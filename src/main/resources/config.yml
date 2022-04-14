@@ -1,0 +1,5 @@
+prefix: "§3§lGuard §7»§f "
+silentChecks: true
+broadcastPunish: false
+broadcastMessage: "%GUARD PREFIX% §c%player% §fhas been removed for §cUnfair Advantage."
+testMode: false
