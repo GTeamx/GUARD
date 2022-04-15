@@ -35,9 +35,9 @@ public class Command implements CommandExecutor {
                         PlayerData data = Data.data.getUserData(sender);
                         data.alertstoggled = !data.alertstoggled;
                         if (data.alertstoggled) {
-                            sender.sendMessage("§3§lGuard §7»§f §fAlert output §aenabled§f!");
+                            sender.sendMessage("§3§lGUARD §7»§f §fAlert output §aenabled§f!");
                         } else {
-                            sender.sendMessage("§3§lGuard §7»§f §fAlert output §cdisabled§f!");
+                            sender.sendMessage("§3§lGUARD §7»§f §fAlert output §cdisabled§f!");
                         }
                         //sender.sendMessage("§a Guard!");
                         //Data.data.clearDataBase();
@@ -51,9 +51,9 @@ public class Command implements CommandExecutor {
                                     if (strings[1].equalsIgnoreCase(checkname)) {
                                         c.isdebugging = !c.isdebugging;
                                         if (c.isdebugging) {
-                                            sender.sendMessage("§3§lGuard §7»§f §fDebugging output §aenabled§f for §a" + c.name + "!");
+                                            sender.sendMessage("§3§lGUARD §7»§f §fDebugging output §aenabled§f for §a" + c.name + "!");
                                         } else {
-                                            sender.sendMessage("§3§lGuard §7»§f §fDebugging output §cdisabled§f for §a" + c.name + "!");
+                                            sender.sendMessage("§3§lGUARD §7»§f §fDebugging output §cdisabled§f for §a" + c.name + "!");
                                         }
                                     }
                                 }
