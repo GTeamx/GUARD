@@ -185,7 +185,7 @@ public class PacketListener extends PacketListenerAbstract {
                 }
                 if(event.getPacketId() == PacketType.Play.Server.ENTITY_VELOCITY) {
                     WrappedPacketOutEntityVelocity velo = new WrappedPacketOutEntityVelocity(event.getNMSPacket());
-                    if(velo.getEntityId() == data.player.getEntityId())
+                    if(velo.getEntityId() == p.getEntityId())
                         data.lastvelocity = System.currentTimeMillis();
                 }
                 for (Check c : data.checks) {

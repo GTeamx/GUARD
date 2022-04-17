@@ -109,6 +109,8 @@ public class PlayerData {
     public boolean isTeleporting;
     public boolean onClimbable;
     public int sinceSlimeTicks;
+    public long entityhit;
+    public int kblevel;
     public Exempt ex = new Exempt(this);
     public WrappedPacketInUseEntity.EntityUseAction useAction;
     public PastLocation targetpastlocations = new PastLocation();

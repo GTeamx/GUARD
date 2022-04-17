@@ -4,12 +4,17 @@ import guard.Guard;
 import guard.data.Data;
 import guard.data.PlayerData;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -86,8 +91,33 @@ public class Event implements Listener {
                 else
                     data.validVelocityHit = false;
                 data.lasthurt = System.currentTimeMillis();
+                if(e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || e.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK)
+                    data.entityhit = System.currentTimeMillis();
+
+
                 if (e.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION || e.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)
                     data.lasthurtother = System.currentTimeMillis();
+            }
+
+        });
+    }
+
+    @EventHandler
+    public void onEntityDMG(EntityDamageByEntityEvent e) {
+        Bukkit.getScheduler().runTaskAsynchronously(Guard.instance, () -> {
+            if (e.getEntity() instanceof Player) {
+                Player p = (Player) e.getEntity();
+                Data.data.registerUser(p);
+                PlayerData data = Data.data.getUserData(p);
+                if(e.getDamager() instanceof Player || e.getDamager() instanceof Mob) {
+                    if(!((LivingEntity) e.getDamager()).getEquipment().getItemInMainHand().getType().equals(Material.AIR)) {
+                        if (((LivingEntity) e.getDamager()).getEquipment().getItemInMainHand().containsEnchantment(Enchantment.KNOCKBACK))
+                            data.kblevel = ((LivingEntity) e.getDamager()).getEquipment().getItemInMainHand().getEnchantmentLevel(Enchantment.KNOCKBACK);
+
+                        if (((LivingEntity) e.getDamager()).getEquipment().getItemInMainHand().containsEnchantment(Enchantment.ARROW_KNOCKBACK))
+                            data.kblevel = ((LivingEntity) e.getDamager()).getEquipment().getItemInMainHand().getEnchantmentLevel(Enchantment.ARROW_KNOCKBACK);
+                    }
+                }
             }
 
         });
