@@ -18,7 +18,7 @@ public class InvalidA extends Check {
         if(!data.playerGround) InvalidA = 0;
         if(InvalidA >= 8) MaxSpeed = 0.2864;
         if(InvalidA < 8) MaxSpeed = 0.6121838;
-        if(data.lasthurt <= 1200) {
+        if(isExempt(ExemptType.VELOCITY)) {
             InvalidA += data.kblevel;
             InvalidA += 0.45;
         }
