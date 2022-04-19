@@ -87,6 +87,7 @@ public class PacketListener extends PacketListenerAbstract {
                         }
                     }
                 }
+
                 if (event.getPacketId() == PacketType.Play.Client.BLOCK_DIG) {
                     WrappedPacketInBlockDig dig = new WrappedPacketInBlockDig(packet);
                     if (dig.getDigType().toString().contains("START_DESTROY_BLOCK")) {

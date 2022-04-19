@@ -1,7 +1,6 @@
 package guard.exempt;
 
 import guard.data.PlayerData;
-import io.github.retrooper.packetevents.PacketEvents;
 import lombok.Getter;
 
 import java.util.function.Function;
@@ -30,7 +29,8 @@ public enum ExemptType {
     VOID(data -> data.getPlayer().getLocation().getY() < 4),
     DEPTH_STRIDER(data -> data.getDepthStriderLevel() > 0),
     FLYING(data -> System.currentTimeMillis() - data.lastflyingtime < 3000L),
-    VELOCITY(data -> System.currentTimeMillis() - data.entityhit < 300L);
+    VELOCITY(data -> System.currentTimeMillis() - data.lastvelocity < 200L),
+    PLACE(data -> System.currentTimeMillis() - data.lastBlockplaced < 600L);
 
     private final Function<PlayerData, Boolean> exception;
 
