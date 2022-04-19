@@ -245,6 +245,7 @@ Motion D:
 
     broadcastMessage: "%GUARD PREFIX% §c%player% §fhas been removed for §cUnfair Advantage."
     #This message will be broadcasted to across the server the player got banned on.
+
 Invalid A:
 
   enabled: true
@@ -260,6 +261,48 @@ Invalid A:
     #Defines how much the buffer needs to be before sending an alert. 0 means that it will send an alert at the first Flag.
 
     removeBuffer: 0
+    #How much should be removed from the buffer if the player isn't triggering the check. 0 means that it will delete the entire buffer.
+
+  Punishments:
+
+    kick: false
+    #This defines if Guard autokicks players if they go above the punishVL.
+
+    ban: false
+    #This defines if Guard autobans players if they go above the punishVL.
+
+    punishVL: 3
+    #This defines how many times the player needs to flag before getting punished by Guard.
+
+  Messages:
+
+    kickMessage: "%GUARD PREFIX% §cYou were kicked for Unfair Advantage."
+    #This message will be displayed to the kicked player.
+
+    banMessage: "%GUARD PREFIX% §cYou were banned for Unfair Advantage."
+    #This message will be displayed to the banned player.
+
+    broadcastPunish: false
+    #This defines if the kick/ban is broadcasted across the server the player got banned on.
+
+    broadcastMessage: "%GUARD PREFIX% §c%player% §fhas been removed for §cUnfair Advantage."
+    #This message will be broadcasted to across the server the player got banned on.
+
+Strafe A:
+
+  enabled: true
+  silent: true
+
+  Buffer:
+    #Don't touch this if you don't know what your doing.
+
+    addBuffer: 1
+    #How much should be added to the buffer when the player triggers the check. 0 means that it will add nothing to the buffer.
+
+    maxBuffer: 4
+    #Defines how much the buffer needs to be before sending an alert. 0 means that it will send an alert at the first Flag.
+
+    removeBuffer: 1
     #How much should be removed from the buffer if the player isn't triggering the check. 0 means that it will delete the entire buffer.
 
   Punishments:

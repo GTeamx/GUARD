@@ -13,13 +13,17 @@ public class InvalidA extends Check {
     double MaxSpeed;
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastmotionX, double lastmotionY, double lastmotionZ, float deltaYaw, float deltaPitch, float lastdeltaYaw, float lastdeltaPitch) {
-        boolean exempt = isExempt(ExemptType.TELEPORT, ExemptType.JOINED);
+        boolean exempt = isExempt(ExemptType.TELEPORT, ExemptType.JOINED, ExemptType.FLYING, ExemptType.INSIDE_VEHICLE);
         if(data.playerGround) InvalidA++;
         if(!data.playerGround) InvalidA = 0;
-        if(InvalidA >= 8) MaxSpeed = 0.29;
-        if(InvalidA < 8) MaxSpeed = 0.87;
-        if(Math.abs(data.getMotionZ(1) + data.getMotionX(1)) >= MaxSpeed && !exempt) fail("Impossible Teleport", Math.abs(data.getMotionZ(1) + data.getMotionX(1)));
-        if(Math.abs(data.getMotionZ(1) + data.getMotionX(1)) >= MaxSpeed && !exempt) fail("Teleported Horizontally", "cs=" + Math.abs(data.getMotionZ(1) + data.getMotionX(1)) + "mxs=" + MaxSpeed);
+        if(InvalidA >= 8) MaxSpeed = 0.2864;
+        if(InvalidA < 8) MaxSpeed = 0.6121838;
+        if(data.lasthurt <= 1200) {
+            InvalidA += data.kblevel;
+            InvalidA += 0.45;
+        }
+        if(data.lastice <= 1200) InvalidA += 0.25;
+        if(data.getDeltaXZ() >= MaxSpeed && !exempt) fail("Impossible Teleport", "cs=" + data.getDistance(true) + "ms=" + MaxSpeed);
 
     }
 }
