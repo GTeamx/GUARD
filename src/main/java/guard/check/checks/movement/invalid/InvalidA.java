@@ -16,7 +16,7 @@ public class InvalidA extends Check {
         boolean exempt = isExempt(ExemptType.TELEPORT, ExemptType.JOINED, ExemptType.FLYING, ExemptType.INSIDE_VEHICLE);
         if(data.playerGround) InvalidA++;
         if(!data.playerGround) InvalidA = 0;
-        if(InvalidA >= 8) MaxSpeed = 0.2864;
+        if(InvalidA >= 8) MaxSpeed = 0.28804;
         if(InvalidA < 8) MaxSpeed = 0.6121838;
         if(isExempt(ExemptType.VELOCITY)) {
             InvalidA += data.kblevel;
