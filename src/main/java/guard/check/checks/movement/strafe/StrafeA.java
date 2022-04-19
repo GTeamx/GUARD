@@ -18,6 +18,6 @@ public class StrafeA extends Check {
             if(Angle >= 0.000086) fail("Strafed in air", Angle);
         }
         if(Angle <= 0.000086) removeBuffer();
-        data.sendMessage("ANGLE=" + Angle + " BUFFER=" + buffer + maxBuffer);
+        debug("ANGLE=" + Angle + " BUFFER=" + buffer + maxBuffer);
     }
 }

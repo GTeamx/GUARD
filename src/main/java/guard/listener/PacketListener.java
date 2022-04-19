@@ -1,6 +1,7 @@
 package guard.listener;
 
 import guard.Guard;
+import guard.api.check.GuardCheck;
 import guard.check.Check;
 import guard.data.Data;
 import guard.data.PlayerData;
@@ -26,6 +27,7 @@ import org.bukkit.material.Step;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
+import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +77,14 @@ public class PacketListener extends PacketListenerAbstract {
                     c.data = data;
                 if (c.data != null && data != null) {
                         c.onPacket(event);
+                    }
+                }
+                if(!data.apichecks.isEmpty()) {
+                    for(GuardCheck c : data.apichecks) {
+                        c.data = data;
+                        if (c.data != null && data != null) {
+                            c.onPacket(event);
+                        }
                     }
                 }
                 if (event.getPacketId() == PacketType.Play.Client.BLOCK_DIG) {
@@ -158,6 +168,16 @@ public class PacketListener extends PacketListenerAbstract {
                             }
                         }
                     }
+                    if(!data.apichecks.isEmpty()) {
+                        for(GuardCheck c : data.apichecks) {
+                            if (data != null) {
+                                c.data = data;
+                                if (c.data != null) {
+                                    c.onMove(event, data.motionX, data.motionY, data.motionZ, data.lastmotionX, data.lastmotionY, data.lastmotionZ, data.deltaYaw, data.deltaPitch, data.lastdeltaYaw, data.lastdeltaPitch);
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -196,6 +216,16 @@ public class PacketListener extends PacketListenerAbstract {
                         }
                     }
                 }
+                if(!data.apichecks.isEmpty()) {
+                    for(GuardCheck c : data.apichecks) {
+                        if(data != null) {
+                            c.data = data;
+                            if(c.data != null) {
+                                c.onPacketSend(event);
+                            }
+                        }
+                    }
+                }
 
             }
         }
@@ -222,18 +252,19 @@ public class PacketListener extends PacketListenerAbstract {
                 }
             }
         }
-        data.isInLiquid = blocks.stream().anyMatch(Block::isLiquid);
-        data.inweb = blocks.stream().anyMatch(block -> block.getType().toString().contains("WEB"));
-        data.inAir = blocks.stream().allMatch(block -> block.getType() == Material.AIR);
-        data.onIce = blocks.stream().anyMatch(block -> block.getType().toString().contains("ICE"));
-        data.onSolidGround = blocks.stream().anyMatch(block -> block.getType().isSolid());
-        data.isonSlab = blocks.stream().anyMatch(block -> block.getType().toString().contains("STEP") || block.getType().toString().contains("SLAB"));
-        data.isonStair = blocks.stream().anyMatch(block -> block.getType().toString().contains("STAIR"));
+        List<Block> b = blocks;
+        data.isInLiquid = b.stream().anyMatch(Block::isLiquid);
+        data.inweb = b.stream().anyMatch(block -> block.getType().toString().contains("WEB"));
+        data.inAir = b.stream().allMatch(block -> block.getType() == Material.AIR);
+        data.onIce = b.stream().anyMatch(block -> block.getType().toString().contains("ICE"));
+        data.onSolidGround = b.stream().anyMatch(block -> block.getType().isSolid());
+        data.isonSlab = b.stream().anyMatch(block -> block.getType().toString().contains("STEP") || block.getType().toString().contains("SLAB"));
+        data.isonStair = b.stream().anyMatch(block -> block.getType().toString().contains("STAIR"));
         data.nearTrapdoor = this.isCollidingAtLocation(data,1.801, material -> material.toString().contains("TRAP_DOOR"));
-        data.blockabove = blocks.stream().filter(block -> block.getLocation().getY() - data.to.getY() > 1.5)
+        data.blockabove = b.stream().filter(block -> block.getLocation().getY() - data.to.getY() > 1.5)
                 .anyMatch(block -> block.getType() != Material.AIR) || data.nearTrapdoor;
-        data.onSlime = blocks.stream().anyMatch(block -> block.getType().toString().equalsIgnoreCase("SLIME_BLOCK"));
-        data.nearPiston = blocks.stream().anyMatch(block -> block.getType().toString().contains("PISTON"));
+        data.onSlime = b.stream().anyMatch(block -> block.getType().toString().equalsIgnoreCase("SLIME_BLOCK"));
+        data.nearPiston = b.stream().anyMatch(block -> block.getType().toString().contains("PISTON"));
         final Location location = data.getPlayer().getLocation();
         final int var1 = NumberConversions.floor(location.getX());
         final int var2 = NumberConversions.floor(location.getY());

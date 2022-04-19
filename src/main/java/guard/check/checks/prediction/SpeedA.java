@@ -17,10 +17,10 @@ public class SpeedA extends Check {
         if(flying.isMoving()) {
             prediction = data.getLastDeltaXZ() * (double) 0.91F + (data.player.isSprinting() ? 0.026 : 0.02);
             double diff = data.getDeltaXZ() - prediction;
-            boolean exempt = isExempt(ExemptType.NEAR_VEHICLE, ExemptType.FLYING, ExemptType.TELEPORT);
+            boolean exempt = isExempt(ExemptType.NEAR_VEHICLE, ExemptType.FLYING, ExemptType.TELEPORT, ExemptType.VELOCITY);
             debug("d=" + diff);
             if(data.airticks > 2 && !exempt) {
-                if(diff > -0.000000000000000000000001) {
+                if(diff > 0.006) {
                     fail("Speed Prediction", "d=" + diff);
                 } else {
                     removeBuffer();

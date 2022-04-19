@@ -23,7 +23,7 @@ public class InvalidA extends Check {
             InvalidA += 0.45;
         }
         if(data.lastice <= 1200) InvalidA += 0.25;
-        if(data.getDeltaXZ() >= MaxSpeed && !exempt) fail("Impossible Teleport", "cs=" + data.getDistance(true) + "ms=" + MaxSpeed);
+        if(data.getDeltaXZ() >= MaxSpeed && !exempt) fail("Impossible Teleport", "cs=" + data.getDeltaXZ() + " ms=" + MaxSpeed);
 
     }
 }

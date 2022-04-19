@@ -3,6 +3,9 @@ package guard.data;
 // import com.sun.org.apache.xerces.internal.impl.xpath.XPath; -> java: package com.sun.org.apache.xerces.internal.impl.xpath does not exist
 
 import guard.Guard;
+import guard.api.GuardAPI;
+import guard.api.check.GuardCheck;
+import guard.api.check.GuardCheckInfo;
 import guard.check.Check;
 import guard.check.CheckInfo;
 import guard.check.checks.movement.ground.GroundA;
@@ -35,6 +38,8 @@ import java.util.*;
 public class PlayerData {
 
     public ArrayList<Check> checks = new ArrayList<>();
+    public ArrayList<GuardCheck> apichecks = new ArrayList<>();
+    public ArrayList<GuardCheck> apicheckscopy = new ArrayList<>();
     private HashMap<String, HashMap<String, Integer>> flags = new HashMap<String, HashMap<String, Integer>>();
     public UUID uuid;
     public Player player;
@@ -64,14 +69,9 @@ public class PlayerData {
     public double lastFalldistance;
     public Location sto;
     public Location sfrom;
-    public boolean aboveSlime;
-    public boolean onLowBlock;
     public boolean isonStair;
     public boolean isInLiquid;
-    public boolean isOnLadder;
     public boolean isonSlab;
-    public boolean ground2;
-    public boolean lastground2;
     public boolean blockabove;
     public boolean validVelocityHit;
     public boolean isDead;
@@ -97,7 +97,6 @@ public class PlayerData {
     public long lastice;
     public boolean onIce;
     public boolean onSlime;
-    public long lastblockabove;
     public long lastslime;
     public Entity target;
     public Entity lasttargetreach;
@@ -140,6 +139,7 @@ public class PlayerData {
         registerCheck(new InvalidA());
         registerCheck(new StrafeA());
         registerCheck(new InvalidB());
+        checkforChecksAPI();
         Bukkit.getScheduler().runTaskTimerAsynchronously(Guard.instance, ()-> {
             if(lasttargetreach != null) {
                 targetpastlocations.addLocation(lasttargetreach.getLocation());
@@ -171,6 +171,73 @@ public class PlayerData {
         if(!checks.contains(check))
             checks.add(check);
     }
+
+
+
+    private void addAPICheck(GuardCheck check) {
+        if(!apichecks.contains(check)) {
+            GuardCheckInfo info = check.getClass().getAnnotation(GuardCheckInfo.class);
+
+            check.name = info.name();
+            check.category = info.category();
+            check.enabled = true;// config
+            check.kickable = info.kickable(); // config
+            check.bannable = info.banable();// config
+            // if(Guard.instance.configUtils.getBooleanFromConfig("config", "silentchecks")) {// config decides
+            //     check.silent = Guard.instance.configUtils.getBooleanFromConfig("checks", info.name() + ".silent");
+            // } else {
+            //     check.silent = false;
+            // }
+            check.maxBuffer = info.maxBuffer();// config
+            check.addBuffer = info.addBuffer(); // config
+            check.removeBuffer = info.removeBuffer(); // config
+
+            apichecks.add(check);
+        } else {
+            //apichecks.remove(check);
+            GuardCheckInfo info = check.getClass().getAnnotation(GuardCheckInfo.class);
+
+            check.name = info.name();
+            check.category = info.category();
+            check.enabled = true;// config
+            check.kickable = info.kickable(); // config
+            check.bannable = info.banable();// config
+            // if(Guard.instance.configUtils.getBooleanFromConfig("config", "silentchecks")) {// config decides
+            //     check.silent = Guard.instance.configUtils.getBooleanFromConfig("checks", info.name() + ".silent");
+            // } else {
+            //     check.silent = false;
+            // }
+            check.maxBuffer = info.maxBuffer();// config
+            check.addBuffer = info.addBuffer(); // config
+            check.removeBuffer = info.removeBuffer(); // config
+            apichecks.remove(check);
+            addAPICheck(check);
+        }
+    }
+    private void removeAPICheck(GuardCheck check) {
+        GuardCheckInfo info = check.getClass().getAnnotation(GuardCheckInfo.class);
+
+        check.name = info.name();
+        check.category = info.category();
+        check.enabled = true;// config
+        check.kickable = info.kickable(); // config
+        check.bannable = info.banable();// config
+        // if(Guard.instance.configUtils.getBooleanFromConfig("config", "silentchecks")) {// config decides
+        //     check.silent = Guard.instance.configUtils.getBooleanFromConfig("checks", info.name() + ".silent");
+        // } else {
+        //     check.silent = false;
+        // }
+        check.maxBuffer = info.maxBuffer();// config
+        check.addBuffer = info.addBuffer(); // config
+        check.removeBuffer = info.removeBuffer(); // config
+        apichecks.removeIf(c -> c.name.equals(check.name));
+    //    if(apichecks.contains(check))
+         //   apichecks.removeIf(c -> c.equals(check));
+           // GuardAPI.checksremove.remove(check);
+            //GuardAPI.checksremove.removeIf(c -> c.equals(check));
+    }
+
+
 
     private void addCheck(Check check) {
         if(!checks.contains(check))
@@ -211,6 +278,50 @@ public class PlayerData {
 
 
     public void flag(Check check, int treshold, Object... debug) {
+        if(player != null) {
+            addFlag(check.name);
+            String buf = "";
+            String Value = "";
+            String Info = "";
+            String Buffer = "";
+            String maxBuffer = "";
+            int i = 0;
+            for (Object obj : debug) {
+                i++;
+                if(i == 1) {
+                    Info = obj.toString();
+                } else if(i == 2) {
+                    Value = obj.toString();
+                }else if(i == 3) {
+                    Buffer = obj.toString();
+                }else if(i == 4) {
+                    maxBuffer = obj.toString();
+                }
+                buf += obj.toString() + ", ";
+            }
+            final String text = "§7Check: §3" + check.name + " \n§7Information: §3" + Info + " \n§7Value: §3" + Value + " \n§7Buffer: §3" + Buffer + "§7/" + maxBuffer;
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                boolean d = Guard.instance.configUtils.getBooleanFromConfig("config", "testMode");
+                PlayerData data = Data.data.getUserData(p);
+                if ((data.alertstoggled && !d) || (d && !p.getName().equals(player.getName()))) { // TODO: /alerts command test later && (!d && !player.getName().equals(p.getName()))
+                    TextComponent Flag = new TextComponent("§3§lGUARD §7»§f " + name + " §7failed §f" + check.name + " §7(§3x" + getFlags(name, check.name) + "§7)");
+                    Flag.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder(text).create()));
+                    p.spigot().sendMessage(Flag);
+                }
+            }
+            if(Guard.instance.configUtils.getBooleanFromConfig("config", "testMode")) {
+                TextComponent Flag = new TextComponent("§3§lGUARD §7»§f " + name + " §7failed §f" + check.name + " §7(§3x" + getFlags(name, check.name) + "§7)");
+                Flag.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(text).create()));
+                player.spigot().sendMessage(Flag);
+            }
+            if (getFlags(name, check.name) > treshold) {
+                ban(name, check.bannable, check.kickable ,check.name
+                        , Guard.instance.configUtils.getBooleanFromConfig("checks", check.name + ".Messages.broadcastPunish"));
+            }
+        }
+    }
+
+    public void flagapi(GuardCheck check, int treshold, Object... debug) {
         if(player != null) {
             addFlag(check.name);
             String buf = "";
@@ -427,6 +538,57 @@ public class PlayerData {
 
 
 
+    private void checkforChecksAPI() {
+        //if(!GuardAPI.checks.isEmpty()) {
+          //  for(GuardCheck check : GuardAPI.checks) {
+                //addAPICheck(check);
+          //  }
+      //  }
+        try {
+            if (!GuardAPI.cm.getChecks().isEmpty()) {
+                for (GuardCheck c : GuardAPI.cm.getChecks()) {
+                    if (!apichecks.contains(c)) {
+                        apichecks.add(c);
+                    }
+                }
+            }
+            if (!GuardAPI.cm.getRemovingchecks().isEmpty()) {
+                for (GuardCheck c : GuardAPI.cm.getRemovingchecks()) {
+                    if (apichecks.contains(c)) {
+                        apichecks.remove(c);
+                        GuardAPI.cm.getRemovingchecks().remove(c);
+                    }
+                }
+            }
+        }catch(ConcurrentModificationException e) {
+
+        }
+
+       // if(!GuardAPI.checksremove.isEmpty()) {
+            //for(GuardCheck check : GuardAPI.checksremove) {
+
+           // }
+       // }
+    }
+
+    public void removeapicheck(GuardCheck check) {
+        GuardCheckInfo info = check.getClass().getAnnotation(GuardCheckInfo.class);
+
+        check.name = info.name();
+        check.category = info.category();
+        check.enabled = true;// config
+        check.kickable = info.kickable(); // config
+        check.bannable = info.banable();// config
+        // if(Guard.instance.configUtils.getBooleanFromConfig("config", "silentchecks")) {// config decides
+        //     check.silent = Guard.instance.configUtils.getBooleanFromConfig("checks", info.name() + ".silent");
+        // } else {
+        //     check.silent = false;
+        // }
+        check.maxBuffer = info.maxBuffer();// config
+        check.addBuffer = info.addBuffer(); // config
+        check.removeBuffer = info.removeBuffer(); // config
+        removeAPICheck(check);
+    }
 
 
     private long test;
@@ -449,6 +611,7 @@ public class PlayerData {
         mx.add(motionX);
         my.add(motionY);
         mz.add(motionZ);
+        checkforChecksAPI();
        /** isonSlab = BlockUtils.isonSlab(player);
         aboveSlime = wasOnSlime(255);
         isonStair = BlockUtils.isonStair(player);
@@ -485,18 +648,6 @@ public class PlayerData {
         else
             airticks++;
 
-    }
-
-    public double getDistance(boolean y) {
-        if(sfrom != null) {
-            if (y) {
-                Location newloc = sto.clone();
-                newloc.setY(sfrom.clone().getY());
-                return newloc.distance(sfrom.clone());
-            }
-            return sto.clone().distance(sfrom.clone()); // sto.distance(sfrom)
-        }
-        return 0;
     }
 
     public float yawTo180F(float flub) {

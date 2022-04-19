@@ -1,7 +1,8 @@
-package guard.check;
+package guard.api.check;
 
 import guard.Guard;
 import guard.api.events.GuardFlagEvent;
+import guard.check.Category;
 import guard.data.PlayerData;
 import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
@@ -12,10 +13,8 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class Check {
-
+public abstract class GuardCheck {
     public String name;
     public boolean enabled;
     public Category category;
@@ -33,6 +32,7 @@ public abstract class Check {
     public int punishVL;
     public PlayerData data;
     public boolean isdebugging;
+    public int punishvl;
     public List<Player> debugtoplayers = new ArrayList<>();
 
     public void onPacket(PacketPlayReceiveEvent packet) {
@@ -55,22 +55,12 @@ public abstract class Check {
 
     public void fail(Object a, Object b) {
         if(data != null) {
-            AtomicBoolean docancel = new AtomicBoolean(false);
-            Bukkit.getScheduler().runTask(Guard.instance, ()-> {
-                GuardFlagEvent event = new GuardFlagEvent(data.player, this);
-                Bukkit.getPluginManager().callEvent(event);
-                if(event.isCancelled()) docancel.set(true);
-            });
-
-            if(docancel.get()) return;
-
-
             if(buffer < maxBuffer + 10 && addBuffer != 0) {
                 buffer += addBuffer;
             }
             if(buffer > maxBuffer || addBuffer == 0) {
                 //sendMessage("fail a=" + addBuffer + " b=" + buffer + " r=" + removeBuffer + " silent=" + silent + " kick=" + kickable + " ban=" + bannable);
-                data.flag(this, Guard.instance.configUtils.getIntFromConfig("checks", name + ".Punishments.punishVL") - 1, a, b, buffer, maxBuffer);
+                data.flagapi(this, punishvl - 1, a, b, buffer, maxBuffer);
 
             }
         }
@@ -87,7 +77,7 @@ public abstract class Check {
             } else {
                 for(Player p : debugtoplayers) {
                     //if(p.getName().equals(p.getName())) {
-                        p.sendMessage(message);
+                    p.sendMessage(message);
                     //}
                 }
             }
