@@ -7,6 +7,7 @@ import guard.check.Check;
 import guard.check.CheckInfo;
 import guard.check.checks.movement.ground.GroundA;
 import guard.check.checks.movement.invalid.InvalidA;
+import guard.check.checks.movement.invalid.InvalidB;
 import guard.check.checks.movement.motion.MotionB;
 import guard.check.checks.movement.motion.MotionC;
 import guard.check.checks.movement.motion.MotionD;
@@ -138,6 +139,7 @@ public class PlayerData {
         registerCheck(new MotionD());
         registerCheck(new InvalidA());
         registerCheck(new StrafeA());
+        registerCheck(new InvalidB());
         Bukkit.getScheduler().runTaskTimerAsynchronously(Guard.instance, ()-> {
             if(lasttargetreach != null) {
                 targetpastlocations.addLocation(lasttargetreach.getLocation());
