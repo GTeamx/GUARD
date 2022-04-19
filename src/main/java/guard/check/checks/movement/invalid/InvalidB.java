@@ -12,10 +12,10 @@ public class InvalidB extends Check {
     double Speed;
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastmotionX, double lastmotionY, double lastmotionZ, float deltaYaw, float deltaPitch, float lastdeltaYaw, float lastdeltaPitch) {
-        boolean exempt = isExempt(ExemptType.FLYING, ExemptType.INSIDE_VEHICLE);
+        boolean exempt = isExempt(ExemptType.FLYING, ExemptType.INSIDE_VEHICLE, ExemptType.WEB, ExemptType.CLIMBABLE);
         Speed = Math.sqrt(Math.pow(Math.abs(motionX), 2) + Math.pow(Math.abs(motionZ), 2));
         Speed = Math.round(Speed * 10000000);
-        if(!data.isOnLadder && !data.inweb && !exempt && String.valueOf(Speed).contains("000")) fail("Constant Speed", "cs=" + Speed);
+        if(!exempt && String.valueOf(Speed).contains("000")) fail("Constant Speed", "cs=" + Speed);
         if(!String.valueOf(Speed).contains("000")) removeBuffer();
     }
 }
