@@ -2,5 +2,5 @@ package guard.check;
 
 public enum Category {
 
-    COMBAT, MOVEMENT, PREDICTION, WORLD
+    COMBAT, MOVEMENT, PREDICTION, WORLD, PLAYER
 }
