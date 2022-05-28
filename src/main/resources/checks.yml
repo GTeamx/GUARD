@@ -262,3 +262,37 @@ AutoFish C:
     banMessage: "%GUARD PREFIX% §cYou were banned for Unfair Advantage."
     broadcastPunish: false
     broadcastMessage: "%GUARD PREFIX% §c%player% §fhas been removed for §cUnfair Advantage."
+
+Strafe A:
+  enabled: true
+  silent: true
+  Buffer:
+    addBuffer: 0
+    maxBuffer: 0
+    removeBuffer: 0
+  Punishments:
+    kick: false
+    ban: false
+    punishVL: 3
+  Messages:
+    kickMessage: "%GUARD PREFIX% §cYou were kicked for Unfair Advantage."
+    banMessage: "%GUARD PREFIX% §cYou were banned for Unfair Advantage."
+    broadcastPunish: false
+    broadcastMessage: "%GUARD PREFIX% §c%player% §fhas been removed for §cUnfair Advantage."
+
+BadPacket A:
+  enabled: true
+  silent: true
+  Buffer:
+    addBuffer: 0
+    maxBuffer: 0
+    removeBuffer: 0
+  Punishments:
+    kick: false
+    ban: false
+    punishVL: 3
+  Messages:
+    kickMessage: "%GUARD PREFIX% §cYou were kicked for Unfair Advantage."
+    banMessage: "%GUARD PREFIX% §cYou were banned for Unfair Advantage."
+    broadcastPunish: false
+    broadcastMessage: "%GUARD PREFIX% §c%player% §fhas been removed for §cUnfair Advantage."

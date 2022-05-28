@@ -60,5 +60,6 @@ public class SpeedB extends Check {
         if(System.currentTimeMillis() - data.lasthurt < 1500 || System.currentTimeMillis() - data.lasthurtother < 1500 && data.kblevel > 0) maxSpeed = data.kblevel * 0.95;
 
         if(cSpeed > maxSpeed && !exempt) fail("Speed Limit", "cSpeed=" + cSpeed + " maxSpeed=" + maxSpeed);
+        if(cSpeed < maxSpeed && !exempt) removeBuffer();
     }
 }

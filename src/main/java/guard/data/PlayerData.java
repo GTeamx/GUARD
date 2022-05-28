@@ -17,6 +17,7 @@ import guard.check.checks.movement.motion.MotionC;
 import guard.check.checks.movement.motion.MotionD;
 import guard.check.checks.movement.speed.SpeedB;
 import guard.check.checks.movement.strafe.StrafeA;
+import guard.check.checks.player.badpacket.BadPacketA;
 import guard.check.checks.prediction.MotionA;
 import guard.check.checks.prediction.SpeedA;
 import guard.check.checks.world.autofish.AutoFishA;
@@ -49,6 +50,12 @@ public class PlayerData {
     public UUID uuid;
     public Player player;
     public String name;
+    public double lastEat;
+    public double eatDelay = 1300;
+    public double lastShoot = 99;
+    public double shootDelay = 299;
+    public double lastShootDelay = 1000;
+    public double lastUse;
     public boolean alertstoggled;
     public long lastTeleport;
     public long weirdTeleport;
@@ -154,6 +161,7 @@ public class PlayerData {
         registerCheck(new AutoFishA());
         registerCheck(new AutoFishB());
         registerCheck(new AutoFishC());
+        registerCheck(new BadPacketA());
         checkforChecksAPI();
         Bukkit.getScheduler().runTaskTimerAsynchronously(Guard.instance, ()-> {
             if(lasttargetreach != null) {

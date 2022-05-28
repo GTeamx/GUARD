@@ -6,6 +6,7 @@ import guard.data.PlayerData;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -17,10 +18,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerFishEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.player.*;
 
 public class Event implements Listener {
 
@@ -57,6 +56,40 @@ public class Event implements Listener {
                 data.lastFishDiff = (System.currentTimeMillis() - data.lastBite);
                 data.armAnimation = false;
             }
+        });
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent e) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Guard.instance, () -> {
+            PlayerData data = Data.data.getUserData(e.getPlayer());
+            data.lastUse = System.currentTimeMillis();
+        });
+    }
+
+    @EventHandler
+    public void onShoot(ProjectileLaunchEvent e) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Guard.instance, () -> {
+            if (e.getEntity() instanceof Arrow) {
+                Arrow arrow = (Arrow) e.getEntity();
+                if (arrow.getShooter() != null && arrow.getShooter() instanceof Player) {
+                    Player player = (Player) arrow.getShooter();
+                    PlayerData data = Data.data.getUserData(player);
+                    data.lastShootDelay = System.currentTimeMillis() - data.lastUse;
+                    data.shootDelay = System.currentTimeMillis() - data.lastShoot;
+                    data.lastShoot = System.currentTimeMillis();
+                }
+            }
+        });
+    }
+
+    @EventHandler
+    public void onConsume(PlayerItemConsumeEvent e) {
+        Bukkit.getScheduler().scheduleSyncDelayedTask(Guard.instance, () -> {
+            PlayerData data = Data.data.getUserData(e.getPlayer());
+            data.eatDelay = System.currentTimeMillis() - data.lastUse;
+            if (data.eatDelay < 1400) e.setCancelled(true);
+            data.lastEat = System.currentTimeMillis();
         });
     }
 
