@@ -11,12 +11,17 @@ import guard.check.CheckInfo;
 import guard.check.checks.movement.ground.GroundA;
 import guard.check.checks.movement.invalid.InvalidA;
 import guard.check.checks.movement.invalid.InvalidB;
+import guard.check.checks.movement.invalid.InvalidC;
 import guard.check.checks.movement.motion.MotionB;
 import guard.check.checks.movement.motion.MotionC;
 import guard.check.checks.movement.motion.MotionD;
+import guard.check.checks.movement.speed.SpeedB;
 import guard.check.checks.movement.strafe.StrafeA;
 import guard.check.checks.prediction.MotionA;
 import guard.check.checks.prediction.SpeedA;
+import guard.check.checks.world.autofish.AutoFishA;
+import guard.check.checks.world.autofish.AutoFishB;
+import guard.check.checks.world.autofish.AutoFishC;
 import guard.exempt.Exempt;
 import guard.utils.*;
 import io.github.retrooper.packetevents.PacketEvents;
@@ -47,6 +52,11 @@ public class PlayerData {
     public boolean alertstoggled;
     public long lastTeleport;
     public long weirdTeleport;
+    public double isSwimming;
+    public double lastFish;
+    public double lastFishDiff = 100;
+    public boolean armAnimation = true;
+    public double lastBite;
     public Location from;
     public Location to;
     public boolean playerGround;
@@ -132,13 +142,18 @@ public class PlayerData {
         lasthurt = System.currentTimeMillis();
         registerCheck(new GroundA());
         registerCheck(new SpeedA());
+        registerCheck(new SpeedB());
         registerCheck(new MotionA());
         registerCheck(new MotionB());
         registerCheck(new MotionC());
         registerCheck(new MotionD());
-        registerCheck(new InvalidA());
         registerCheck(new StrafeA());
+        registerCheck(new InvalidA());
         registerCheck(new InvalidB());
+        registerCheck(new InvalidC());
+        registerCheck(new AutoFishA());
+        registerCheck(new AutoFishB());
+        registerCheck(new AutoFishC());
         checkforChecksAPI();
         Bukkit.getScheduler().runTaskTimerAsynchronously(Guard.instance, ()-> {
             if(lasttargetreach != null) {
@@ -597,6 +612,7 @@ public class PlayerData {
             from = to;
         }
 
+        lastBlockplaced = System.currentTimeMillis();
         test = System.currentTimeMillis();
         lastmotionX = motionX;
         lastmotionY = motionY;
@@ -635,9 +651,9 @@ public class PlayerData {
             }
         }
         if(player != null) {
-            if(player.isGliding()) {
-                lastelytraused = System.currentTimeMillis();
-            }
+            //if(player.isGliding()) {
+              //  lastelytraused = System.currentTimeMillis();
+            //}
         }
         //sendMessage("took: " + (System.currentTimeMillis() - test) + " ms.");
         if(motionY > 0) {
@@ -648,6 +664,18 @@ public class PlayerData {
         else
             airticks++;
 
+    }
+
+    public double getDistance(boolean y) {
+        if(sfrom != null) {
+            if (y) {
+                Location newloc = sto.clone();
+                newloc.setY(sfrom.clone().getY());
+                return newloc.distance(sfrom.clone());
+            }
+            return sto.clone().distance(sfrom.clone()); // sto.distance(sfrom)
+        }
+        return 0;
     }
 
     public float yawTo180F(float flub) {

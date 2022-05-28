@@ -73,6 +73,9 @@ public class PacketListener extends PacketListenerAbstract {
                     data.target = ue.getEntity();
                     data.useAction = ue.getAction();
                 }
+                if (event.getPacketId() == PacketType.Play.Client.ARM_ANIMATION) {
+                    data.armAnimation = true;
+                }
                 for (Check c : data.checks) {
                     c.data = data;
                 if (c.data != null && data != null) {

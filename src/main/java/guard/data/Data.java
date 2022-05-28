@@ -1,11 +1,10 @@
 package guard.data;
 
 import org.bukkit.entity.Player;
-
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 
-public enum  Data {
+public enum Data {
     data;
 
     public ArrayList<PlayerData> users = new ArrayList<>();

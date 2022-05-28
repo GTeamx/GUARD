@@ -17,6 +17,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -47,7 +48,17 @@ public class Event implements Listener {
         });
     }
 
-
+    @EventHandler
+    public void onFishing(PlayerFishEvent e) {
+        Bukkit.getScheduler().runTaskAsynchronously(Guard.instance, () -> {
+            PlayerData data = Data.data.getUserData(e.getPlayer());
+            if(e.getState() == PlayerFishEvent.State.BITE) data.lastBite = System.currentTimeMillis();
+            if(e.getState() == PlayerFishEvent.State.CAUGHT_FISH) {
+                data.lastFishDiff = (System.currentTimeMillis() - data.lastBite);
+                data.armAnimation = false;
+            }
+        });
+    }
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDeath(PlayerDeathEvent e) {
@@ -60,7 +71,7 @@ public class Event implements Listener {
     }
 
     @EventHandler
-    public void respawn(PlayerRespawnEvent e) {
+    public void onRespawn(PlayerRespawnEvent e) {
         Bukkit.getScheduler().runTaskAsynchronously(Guard.instance, () -> {
             Data.data.registerUser(e.getPlayer());
             PlayerData data = Data.data.getUserData(e.getPlayer());
@@ -72,7 +83,6 @@ public class Event implements Listener {
     @EventHandler
     public void onPlace(BlockPlaceEvent e) {
         Bukkit.getScheduler().runTaskAsynchronously(Guard.instance, () -> {
-            Data.data.registerUser(e.getPlayer());
             PlayerData data = Data.data.getUserData(e.getPlayer());
             data.lastBlockplaced = System.currentTimeMillis();
             data.blockplaced = e.getBlock();
@@ -136,7 +146,7 @@ public class Event implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onbreak(BlockBreakEvent e) {
+    public void onBreak(BlockBreakEvent e) {
         Bukkit.getScheduler().runTaskAsynchronously(Guard.instance, () -> {
             Data.data.registerUser(e.getPlayer());
             PlayerData data = Data.data.getUserData(e.getPlayer());
