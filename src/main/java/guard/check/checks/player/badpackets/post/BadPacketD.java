@@ -11,8 +11,7 @@ import io.github.retrooper.packetevents.packettype.PacketType;
 public class BadPacketD extends GuardCheck {
 
     public void onPacket(PacketPlayReceiveEvent packet) {
-        boolean isPost = isPost(packet.getPacketId(), PacketType.Play.Client.CUSTOM_PAYLOAD);
-        if (isPost) fail(packet, "Post packet", "CUSTOM_PAYLOAD");
+        if (isPost(packet.getPacketId(), PacketType.Play.Client.CUSTOM_PAYLOAD)) fail(packet, "Post packet", "CUSTOM_PAYLOAD");
     }
 
 }
