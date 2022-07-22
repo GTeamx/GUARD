@@ -40,6 +40,11 @@ public class GuardCheckManager {
         registerCheck(new BadPacketK());
         registerCheck(new BadPacketL());
         registerCheck(new BadPacketM());
+        registerCheck(new BadPacketN());
+        registerCheck(new BadPacketO());
+        registerCheck(new BadPacketP());
+        registerCheck(new BadPacketQ());
+        registerCheck(new BadPacketU());
     }
 
     public void registerCheck(GuardCheck check) {
