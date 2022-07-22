@@ -5,6 +5,8 @@ import guard.check.checks.movement.fly.FlyB;
 import guard.check.checks.movement.fly.FlyC;
 import guard.check.checks.movement.invalid.InvalidA;
 import guard.check.checks.movement.fly.FlyA;
+import guard.check.checks.player.badpackets.*;
+import guard.check.checks.player.badpackets.post.*;
 import guard.check.checks.player.timer.TimerA;
 import guard.check.checks.player.timer.TimerB;
 
@@ -19,9 +21,24 @@ public class GuardCheckManager {
         registerCheck(new FlyA());
         registerCheck(new FlyB());
         registerCheck(new FlyC());
+
         registerCheck(new InvalidA());
+
         registerCheck(new TimerA());
         registerCheck(new TimerB());
+
+        registerCheck(new BadPacketA());
+        registerCheck(new BadPacketB());
+        registerCheck(new BadPacketC());
+        registerCheck(new BadPacketD());
+        registerCheck(new BadPacketE());
+        registerCheck(new BadPacketF());
+        registerCheck(new BadPacketG());
+        registerCheck(new BadPacketH());
+        registerCheck(new BadPacketI());
+        registerCheck(new BadPacketJ());
+        registerCheck(new BadPacketK());
+        registerCheck(new BadPacketL());
     }
 
     public void registerCheck(GuardCheck check) {
