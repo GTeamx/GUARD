@@ -19,7 +19,7 @@ public class BadPacketM extends GuardCheck {
         if(packet.getPacketId() == PacketType.Play.Client.KEEP_ALIVE) {
             WrappedPacketInKeepAlive keepalive = new WrappedPacketInKeepAlive(packet.getNMSPacket());
             if(id != keepalive.getId()) {
-                fail(null, "Keep Alive Id did not match", "id=" + id + " fakeid=" + keepalive.getId());
+                fail(null, "Invalid packet", "id=" + id + " fakeid=" + keepalive.getId());
             }
         }
     }
