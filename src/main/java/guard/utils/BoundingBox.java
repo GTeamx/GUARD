@@ -2,7 +2,6 @@ package guard.utils;
 
 import lombok.Getter;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -10,7 +9,6 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 @Getter
 public class BoundingBox {
 
