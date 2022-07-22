@@ -11,6 +11,7 @@ import io.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.settings.PacketEventsSettings;
 import io.github.retrooper.packetevents.utils.server.ServerVersion;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Guard extends JavaPlugin {
@@ -41,9 +42,17 @@ public class Guard extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("§aGuard is now Enabled!");
         Bukkit.getPluginCommand("guard").setExecutor(new Command());
         configUtils = new ConfigUtils(this);
-        auth.init();
-        Bukkit.getScheduler().runTaskTimerAsynchronously(this, new RunnableAuth(), 0, 20*60);
+        //auth.init();
+        //Bukkit.getScheduler().runTaskTimerAsynchronously(this, new RunnableAuth(), 0, 20*60);
+        PacketEvents.get().init();
+        PacketEvents.get().registerListener(Guard.instance.listener);
 
+
+        PacketEvents.get().getInjector().eject();
+        PacketEvents.get().getInjector().inject();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            PacketEvents.get().getInjector().injectPlayer(p);
+        }
     }
 
     @Override

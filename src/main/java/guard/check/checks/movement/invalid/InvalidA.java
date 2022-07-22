@@ -11,6 +11,6 @@ public class InvalidA extends GuardCheck {
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
         double[] values = gp.predictionProcessor.predictUrAssOff();
-        if(gp.getDeltaXZ() > values[0] && values[1] > 0.0000022 && gp.getDeltaXZ() > 0) fail(packet, "Predictions unfollowed", "v=" + values[1]); else removeBuffer();
+        if(gp.getDeltaXZ() > values[0] && values[1] > 0.00005 && gp.getDeltaXZ() > 0) fail(packet, "Predictions unfollowed", "v=" + values[1]); else removeBuffer();
     }
 }

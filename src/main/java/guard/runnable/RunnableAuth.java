@@ -22,20 +22,23 @@ public class RunnableAuth implements Runnable {
                 wasFirst = true;
             }
             doEnable = true;
-            if(!Guard.instance.configUtils.getStringFromConfig("config", "license", "").equals(""))
+            if(!Guard.instance.configUtils.getStringFromConfig("config", "license", "").equals("")) {
                 Guard.instance.auth.register(Guard.instance.configUtils.getStringFromConfig("config", "license", ""));
-            if(doEnable && wasFirst) {
-                PacketEvents.get().init();
-                PacketEvents.get().registerListener(Guard.instance.listener);
+                if(Guard.instance.auth.auth) {
+                    if (doEnable && wasFirst) {
+                        PacketEvents.get().init();
+                        PacketEvents.get().registerListener(Guard.instance.listener);
 
 
-                PacketEvents.get().getInjector().eject();
-                PacketEvents.get().getInjector().inject();
-                for(Player p : Bukkit.getOnlinePlayers()) {
-                    PacketEvents.get().getInjector().injectPlayer(p);
+                        PacketEvents.get().getInjector().eject();
+                        PacketEvents.get().getInjector().inject();
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            PacketEvents.get().getInjector().injectPlayer(p);
+                        }
+                        doEnable = false;
+                        wasFirst = false;
+                    }
                 }
-                doEnable = false;
-                wasFirst = false;
             }
         }else {
             if(doEnable && wasFirst) {
@@ -49,7 +52,7 @@ public class RunnableAuth implements Runnable {
                     PacketEvents.get().getInjector().injectPlayer(p);
                 }
                 doEnable = false;
-                wasFirst = false;
+                //wasFirst = false;
             }
             if(!wasFirst) {
                 Guard.instance.auth.login(Guard.instance.configUtils.getStringFromConfig("config", "license", "") + "1", Guard.instance.configUtils.getStringFromConfig("config", "license", "") + "2");

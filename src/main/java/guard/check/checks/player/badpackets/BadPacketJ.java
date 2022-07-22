@@ -14,7 +14,7 @@ public class BadPacketJ extends GuardCheck {
     public void onPacket(PacketPlayReceiveEvent packet) {
         if(packet.getPacketId() == PacketType.Play.Client.ABILITIES) {
             WrappedPacketInAbilities wrapper = new WrappedPacketInAbilities(packet.getNMSPacket());
-            if(wrapper.isFlying() && !packet.getPlayer().isFlying()) fail(packet, "Impossible packet", "ABILITIES");
+            if((wrapper.isFlying() && !gp.getPlayer().isFlying())) fail(packet, "Impossible packet", "ABILITIES");
         }
     }
 

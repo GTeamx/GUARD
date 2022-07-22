@@ -4,11 +4,15 @@ import guard.Guard;
 import guard.check.checks.movement.fly.FlyA;
 import guard.check.checks.movement.fly.FlyB;
 import guard.check.checks.movement.fly.FlyC;
+import guard.check.checks.movement.fly.FlyD;
+import guard.check.checks.movement.ground.GroundA;
 import guard.check.checks.movement.invalid.InvalidA;
+import guard.check.checks.movement.jump.JumpA;
 import guard.check.checks.player.badpackets.*;
 import guard.check.checks.player.badpackets.post.*;
 import guard.check.checks.player.timer.TimerA;
 import guard.check.checks.player.timer.TimerB;
+import io.github.retrooper.packetevents.PacketEvents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +25,11 @@ public class GuardCheckManager {
         registerCheck(new FlyA());
         registerCheck(new FlyB());
         registerCheck(new FlyC());
+        registerCheck(new FlyD());
+
+        registerCheck(new JumpA());
+
+        registerCheck(new GroundA());
 
         registerCheck(new InvalidA());
 
@@ -42,9 +51,6 @@ public class GuardCheckManager {
         registerCheck(new BadPacketM());
         registerCheck(new BadPacketN());
         registerCheck(new BadPacketO());
-        registerCheck(new BadPacketP());
-        registerCheck(new BadPacketQ());
-        registerCheck(new BadPacketU());
     }
 
     public void registerCheck(GuardCheck check) {

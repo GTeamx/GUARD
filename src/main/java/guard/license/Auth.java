@@ -34,8 +34,7 @@ public class Auth {
     public void init() {
         HttpResponse<String> response;
         try {
-            response = Unirest.post(url).field("type", "init").field("ver", version).field("name", appname)
-                    .field("ownerid", ownerid).asString();
+            response = Unirest.post(url).field("type", "init").field("ver", version).field("name", appname).field("ownerid", ownerid).asString();
 
             // System.out.println(response.getBody());
             try {
