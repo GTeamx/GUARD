@@ -31,6 +31,7 @@ public enum ExemptType {
     FLYING(gp -> System.currentTimeMillis() - gp.lastFlyingTime < 3000L),
     VELOCITY(gp -> System.currentTimeMillis() - gp.entityHit < 300L),
     HEALTH_CHANGE(gp -> gp.lastHealth > gp.getPlayer().getHealth()),
+    GLIDE(gp -> System.currentTimeMillis() - gp.lastGlide < 4000),
     PLACE(gp -> System.currentTimeMillis() - gp.lastBlockPlaced < 300L);
 
     private final Function<GuardPlayer, Boolean> exception;
