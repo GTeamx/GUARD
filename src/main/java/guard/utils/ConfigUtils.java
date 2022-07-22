@@ -41,7 +41,17 @@ public class ConfigUtils {
     }
 
 
-    public boolean getBooleanFromConfig(String configName, String value) {
+    public boolean getBooleanFromConfig(String configName, String value, boolean defaultValue) {
+        try {
+            if(configName.equalsIgnoreCase("config")) {
+                config.get(value);
+            }
+            if(configName.equalsIgnoreCase("checks")) {
+                checks.get(value);
+            }
+        }catch (NullPointerException e) {
+            return defaultValue;
+        }
         if(configName.equalsIgnoreCase("config")) {
             if (config == null) {
                 reloadConfigs();
@@ -55,9 +65,19 @@ public class ConfigUtils {
             }
            return checks.getBoolean(value);
         }
-        return false;
+        return defaultValue;
     }
-    public String getStringFromConfig(String configName, String value) {
+    public String getStringFromConfig(String configName, String value, String defaultValue) {
+        try {
+            if(configName.equalsIgnoreCase("config")) {
+                config.get(value);
+            }
+            if(configName.equalsIgnoreCase("checks")) {
+                checks.get(value);
+            }
+        }catch (NullPointerException e) {
+            return defaultValue;
+        }
         if(configName.equalsIgnoreCase("config")) {
             if (config == null) {
                 guard.reloadConfig();
@@ -71,27 +91,45 @@ public class ConfigUtils {
             }
             return checks.getString(value);
         }
-        return "";
+        return defaultValue;
     }
 
-    public String getConvertedStringFromConfig(String configName, Player player, String value) {
+    public String getConvertedStringFromConfig(String configName, Player player, String value, String defaultValue) {
+        try {
+            if(configName.equalsIgnoreCase("config")) {
+                config.get(value);
+            }
+            if(configName.equalsIgnoreCase("checks")) {
+                checks.get(value);
+            }
+        }catch (NullPointerException e) {
+            String s = defaultValue;
+            String newStringConverted = "";
+            if(s.contains("%player%")) {
+                newStringConverted = s.replace("%player%", player.getName());
+            }
+            return newStringConverted;
+        }
         if(configName.equalsIgnoreCase("config")) {
             if (config == null) {
                 guard.reloadConfig();
             }
 
             String s = config.getString(value);
-            if(s != null) {
-                String s2 = config.getString("prefix");
-                s2.replace("\"", "");
-                s.replace("%GUARD PREFIX%", s2);
-                s.replace("%player%", player.getName());
-                s.replace("\"", "");
-
-            return s;
+            String s2 = config.getString("prefix");
+            String newStringConverted = "";
+            //s2.replace("\"", "");
+            if(s.contains("%GUARD PREFIX%")) {
+                newStringConverted = s.replace("%GUARD PREFIX%", s2);
             }
+            if(s.contains("%player%")) {
+                newStringConverted = s.replace("%player%", player.getName());
+            }
+            // s.replace("\"", "");
+            return newStringConverted;
+            //}
 
-        }
+        } else
         if(configName.equalsIgnoreCase("checks")) {
             if(checks == null) {
                 reloadConfigs();
@@ -101,18 +139,39 @@ public class ConfigUtils {
             }
 
             String s = checks.getString(value);
-            if(s != null) {
+            //if(s != null) {
                 String s2 = config.getString("prefix");
-                s2.replace("\"", "");
-                s.replace("%GUARD PREFIX%", s2);
-                s.replace("%player%", player.getName());
-                s.replace("\"", "");
-                return s;
+                String newStringConverted = "";
+                //s2.replace("\"", "");
+            if(s.contains("%GUARD PREFIX%")) {
+                newStringConverted = s.replace("%GUARD PREFIX%", s2);
             }
+            if(s.contains("%player%")) {
+                newStringConverted = s.replace("%player%", player.getName());
+            }
+               // s.replace("\"", "");
+                return newStringConverted;
+            //}
+        } else {
+            String s = defaultValue;
+            String newStringConverted = "";
+            if(s.contains("%player%")) {
+                newStringConverted = s.replace("%player%", player.getName());
+            }
+            return newStringConverted;
         }
-        return "";
     }
-    public int getIntFromConfig(String configName, String value) {
+    public int getIntFromConfig(String configName, String value, int defaultValue) {
+        try {
+            if(configName.equalsIgnoreCase("config")) {
+                config.get(value);
+            }
+            if(configName.equalsIgnoreCase("checks")) {
+                checks.get(value);
+            }
+        }catch (NullPointerException e) {
+            return defaultValue;
+        }
         if(configName.equalsIgnoreCase("config")) {
             if (config == null) {
                 guard.reloadConfig();
@@ -126,9 +185,19 @@ public class ConfigUtils {
             }
             return checks.getInt(value);
         }
-        return 0;
+        return defaultValue;
     }
-    public double getDoubleFromConfig(String configName, String value) {
+    public double getDoubleFromConfig(String configName, String value, double defaultValue) {
+        try {
+            if(configName.equalsIgnoreCase("config")) {
+                config.get(value);
+            }
+            if(configName.equalsIgnoreCase("checks")) {
+                checks.get(value);
+            }
+        }catch (NullPointerException e) {
+            return defaultValue;
+        }
         if(configName.equalsIgnoreCase("config")) {
             if (config == null) {
                 guard.reloadConfig();
@@ -142,7 +211,7 @@ public class ConfigUtils {
             }
             return checks.getDouble(value);
         }
-        return 0;
+        return defaultValue;
     }
 
 

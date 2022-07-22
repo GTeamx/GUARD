@@ -1,10 +1,9 @@
 package guard.command;
 
 import guard.Guard;
-import guard.check.Check;
-import guard.data.Data;
-import guard.data.PlayerData;
-import io.github.retrooper.packetevents.PacketEvents;
+import guard.check.GuardCheck;
+import guard.data.GuardPlayer;
+import guard.data.GuardPlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,14 +26,14 @@ public class Command implements CommandExecutor {
                         //     PacketEvents.get().getInjector().injectPlayer(p);
                         // }
                         Guard.instance.configUtils.reloadConfigs();
-                        Data.data.clearDataBase();
+                        GuardPlayerManager.clearGuardPlayers();
                         return true;
                     } else if (strings[0].equalsIgnoreCase("alerts")) {
                         //Bukkit.broadcastMessage("§cReloading Guard");
 
-                        PlayerData data = Data.data.getUserData(sender);
-                        data.alertstoggled = !data.alertstoggled;
-                        if (data.alertstoggled) {
+                        GuardPlayer gp = GuardPlayerManager.getGuardPlayer(sender);
+                        gp.alertsToggled = !gp.alertsToggled;
+                        if (gp.alertsToggled) {
                             sender.sendMessage("§3§lGUARD §7»§f §fAlert output §aenabled§f!");
                         } else {
                             sender.sendMessage("§3§lGUARD §7»§f §fAlert output §cdisabled§f!");
@@ -45,12 +44,12 @@ public class Command implements CommandExecutor {
                     } else if (strings[0].equalsIgnoreCase("debug")) {
                         if(strings.length > 1) {
                             if(strings.length < 3) {
-                                PlayerData data = Data.data.getUserData(sender);
-                                for(Check c : data.checks) {
+                                GuardPlayer gp = GuardPlayerManager.getGuardPlayer(sender);
+                                for(GuardCheck c : gp.getCheckManager().checks) {
                                     String checkname = c.name.replace(" ", "");
                                     if (strings[1].equalsIgnoreCase(checkname)) {
-                                        c.isdebugging = !c.isdebugging;
-                                        if (c.isdebugging) {
+                                        c.isDebugging = !c.isDebugging;
+                                        if (c.isDebugging) {
                                             sender.sendMessage("§3§lGUARD §7»§f §fDebugging output §aenabled§f for §a" + c.name + "!");
                                         } else {
                                             sender.sendMessage("§3§lGUARD §7»§f §fDebugging output §cdisabled§f for §a" + c.name + "!");
@@ -60,17 +59,25 @@ public class Command implements CommandExecutor {
                             } else {
                                 Player target = Bukkit.getPlayer(strings[2]);
                                 if(target != null) {
-                                    PlayerData data = Data.data.getUserData(target);
-                                    for (Check c : data.checks) {
+                                    GuardPlayer gp = GuardPlayerManager.getGuardPlayer(sender);
+                                    for (GuardCheck c : gp.getCheckManager().checks) {
                                         String checkname = c.name.replace(" ", "");
                                         if (strings[1].equalsIgnoreCase(checkname)) {
-                                            c.isdebugging = !c.isdebugging;
-                                            if (c.isdebugging) {
-                                                c.debugtoplayers.add(sender);
-                                                sender.sendMessage("§3§lGuard §7»§f §fDebugging output §aenabled§f for §a" + c.name + "!");
+                                            if(c.debugToPlayers.isEmpty()) {
+                                                 if(!c.isDebugging) {
+                                                    c.isDebugging = true;
+
+                                                }
+                                                c.debugToPlayers.add(sender);
+                                                sender.sendMessage("§3§lGuard §7»§f §aEnabled§f §fdebugging " + c.name + "for §a" + target.getName() + "!");
                                             } else {
-                                                c.debugtoplayers.remove(sender);
-                                                sender.sendMessage("§3§lGuard §7»§f §fDebugging output §cdisabled§f for §a" + c.name + "!");
+                                                if(c.debugToPlayers.contains(sender)) {
+                                                    c.debugToPlayers.remove(sender);
+                                                    sender.sendMessage("§3§lGuard §7»§f §cDisabled§f §fdebugging " + c.name + "for §a" + target.getName() + "!");
+                                                }
+                                                if(c.debugToPlayers.isEmpty()) {
+                                                    c.isDebugging = false;
+                                                }
                                             }
                                         }
                                     }

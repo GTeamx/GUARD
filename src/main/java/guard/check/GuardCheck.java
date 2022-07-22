@@ -1,9 +1,9 @@
 package guard.check;
 
 import guard.Guard;
-import guard.api.events.GuardFlagEvent;
-import guard.data.PlayerData;
+import guard.data.GuardPlayer;
 import guard.exempt.ExemptType;
+import io.github.retrooper.packetevents.event.eventtypes.CancellableNMSPacketEvent;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.event.impl.PacketPlaySendEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
@@ -12,66 +12,63 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-public abstract class Check {
+public class GuardCheck {
 
     public String name;
     public boolean enabled;
-    public Category category;
+    public GuardCategory category;
+    public GuardCheckState state;
     private boolean sent = false;
     private long lastFlying;
-    private long lastotherPacket;
+    private long lastOtherPacket;
     public double buffer = 0;
     public double maxBuffer;
-    private double bufferpost;
+    private double bufferPost;
     public boolean bannable;
     public boolean kickable;
     public boolean silent;
     public double addBuffer;
     public double removeBuffer;
     public int punishVL;
-    public PlayerData data;
-    public boolean isdebugging;
-    public List<Player> debugtoplayers = new ArrayList<>();
+    public GuardPlayer gp;
+    public boolean isDebugging;
+    public List<Player> debugToPlayers = new ArrayList<>();
 
     public void onPacket(PacketPlayReceiveEvent packet) {
-        if(data == null) {
+        if(gp == null) {
             return;
         }
     }
 
     public void onPacketSend(PacketPlaySendEvent packet) {
-        if(data == null) {
+        if(gp == null) {
             return;
         }
     }
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastmotionX, double lastmotionY, double lastmotionZ, float deltaYaw, float deltaPitch, float lastdeltaYaw, float lastdeltaPitch) {
-        if(data == null) {
+        if(gp == null) {
             return;
         }
     }
 
-    public void fail(Object a, Object b) {
-        if(data != null) {
-            AtomicBoolean docancel = new AtomicBoolean(false);
-            Bukkit.getScheduler().runTask(Guard.instance, ()-> {
-                GuardFlagEvent event = new GuardFlagEvent(data.player, this);
-                Bukkit.getPluginManager().callEvent(event);
-                if(event.isCancelled()) docancel.set(true);
-            });
 
-            if(docancel.get()) return;
 
+    public void fail(CancellableNMSPacketEvent packetEvent, Object information, Object value) {
+        if(gp != null) {
 
             if(buffer < maxBuffer + 10 && addBuffer != 0) {
                 buffer += addBuffer;
             }
             if(buffer > maxBuffer || addBuffer == 0) {
-                //sendMessage("fail a=" + addBuffer + " b=" + buffer + " r=" + removeBuffer + " silent=" + silent + " kick=" + kickable + " ban=" + bannable);
-                data.flag(this, Guard.instance.configUtils.getIntFromConfig("checks", name + ".Punishments.punishVL") - 1, a, b, buffer, maxBuffer);
 
+                GuardCheckInfo info = this.getClass().getAnnotation(GuardCheckInfo.class);
+                //sendMessage("fail a=" + addBuffer + " b=" + buffer + " r=" + removeBuffer + " silent=" + silent + " kick=" + kickable + " ban=" + bannable);
+                gp.flag(this, Guard.instance.configUtils.getIntFromConfig("checks", name + ".Punishments.punishVL", info.punishVL()) - 1, information, value, buffer, maxBuffer, state);
+                if(!silent && packetEvent != null) {
+                    packetEvent.setCancelled(true);
+                }
             }
         }
     }
@@ -81,13 +78,13 @@ public abstract class Check {
     }
 
     public void debug(String message) {
-        if(isdebugging) {
-            if(debugtoplayers.size() == 0) {
+        if(isDebugging) {
+            if(debugToPlayers.size() == 0) {
                 sendMessage(message);
             } else {
-                for(Player p : debugtoplayers) {
+                for(Player p : debugToPlayers) {
                     //if(p.getName().equals(p.getName())) {
-                        p.sendMessage(message);
+                    p.sendMessage(message);
                     //}
                 }
             }
@@ -95,11 +92,11 @@ public abstract class Check {
     }
 
     public boolean isExempt(final ExemptType exemptType) {
-        return data.getExempt().isExempt(exemptType);
+        return gp.getExempt().isExempt(exemptType);
     }
 
     public boolean isExempt(ExemptType... type) {
-        return data.getExempt().isExempt(type);
+        return gp.getExempt().isExempt(type);
     }
 
     public void removeBuffer() {
@@ -116,8 +113,12 @@ public abstract class Check {
     }
 
     public void sendMessage(String Message) {
-        if(data != null) {
-            data.sendMessage(Message);
+        if(gp != null) {
+            if(gp.getPlayer() != null) {
+                Bukkit.getScheduler().runTask(Guard.instance, () -> {
+                    gp.getPlayer().sendMessage(Message);
+                });
+            }
         }
     }
 
@@ -125,17 +126,17 @@ public abstract class Check {
     public boolean isPost(byte type1, byte type2) {
         if (type1 == PacketType.Play.Client.POSITION || type1 == PacketType.Play.Client.POSITION_LOOK ||type1 == PacketType.Play.Client.LOOK) {
             final long now = System.currentTimeMillis();
-            final long delay = now - lastotherPacket;
+            final long delay = now - lastOtherPacket;
 
             if (sent) {
                 if (delay > 40L && delay < 100L) {
-                    bufferpost += 0.25;
+                    bufferPost += 0.25;
 
-                    if (bufferpost > 0.5) {
+                    if (bufferPost > 0.5) {
                         return true;
                     }
                 } else {
-                    bufferpost = Math.max(bufferpost - 0.025, 0);
+                    bufferPost = Math.max(bufferPost - 0.025, 0);
                 }
 
                 sent = false;
@@ -147,10 +148,10 @@ public abstract class Check {
             final long delay = now - lastFlying;
 
             if (delay < 10L) {
-                lastotherPacket = now;
+                lastOtherPacket = now;
                 sent = true;
             } else {
-                bufferpost = Math.max(bufferpost - 0.025, 0.0);
+                bufferPost = Math.max(bufferPost - 0.025, 0.0);
             }
         }
 

@@ -52,6 +52,15 @@ public class BoundingBox {
         this.maxZ = max.getZ();
     }
 
+    public BoundingBox(Block block) {
+        this.minX = io.github.retrooper.packetevents.utils.boundingbox.BoundingBox.of(block).getMinX();
+        this.minY = io.github.retrooper.packetevents.utils.boundingbox.BoundingBox.of(block).getMinY();
+        this.minZ = io.github.retrooper.packetevents.utils.boundingbox.BoundingBox.of(block).getMinZ();
+        this.maxX =io.github.retrooper.packetevents.utils.boundingbox.BoundingBox.of(block).getMaxX();
+        this.maxY = io.github.retrooper.packetevents.utils.boundingbox.BoundingBox.of(block).getMaxY();
+        this.maxZ = io.github.retrooper.packetevents.utils.boundingbox.BoundingBox.of(block).getMaxZ();
+    }
+
     public BoundingBox(final Player player) {
         this.minX = player.getLocation().getX() - 0.3D;
         this.minY = player.getLocation().getY();
@@ -178,6 +187,11 @@ public class BoundingBox {
             default:
                 return 0;
         }
+    }
+
+
+    public boolean isCollided(BoundingBox other) {
+        return other.maxX >= this.minX && other.minX <= this.maxX && other.maxY >= this.minY && other.minY <= this.maxY && other.maxZ >= this.minZ && other.minZ <= this.maxZ;
     }
 
 }

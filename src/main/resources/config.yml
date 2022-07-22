@@ -1,5 +1,6 @@
-prefix: "§3§lGuard §7»§f "
-silentChecks: true
-broadcastPunish: false
-broadcastMessage: "%GUARD PREFIX% §c%player% §fhas been removed for §cUnfair Advantage."
-testMode: false
+license: "" # Here goes the License key that you got from Purchasing Guard.
+prefix: "§3§lGuard §7»§f" # Guard Prefix
+silentChecks: true # If the Checks should be silent aka not set-backing the player
+broadcastPunish: false # If Guard should broadcast the Punish
+broadcastMessage: "%GUARD PREFIX% §c%player% §fhas been removed for §cUnfair Advantage." # Broadcast Punish Message
+testMode: false # Test mode for Test Servers

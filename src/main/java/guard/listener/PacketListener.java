@@ -1,11 +1,11 @@
 package guard.listener;
 
 import guard.Guard;
-import guard.api.check.GuardCheck;
-import guard.check.Check;
-import guard.data.Data;
-import guard.data.PlayerData;
+import guard.check.GuardCheck;
+import guard.data.GuardPlayer;
+import guard.data.GuardPlayerManager;
 import guard.utils.BoundingBox;
+import io.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.event.PacketListenerAbstract;
 import io.github.retrooper.packetevents.event.PacketListenerPriority;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
@@ -17,96 +17,90 @@ import io.github.retrooper.packetevents.packetwrappers.play.in.flying.WrappedPac
 import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
 import io.github.retrooper.packetevents.packetwrappers.play.out.entityvelocity.WrappedPacketOutEntityVelocity;
 import io.github.retrooper.packetevents.packetwrappers.play.out.position.WrappedPacketOutPosition;
+import io.github.retrooper.packetevents.utils.player.ClientVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.material.Stairs;
-import org.bukkit.material.Step;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
-import java.lang.reflect.Array;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.FutureTask;
 import java.util.function.Predicate;
 
 public class PacketListener extends PacketListenerAbstract {
     private final List<Block> blocks = new ArrayList<>();
-    private final ArrayDeque<Vector> teleports = new ArrayDeque<>();
-    private int tpBandaidFixTicks;
-    private int ticks;
+
     public PacketListener() {
         super(PacketListenerPriority.HIGH);
     }
 
-
     @Override
     public void onPacketPlayReceive(PacketPlayReceiveEvent event) {
         Player p = event.getPlayer();
-        Data.data.registerUser(p);
-        PlayerData data = Data.data.getUserData(p);
+        GuardPlayerManager.addGuardPlayer(p);
+        GuardPlayer gp = GuardPlayerManager.getGuardPlayer(p);
         NMSPacket packet = event.getNMSPacket();
 
         // Bukkit.broadcastMessage("s");
-        if(data != null) {
-            if (data.join++ > 50) {
-                if (event.getPacketId() == PacketType.Play.Client.KEEP_ALIVE) {
-                    data.ping = (int) (System.currentTimeMillis() - data.serverkeepalive);
+        if(gp != null) {
+            //if (data.join++ > 50) {
+            if (event.getPacketId() == PacketType.Play.Client.KEEP_ALIVE) {
+                gp.ping = (int) (System.currentTimeMillis() - gp.serverKeepAlive);
+            }
+            if (p.isDead()) {
+                gp.isDead = true;
+                gp.wasDead = System.currentTimeMillis();
+            } else {
+                if (gp.isDead) {
+                    gp.wasDead = System.currentTimeMillis();
                 }
-                if (p.isDead()) {
-                    data.isDead = true;
-                    data.wasDead = System.currentTimeMillis();
-                } else {
-                    if (data.isDead) {
-                        data.wasDead = System.currentTimeMillis();
-                    }
-                    data.isDead = false;
+                gp.isDead = false;
+            }
+
+
+            if (event.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
+                WrappedPacketInUseEntity ue = new WrappedPacketInUseEntity(packet);
+                gp.target = ue.getEntity();
+                gp.useAction = ue.getAction();
+            }
+            gp.predictionProcessor.handle(event);
+            for (GuardCheck c : gp.getCheckManager().checks) {
+                c.gp = gp;
+                c.onPacket(event);
+            }
+            if (event.getPacketId() == PacketType.Play.Client.BLOCK_DIG) {
+                WrappedPacketInBlockDig dig = new WrappedPacketInBlockDig(packet);
+                if (dig.getDigType().toString().contains("START_DESTROY_BLOCK")) {
+                    gp.sentStartDestroy = true;
                 }
-                data.lasthealth = p.getHealth();
-                data.lastFalldistance = p.getFallDistance();
-                if (event.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
-                    WrappedPacketInUseEntity ue = new WrappedPacketInUseEntity(packet);
-                    data.target = ue.getEntity();
-                    data.useAction = ue.getAction();
+                if (dig.getDigType().toString().contains("ABORT_DESTROY_BLOCK")) {
+                    gp.sentStartDestroy = false;
                 }
-                for (Check c : data.checks) {
-                    c.data = data;
-                if (c.data != null && data != null) {
-                        c.onPacket(event);
-                    }
-                }
-                if(!data.apichecks.isEmpty()) {
-                    for(GuardCheck c : data.apichecks) {
-                        c.data = data;
-                        if (c.data != null && data != null) {
-                            c.onPacket(event);
+                if (dig.getDigType().toString().contains("STOP_DESTROY_BLOCK")) {
+                    if (gp.sentStartDestroy) {
+                        if (dig.getDirection().toString().contains("UP")) {
+                            gp.brokeBlock = System.currentTimeMillis();
                         }
                     }
+                    gp.sentStartDestroy = false;
                 }
-                if (event.getPacketId() == PacketType.Play.Client.BLOCK_DIG) {
-                    WrappedPacketInBlockDig dig = new WrappedPacketInBlockDig(packet);
-                    if (dig.getDigType().toString().contains("START_DESTROY_BLOCK")) {
-                        data.sentstartdestroy = true;
-                    }
-                    if (dig.getDigType().toString().contains("ABORT_DESTROY_BLOCK")) {
-                        data.sentstartdestroy = false;
-                    }
-                    if (dig.getDigType().toString().contains("STOP_DESTROY_BLOCK")) {
-                        if (data.sentstartdestroy) {
-                            if (dig.getDirection().toString().contains("UP")) {
-                                data.brokeblock = System.currentTimeMillis();
-                            }
-                        }
-                        data.sentstartdestroy = false;
+            }
+            if (event.getPacketId() == PacketType.Play.Client.POSITION || event.getPacketId() == PacketType.Play.Client.POSITION_LOOK) {
+                WrappedPacketInFlying ps = new WrappedPacketInFlying(packet);
+                Location from = new Location(p.getWorld(), ps.getPosition().getX(), ps.getPosition().getY(), ps.getPosition().getZ());
+
+                if(gp.to != null) {
+                    if (PacketEvents.get().getPlayerUtils().getClientVersion(p).isNewerThanOrEquals(ClientVersion.v_1_17) && ps.isPosition() && ps.isLook() && sameLocation(gp, ps)) {
+                        gp.dontCheckNextFlying = true;
+
                     }
                 }
-                if (event.getPacketId() == PacketType.Play.Client.POSITION || event.getPacketId() == PacketType.Play.Client.POSITION_LOOK) {
-                    WrappedPacketInFlying ps = new WrappedPacketInFlying(packet);
-                    Location from = new Location(p.getWorld(), ps.getPosition().getX(), ps.getPosition().getY(), ps.getPosition().getZ());
+                if(!gp.dontCheckNextFlying) {
                     if (ps.isRotating()) {
                         from.setYaw(ps.getYaw());
                         from.setPitch(ps.getPitch());
@@ -114,72 +108,76 @@ public class PacketListener extends PacketListenerAbstract {
                         from.setYaw(p.getLocation().getYaw());
                         from.setPitch(p.getLocation().getPitch());
                     }
-                    if (teleports.size() > 0) {
-                        tpBandaidFixTicks = 2;
-                        data.isTeleporting = true;
+
+                    if (gp.teleports.size() > 0) {
+                        gp.tpBandaidFixTicks = 2;
+                        gp.isTeleporting = true;
                     }
 
-                    if (teleports.size() == 0) {
-                        if (--tpBandaidFixTicks < 0) {
-                            data.isTeleporting = false;
+                    if (gp.teleports.size() == 0) {
+                        if (--gp.tpBandaidFixTicks < 0) {
+                            gp.isTeleporting = false;
                         }
                     }
-                    if(data.isTeleporting) {
-                        ticks++;
+                    if (gp.isTeleporting) {
+                        gp.ticks++;
                     } else {
-                        ticks = 0;
+                        gp.ticks = 0;
                     }
-                    if(data.onSlime) {
-                        data.sinceSlimeTicks = 0;
+                    if (gp.onSlime) {
+                        gp.sinceSlimeTicks = 0;
                     } else {
-                        data.sinceSlimeTicks++;
+                        gp.sinceSlimeTicks++;
                     }
-                    data.lastplayerGround = data.playerGround;
-                    data.playerGround = ps.isOnGround();
-                    data.from = data.to;
-                    data.to = from;
-                    data.sfrom = data.sto;
-                    data.sto = from;
-                    data.domove();
-                    handleBlocks(data);
-                    if(data.player.isFlying()) {
-                        data.lastflyingtime = System.currentTimeMillis();
+                    gp.lastLastPlayerGround = gp.lastplayerGround;
+                    gp.lastplayerGround = gp.playerGround;
+                    gp.playerGround = ps.isOnGround();
+                    gp.from = gp.to;
+                    gp.to = from;
+                    gp.sFrom = gp.sTo;
+                    gp.sTo = from;
+                    gp.doMove();
+                    handleBlocks(gp);
+                    if (gp.getPlayer().isFlying()) {
+                        gp.lastFlyingTime = System.currentTimeMillis();
                     }
-                    if (teleports.size() > 150) {
-                        teleports.remove(0);
+                    if (gp.teleports.size() > 150) {
+                        gp.teleports.remove(0);
                     }
-                    if(ticks > 50) {
-                        teleports.clear();
+                    if (gp.ticks > 50) {
+                        gp.teleports.clear();
                     }
-                    for (Vector vector : teleports) {
-                        final double dx = Math.abs(from.getX() - vector.getX());
-                        final double dy = Math.abs(from.getY() - vector.getY());
-                        final double dz = Math.abs(from.getZ() - vector.getZ());
+                    if (!gp.inAnimation) {
+                        try {
+                            for (Vector vector : gp.teleports) {
+                                final double dx = Math.abs(from.getX() - vector.getX());
+                                final double dy = Math.abs(from.getY() - vector.getY());
+                                final double dz = Math.abs(from.getZ() - vector.getZ());
 
-                        if (dx == 0 && dy == 0 && dz == 0) {
-                            teleports.remove(vector);
-                        }
-                    }
-                    for (Check c : data.checks) {
-                        if (data != null) {
-                            c.data = data;
-                            if (c.data != null) {
-                                c.onMove(event, data.motionX, data.motionY, data.motionZ, data.lastmotionX, data.lastmotionY, data.lastmotionZ, data.deltaYaw, data.deltaPitch, data.lastdeltaYaw, data.lastdeltaPitch);
-                            }
-                        }
-                    }
-                    if(!data.apichecks.isEmpty()) {
-                        for(GuardCheck c : data.apichecks) {
-                            if (data != null) {
-                                c.data = data;
-                                if (c.data != null) {
-                                    c.onMove(event, data.motionX, data.motionY, data.motionZ, data.lastmotionX, data.lastmotionY, data.lastmotionZ, data.deltaYaw, data.deltaPitch, data.lastdeltaYaw, data.lastdeltaPitch);
+                                if (dx == 0 && dy == 0 && dz == 0) {
+                                    gp.teleports.remove(vector);
                                 }
                             }
+                        } catch (ConcurrentModificationException ignored) {
+
                         }
+                    } else {
+                        gp.teleports.clear();
+                        gp.isTeleporting = true;
+                    }
+
+
+                    for (GuardCheck c : gp.getCheckManager().checks) {
+                        c.gp = gp;
+                        c.onMove(event, gp.motionX, gp.motionY, gp.motionZ, gp.lastMotionX, gp.lastMotionY, gp.lastMotionZ, gp.deltaYaw, gp.deltaPitch, gp.lastDeltaYaw, gp.lastDeltaPitch);
                     }
                 }
+                gp.dontCheckNextFlying = false;
+                gp.lastHealth = p.getHealth();
+
+                // }
             }
+            gp.lastFallDistance = p.getFallDistance();
         }
     }
 
@@ -187,11 +185,12 @@ public class PacketListener extends PacketListenerAbstract {
     public void onPacketPlaySend(PacketPlaySendEvent event) {
         Player p = event.getPlayer();
         if(p != null) {
-            Data.data.registerUser(p);
-            PlayerData data = Data.data.getUserData(p);
-            if(data != null) {
+            GuardPlayerManager.addGuardPlayer(p);
+            GuardPlayer gp = GuardPlayerManager.getGuardPlayer(p);
+            if(gp != null) {
+
                 if(event.getPacketId() == PacketType.Play.Server.KEEP_ALIVE) {
-                    data.serverkeepalive = System.currentTimeMillis();
+                    gp.serverKeepAlive = System.currentTimeMillis();
                 }
                 if(event.getPacketId() == PacketType.Play.Server.POSITION) {
                     WrappedPacketOutPosition ps = new WrappedPacketOutPosition(event.getNMSPacket());
@@ -201,39 +200,24 @@ public class PacketListener extends PacketListenerAbstract {
                             ps.getPosition().getZ()
                     );
 
-                    teleports.add(teleportVector);
+                    gp.teleports.add(teleportVector);
                 }
                 if(event.getPacketId() == PacketType.Play.Server.ENTITY_VELOCITY) {
                     WrappedPacketOutEntityVelocity velo = new WrappedPacketOutEntityVelocity(event.getNMSPacket());
                     if(velo.getEntityId() == p.getEntityId())
-                        data.lastvelocity = System.currentTimeMillis();
+                        gp.lastVelocity = System.currentTimeMillis();
                 }
-                for (Check c : data.checks) {
-                    if(data != null) {
-                        c.data = data;
-                        if(c.data != null) {
-                            c.onPacketSend(event);
-                        }
-                    }
+                for (GuardCheck c : gp.getCheckManager().checks) {
+                    c.gp = gp;
+                    c.onPacketSend(event);
                 }
-                if(!data.apichecks.isEmpty()) {
-                    for(GuardCheck c : data.apichecks) {
-                        if(data != null) {
-                            c.data = data;
-                            if(c.data != null) {
-                                c.onPacketSend(event);
-                            }
-                        }
-                    }
-                }
-
             }
         }
     }
 
-    private void handleBlocks(PlayerData data) {
+    private void handleBlocks(GuardPlayer gp) {
         blocks.clear();
-        final BoundingBox boundingBox = new BoundingBox(data.getPlayer())
+        final BoundingBox boundingBox = new BoundingBox(gp.getPlayer())
                 .expandSpecific(0, 0, 0.55, 0.6, 0, 0);
 
         final double minX = boundingBox.getMinX();
@@ -242,43 +226,71 @@ public class PacketListener extends PacketListenerAbstract {
         final double maxX = boundingBox.getMaxX();
         final double maxY = boundingBox.getMaxY();
         final double maxZ = boundingBox.getMaxZ();
-
+        List<Block> b = new ArrayList<>();
         for (double x = minX; x <= maxX; x += (maxX - minX)) {
             for (double y = minY; y <= maxY + 0.01; y += (maxY - minY) / 5) { //Expand max by 0.01 to compensate shortly for precision issues due to FP.
                 for (double z = minZ; z <= maxZ; z += (maxZ - minZ)) {
-                    final Location location = new Location(data.getPlayer().getWorld(), x, y, z);
+                    final Location location = new Location(gp.getPlayer().getWorld(), x, y, z);
                     final Block block = this.getBlock(location);
                     blocks.add(block);
+                    b.add(block);
                 }
             }
         }
-        List<Block> b = blocks;
-        data.isInLiquid = b.stream().anyMatch(Block::isLiquid);
-        data.inweb = b.stream().anyMatch(block -> block.getType().toString().contains("WEB"));
-        data.inAir = b.stream().allMatch(block -> block.getType() == Material.AIR);
-        data.onIce = b.stream().anyMatch(block -> block.getType().toString().contains("ICE"));
-        data.onSolidGround = b.stream().anyMatch(block -> block.getType().isSolid());
-        data.isonSlab = b.stream().anyMatch(block -> block.getType().toString().contains("STEP") || block.getType().toString().contains("SLAB"));
-        data.isonStair = b.stream().anyMatch(block -> block.getType().toString().contains("STAIR"));
-        data.nearTrapdoor = this.isCollidingAtLocation(data,1.801, material -> material.toString().contains("TRAP_DOOR"));
-        data.blockabove = b.stream().filter(block -> block.getLocation().getY() - data.to.getY() > 1.5)
-                .anyMatch(block -> block.getType() != Material.AIR) || data.nearTrapdoor;
-        data.onSlime = b.stream().anyMatch(block -> block.getType().toString().equalsIgnoreCase("SLIME_BLOCK"));
-        data.nearPiston = b.stream().anyMatch(block -> block.getType().toString().contains("PISTON"));
-        final Location location = data.getPlayer().getLocation();
+
+        gp.isInLiquid = b.stream().anyMatch(Block::isLiquid);
+        gp.inWeb = b.stream().anyMatch(block -> block.getType().toString().contains("WEB"));
+        gp.inAir = b.stream().allMatch(block -> block.getType() == Material.AIR);
+        gp.onIce = b.stream().anyMatch(block -> block.getType().toString().contains("ICE"));
+        gp.onSolidGround = b.stream().anyMatch(block -> block.getType().isSolid());
+        gp.isOnSlab = b.stream().anyMatch(block -> block.getType().toString().contains("STEP") || block.getType().toString().contains("SLAB"));
+        gp.isOnStair = b.stream().anyMatch(block -> block.getType().toString().contains("STAIR"));
+        gp.nearTrapdoor = this.isCollidingAtLocation(gp,1.801, material -> material.toString().contains("TRAP_DOOR"));
+        gp.blockAbove = b.stream().filter(block -> block.getLocation().getY() - gp.to.getY() > 1.5)
+                .anyMatch(block -> block.getType() != Material.AIR) || gp.nearTrapdoor;
+        gp.onSlime = b.stream().anyMatch(block -> block.getType().toString().equalsIgnoreCase("SLIME_BLOCK"));
+        gp.nearPiston = b.stream().anyMatch(block -> block.getType().toString().contains("PISTON"));
+        final Location location = gp.getPlayer().getLocation();
         final int var1 = NumberConversions.floor(location.getX());
         final int var2 = NumberConversions.floor(location.getY());
         final int var3 = NumberConversions.floor(location.getZ());
         final Block var4 = this.getBlock(new Location(location.getWorld(), var1, var2, var3));
-        data.onClimbable = var4.getType() == Material.LADDER || var4.getType() == Material.VINE;
+
+        BoundingBox box = new BoundingBox(var4);
+        final BoundingBox bb = new BoundingBox(gp.getPlayer())
+                .expandSpecific(0.2, 0.2, 0, 0, 0.2, 0.2);
+        box.expand(Math.abs(gp.motionX) + 0.14, 0,
+                Math.abs(gp.motionZ) + 0.14);
+        final double mx = bb.getMinX();
+        final double my = bb.getMinY();
+        final double mz = bb.getMinZ();
+        final double max = bb.getMaxX();
+        final double may = bb.getMaxY();
+        final double maz = bb.getMaxZ();
+        List<Block> b2 = new ArrayList<>();
+        for (double x = mx; x <= max; x += (max - mx)) {
+            for (double y = my; y <= may + 0.01; y += (may - my) / 5) { //Expand max by 0.01 to compensate shortly for precision issues due to FP.
+                for (double z = mz; z <= maz; z += (maz - mz)) {
+                    final Location loc = new Location(gp.getPlayer().getWorld(), x, y, z);
+                    final Block block = this.getBlock(loc);
+                    b2.add(block);
+                }
+            }
+        }
+        if (!b2.stream().allMatch(block -> block.getType().toString().contains("AIR")))
+            gp.collidesHorizontally = true;
+        else
+            gp.collidesHorizontally = false;
+        //data.sendMessage("" + data.collidesHorizontally + " " + var4.getType() + " " + data.isonStair);
+        gp.onClimbable = var4.getType() == Material.LADDER || var4.getType() == Material.VINE;
     }
 
-    public boolean isCollidingAtLocation(PlayerData data,double drop, Predicate<Material> predicate) {
+    public boolean isCollidingAtLocation(GuardPlayer gp,double drop, Predicate<Material> predicate) {
         final ArrayList<Material> materials = new ArrayList<>();
 
         for (double x = -0.3; x <= 0.3; x += 0.3) {
             for (double z = -0.3; z <= 0.3; z+= 0.3) {
-                final Material material = getBlock(data.getPlayer().getLocation().clone().add(x, drop, z)).getType();
+                final Material material = getBlock(gp.getPlayer().getLocation().clone().add(x, drop, z)).getType();
                 if (material != null) {
                     materials.add(material);
                 }
@@ -305,6 +317,10 @@ public class PacketListener extends PacketListenerAbstract {
             }
             return null;
         }
+    }
+
+    public boolean sameLocation(GuardPlayer gp, WrappedPacketInFlying flying) {
+        return gp.to.getX() == flying.getPosition().getX() && gp.to.getY() == flying.getPosition().getY() && gp.to.getZ() == flying.getPosition().getZ();
     }
 
 }

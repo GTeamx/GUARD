@@ -1,30 +1,18 @@
 package guard.check.checks.movement.invalid;
 
-import guard.check.Category;
-import guard.check.Check;
-import guard.check.CheckInfo;
-import guard.exempt.ExemptType;
+import guard.check.GuardCategory;
+import guard.check.GuardCheck;
+import guard.check.GuardCheckInfo;
+import guard.check.GuardCheckState;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@CheckInfo(name = "Invalid A", category = Category.MOVEMENT)
-public class InvalidA extends Check {
+@GuardCheckInfo(name = "Invalid A", category = GuardCategory.Movement, state = GuardCheckState.Coding, addBuffer = 1, removeBuffer = 1, maxBuffer = 2)
+public class InvalidA extends GuardCheck {
 
-    int InvalidA;
-    double MaxSpeed;
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastmotionX, double lastmotionY, double lastmotionZ, float deltaYaw, float deltaPitch, float lastdeltaYaw, float lastdeltaPitch) {
-        boolean exempt = isExempt(ExemptType.TELEPORT, ExemptType.JOINED, ExemptType.FLYING, ExemptType.INSIDE_VEHICLE);
-        if(data.playerGround) InvalidA++;
-        if(!data.playerGround) InvalidA = 0;
-        if(InvalidA >= 8) MaxSpeed = 0.28804;
-        if(InvalidA < 8) MaxSpeed = 0.6121838;
-        if(isExempt(ExemptType.VELOCITY)) {
-            InvalidA += data.kblevel;
-            InvalidA += 0.45;
-        }
-        if(data.lastice <= 1200) InvalidA += 0.25;
-        if(data.getDeltaXZ() >= MaxSpeed && !exempt) fail("Impossible Teleport", "cs=" + data.getDeltaXZ() + " ms=" + MaxSpeed);
+        double values[] = gp.predictionProcessor.predictUrAssOff();
 
+        if(gp.getDeltaXZ() > values[0] && values[1] > 0.0000022 && gp.getDeltaXZ() > 0) fail(packet, "Did not follow Minecrafts Movements", values[1]); else removeBuffer();
     }
 }
-
