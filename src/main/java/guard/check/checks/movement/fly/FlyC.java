@@ -7,7 +7,7 @@ import guard.check.GuardCheckState;
 import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "Fly C", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 4)
+@GuardCheckInfo(name = "Fly C", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 3)
 public class FlyC extends GuardCheck {
     double motionPrediction = -999999999;
 
