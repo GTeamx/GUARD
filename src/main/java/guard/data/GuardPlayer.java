@@ -35,7 +35,7 @@ public class GuardPlayer {
     public Player player;
     public UUID uuid;
     public boolean alertsToggled;
-    private HashMap<String, HashMap<String, Integer>> flags = new HashMap<String, HashMap<String, Integer>>();
+    private HashMap<String, HashMap<String, Integer>> flags = new HashMap<>();
     public Exempt exempt = new Exempt(this);
     public GuardCheckManager checkManager = new GuardCheckManager();
     public long serverKeepAlive;
@@ -199,6 +199,18 @@ public class GuardPlayer {
             if (player.getInventory().getBoots() != null) {
                 return player.getInventory().getBoots().getEnchantmentLevel(Enchantment.DEPTH_STRIDER);
             }
+        }
+        return 0;
+    }
+
+    public double getDistance(boolean y) {
+        if (sFrom != null) {
+            if (y) {
+                Location newLocation = sTo.clone();
+                newLocation.setY(sFrom.clone().getY());
+                return newLocation.distance(sFrom.clone());
+            }
+            return sTo.clone().distance(sFrom.clone());
         }
         return 0;
     }
