@@ -96,11 +96,11 @@ public class PacketListener extends PacketListenerAbstract {
 
                 if(gp.to != null) {
                     if (PacketEvents.get().getPlayerUtils().getClientVersion(p).isNewerThanOrEquals(ClientVersion.v_1_17) && ps.isPosition() && ps.isLook() && sameLocation(gp, ps)) {
-                        gp.dontCheckNextFlying = true;
+                        gp.noCheckNextFlying = true;
 
                     }
                 }
-                if(!gp.dontCheckNextFlying) {
+                if(!gp.noCheckNextFlying) {
                     if (ps.isRotating()) {
                         from.setYaw(ps.getYaw());
                         from.setPitch(ps.getPitch());
@@ -110,12 +110,12 @@ public class PacketListener extends PacketListenerAbstract {
                     }
 
                     if (gp.teleports.size() > 0) {
-                        gp.tpBandaidFixTicks = 2;
+                        gp.teleportTickFix = 2;
                         gp.isTeleporting = true;
                     }
 
                     if (gp.teleports.size() == 0) {
-                        if (--gp.tpBandaidFixTicks < 0) {
+                        if (--gp.teleportTickFix < 0) {
                             gp.isTeleporting = false;
                         }
                     }
@@ -129,8 +129,8 @@ public class PacketListener extends PacketListenerAbstract {
                     } else {
                         gp.sinceSlimeTicks++;
                     }
-                    gp.lastLastPlayerGround = gp.lastplayerGround;
-                    gp.lastplayerGround = gp.playerGround;
+                    gp.lastLastPlayerGround = gp.lastPlayerGround;
+                    gp.lastPlayerGround = gp.playerGround;
                     gp.playerGround = ps.isOnGround();
                     gp.from = gp.to;
                     gp.to = from;
@@ -172,7 +172,7 @@ public class PacketListener extends PacketListenerAbstract {
                         c.onMove(event, gp.motionX, gp.motionY, gp.motionZ, gp.lastMotionX, gp.lastMotionY, gp.lastMotionZ, gp.deltaYaw, gp.deltaPitch, gp.lastDeltaYaw, gp.lastDeltaPitch);
                     }
                 }
-                gp.dontCheckNextFlying = false;
+                gp.noCheckNextFlying = false;
                 gp.lastHealth = p.getHealth();
 
                 // }

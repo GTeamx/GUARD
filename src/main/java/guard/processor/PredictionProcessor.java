@@ -1,4 +1,4 @@
-package guard.check;
+package guard.processor;
 
 import guard.Guard;
 import guard.data.GuardPlayer;

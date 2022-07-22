@@ -3,7 +3,7 @@ package guard.data;
 import guard.Guard;
 import guard.check.GuardCheck;
 import guard.check.GuardCheckManager;
-import guard.check.PredictionProcessor;
+import guard.processor.PredictionProcessor;
 import guard.exempt.Exempt;
 import io.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
@@ -51,7 +51,7 @@ public class GuardPlayer {
     public long weirdTeleport;
     public Block brokenBlock;
     public long lastBlockPlaced;
-    public boolean lastplayerGround;
+    public boolean lastPlayerGround;
     public boolean lastLastPlayerGround;
     public double motionX;
     public double motionY;
@@ -100,12 +100,13 @@ public class GuardPlayer {
     public Block blockPlaced;
     public boolean nearBoat;
     public long lastNearBoat;
-    public int tpBandaidFixTicks;
+    public int teleportTickFix;
     public int ticks;
-    public boolean dontCheckNextFlying;
-    public boolean lastDontCheckNextFlying;
-    public boolean lastLastDontCheckNextFlying;
+    public boolean noCheckNextFlying;
+    public boolean lastNoCheckNextFlying;
+    public boolean lastLastNoCheckNextFlying;
     public double pMotionX;
+    public double lastGlide;
     public double pMotionZ;
     public PredictionProcessor predictionProcessor = new PredictionProcessor(this);
 
@@ -122,9 +123,9 @@ public class GuardPlayer {
         flags.put(player.getName(), inner);
     }
 
-    public int getFlags(String plname, String type) {
-        if (flags.get(plname) == null) return 0;
-        return flags.get(plname).getOrDefault(type, 0);
+    public int getFlags(String pluginName, String type) {
+        if (flags.get(pluginName) == null) return 0;
+        return flags.get(pluginName).getOrDefault(type, 0);
     }
 
     public void flag(GuardCheck check, int threshold, Object... debug) {
@@ -218,6 +219,8 @@ public class GuardPlayer {
         motionY = to.getY() - from.getY();
         motionZ = to.getZ() - from.getZ();
 
+        if(player != null) { if(player.isGliding()) { lastGlide = System.currentTimeMillis(); } }
+
     }
     public float yawTo180F(float flub) {
         if ((flub %= 360.0f) >= 180.0f) {
@@ -228,8 +231,8 @@ public class GuardPlayer {
         }
         return flub;
     }
-    public void resetFlags(String plname) {
-        flags.put(plname, new HashMap<String, Integer>());
+    public void resetFlags(String pluginName) {
+        flags.put(pluginName, new HashMap<String, Integer>());
     }
 
     public double getDeltaXZSqrt() {
