@@ -11,8 +11,7 @@ import io.github.retrooper.packetevents.packettype.PacketType;
 public class BadPacketB extends GuardCheck {
 
     public void onPacket(PacketPlayReceiveEvent packet) {
-        boolean isPost = isPost(packet.getPacketId(), PacketType.Play.Client.BLOCK_DIG);
-        if (isPost) fail(packet, "Post packet", "BLOCK_DIG");
+        if (isPost(packet.getPacketId(), PacketType.Play.Client.BLOCK_DIG)) fail(packet, "Post packet", "BLOCK_DIG");
     }
 
 }
