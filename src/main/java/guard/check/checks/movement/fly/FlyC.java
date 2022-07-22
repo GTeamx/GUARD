@@ -7,7 +7,7 @@ import guard.check.GuardCheckState;
 import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "Fly C", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 3)
+@GuardCheckInfo(name = "Fly C", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0, maxBuffer = 3)
 public class FlyC extends GuardCheck {
     double motionPrediction = -999999999;
 
@@ -15,7 +15,7 @@ public class FlyC extends GuardCheck {
         boolean exempt = isExempt(ExemptType.SLIME, ExemptType.SLAB, ExemptType.STAIRS, ExemptType.LIQUID, ExemptType.GLIDE, ExemptType.FLYING, ExemptType.NEAR_VEHICLE, ExemptType.INSIDE_VEHICLE, ExemptType.CLIMBABLE);
         motionPrediction = (lastMotionY - 0.08) * 0.9800000190734863;
         if(gp.isInAir() && !exempt && (lastMotionY  - motionPrediction > 0.0000000000001)) fail(packet, "Predictions unfollowed", "lmy=" + lastMotionY + " py=" + motionPrediction + " result=" + (lastMotionY    - motionPrediction));
-        if(!gp.isInAir()) buffer = 0;
+        if(!gp.isInAir()) removeBuffer();
     }
 
 }
