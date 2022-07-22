@@ -10,13 +10,13 @@ import io.github.retrooper.packetevents.packetwrappers.play.in.keepalive.Wrapped
 
 @GuardCheckInfo(name = "BadPacket I", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class BadPacketI extends GuardCheck {
-    private long lastId = -1;
+    long lastId = -1;
 
     public void onPacket(PacketPlayReceiveEvent packet) {
         if (packet.getPacketId() == PacketType.Play.Client.KEEP_ALIVE) {
             WrappedPacketInKeepAlive p = new WrappedPacketInKeepAlive(packet.getNMSPacket());
             if (p.getId() == lastId) {
-                fail(packet, "Impossible packet", "KEEP_ALIVE");
+                fail(null, "Impossible packet", "KEEP_ALIVE");
             }
             lastId = p.getId();
         }

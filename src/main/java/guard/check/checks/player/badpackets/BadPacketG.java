@@ -11,7 +11,7 @@ import io.github.retrooper.packetevents.packetwrappers.play.in.helditemslot.Wrap
 @GuardCheckInfo(name = "BadPacket G", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class BadPacketG extends GuardCheck {
 
-    private int lastSlot = -1;
+    int lastSlot = -1;
 
     public void onPacket(PacketPlayReceiveEvent packet) {
         if (packet.getPacketId() == PacketType.Play.Client.HELD_ITEM_SLOT) {

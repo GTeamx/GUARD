@@ -9,7 +9,7 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.event.impl.PacketPlaySendEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 
-@GuardCheckInfo(name = "Timer B", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.13, maxBuffer = 1)
+@GuardCheckInfo(name = "Timer B", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.14, maxBuffer = 1)
 public class TimerB extends GuardCheck {
 
     double bal;
@@ -19,7 +19,7 @@ public class TimerB extends GuardCheck {
     boolean wasFirst;
     SampleList<Long> balls = new SampleList<>(3);
 
-    public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastmotionX, double lastmotionY, double lastmotionZ, float deltaYaw, float deltaPitch, float lastdeltaYaw, float lastdeltaPitch) {
+    public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
         //if(packet.getPacketId() == PacketType.Play.Client.POSITION || packet.getPacketId() == PacketType.Play.Client.POSITION_LOOK || packet.getPacketId() == PacketType.Play.Client.LOOK || packet.getPacketId() == PacketType.Play.Client.FLYING) {
         long now = System.currentTimeMillis();
         long rate = (System.currentTimeMillis() - lastMS);
@@ -37,7 +37,7 @@ public class TimerB extends GuardCheck {
         if(bal > 10) {
             bal = 2;
         }
-        if(bal < -3) {
+        if(bal < -5) {
             balls.add(50 - rate);
             if(balls.isCollected()) {
                 if(balls.getAverageLong(balls) < 0) {

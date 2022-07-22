@@ -11,11 +11,8 @@ import io.github.retrooper.packetevents.packettype.PacketType;
 public class BadPacketF extends GuardCheck {
 
     public void onPacket(PacketPlayReceiveEvent packet) {
-        if (packet.getPacketId() == PacketType.Play.Client.WINDOW_CLICK) {
-            boolean isPost = isPost(packet.getPacketId(), (byte) -100);
-            if (isPost) fail(packet, "Post packet", "WINDOW_CLICK");
-            if (isPost) packet.setCancelled(true);
-        }
+        boolean isPost = isPost(packet.getPacketId(), PacketType.Play.Client.WINDOW_CLICK);
+        if (isPost) fail(packet, "Post packet", "WINDOW_CLICK");
     }
 
 }
