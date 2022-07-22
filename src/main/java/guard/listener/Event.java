@@ -24,8 +24,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import java.util.ConcurrentModificationException;
-
 public class Event implements Listener {
 
 

@@ -1,10 +1,10 @@
 package guard.check;
 
 import guard.Guard;
+import guard.check.checks.movement.fly.FlyA;
 import guard.check.checks.movement.fly.FlyB;
 import guard.check.checks.movement.fly.FlyC;
 import guard.check.checks.movement.invalid.InvalidA;
-import guard.check.checks.movement.fly.FlyA;
 import guard.check.checks.player.badpackets.*;
 import guard.check.checks.player.badpackets.post.*;
 import guard.check.checks.player.timer.TimerA;
