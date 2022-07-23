@@ -1,11 +1,12 @@
 package guard.check;
 
 import guard.Guard;
+import guard.check.checks.combat.killaura.KillAuraA;
 import guard.check.checks.movement.fastclimb.FastClimbA;
 import guard.check.checks.movement.fly.*;
 import guard.check.checks.movement.ground.GroundA;
-import guard.check.checks.movement.speed.*;
 import guard.check.checks.movement.jump.JumpA;
+import guard.check.checks.movement.speed.*;
 import guard.check.checks.movement.step.StepA;
 import guard.check.checks.movement.step.StepB;
 import guard.check.checks.movement.step.StepC;
@@ -63,6 +64,9 @@ public class GuardCheckManager {
         registerCheck(new BadPacketM());
         registerCheck(new BadPacketN());
         registerCheck(new BadPacketO());
+        registerCheck(new BadPacketP());
+
+        registerCheck(new KillAuraA());
     }
 
     public void registerCheck(GuardCheck check) {

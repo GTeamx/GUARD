@@ -5,7 +5,6 @@ import guard.data.GuardPlayerManager;
 import guard.license.Auth;
 import guard.listener.Event;
 import guard.listener.PacketListener;
-import guard.runnable.RunnableAuth;
 import guard.utils.ConfigUtils;
 import io.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.settings.PacketEventsSettings;

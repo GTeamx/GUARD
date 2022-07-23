@@ -97,6 +97,7 @@ public class GuardPlayer {
     public boolean isTeleporting;
     public boolean onClimbable;
     public long entityHit;
+    public double lastAttack;
     public long lastHurt;
     public long lastHurtOther;
     public boolean validVelocityHit;
