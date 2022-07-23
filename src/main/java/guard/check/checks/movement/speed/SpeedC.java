@@ -59,7 +59,7 @@ public class SpeedC extends GuardCheck {
             }
         }
 
-        // SOULSAND | Ground
+        // SOUL SAND | Ground
         // TODO: Support soul sand + soul speed enchantment
 
         // SPEED | Ground - Air
@@ -73,7 +73,7 @@ public class SpeedC extends GuardCheck {
         }
 
         // WATER | Ground - Air
-        if(gp.isInLiquid) {
+        if(gp.isInLiquid && !gp.playerGround) {
             // TODO: Add support for tridents and their enchantments
             maxSpeed = 0.21;
             if(gp.getDepthStriderLevel() > 0) {
