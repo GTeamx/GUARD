@@ -12,10 +12,9 @@ public class FlyD extends GuardCheck {
     double motionPrediction = -999999999;
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
-        double predictedMotionY = (lastMotionY - 0.08D) * (double)0.98F;
-        double diff = Math.abs(predictedMotionY - motionY);
-        if(diff > 0.0000000000004 && gp.isInAir() && motionY < 0 && motionY != (((-0 - 0.08D) * (double)0.98F)) && motionY != -0.07840000152587834 && !gp.playerGround) {
-            fail(packet, "Predictions unfollowed", "move=" + motionY + " predicted=" + predictedMotionY);
-        }else removeBuffer();
+        boolean exempt = isExempt(ExemptType.SLIME, ExemptType.SLAB, ExemptType.STAIRS, ExemptType.LIQUID, ExemptType.GLIDE, ExemptType.FLYING, ExemptType.NEAR_VEHICLE, ExemptType.INSIDE_VEHICLE, ExemptType.CLIMBABLE);
+        motionPrediction = (lastMotionY - 0.08) * 0.9800000190734863;
+        if(gp.isInAir() && !gp.playerGround && !gp.onSolidGround && gp.inAir && !exempt && (motionY  - motionPrediction > 0.5)) fail(packet, "Predictions unfollowed", "lmy=" + motionY + " py=" + motionPrediction + " result=" + (motionY - motionPrediction));
+        if(gp.isInAir() && !gp.playerGround && !gp.onSolidGround && gp.inAir && !exempt && motionY < 0.05 && motionY > 0) fail(packet, "Predictions unfollowed", "lmy=" + motionY + " py=" + motionPrediction + " result=" + (motionY    - motionPrediction));
     }
 }
