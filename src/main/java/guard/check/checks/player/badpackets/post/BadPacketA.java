@@ -6,7 +6,6 @@ import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
-import io.github.retrooper.packetevents.packetwrappers.play.in.armanimation.WrappedPacketInArmAnimation;
 
 @GuardCheckInfo(name = "BadPacket A", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class BadPacketA extends GuardCheck {
