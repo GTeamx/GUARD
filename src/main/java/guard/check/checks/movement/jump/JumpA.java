@@ -17,10 +17,6 @@ public class JumpA extends GuardCheck {
         boolean jumped = motionY > 0 && gp.from.getY() % (1D/64) == 0 && !gp.playerGround && !step;
         double expectedJumpMotion = 0.42F + (double)(gp.hasPotionEffect(PotionEffectType.JUMP) ? (gp.getEffectByType(PotionEffectType.JUMP).get().getAmplifier() + 1) * 0.1F : 0);
         boolean exempt = isExempt(ExemptType.INSIDE_VEHICLE, ExemptType.VELOCITY, ExemptType.CLIMBABLE, ExemptType.FLYING, ExemptType.SLIME, ExemptType.BLOCK_ABOVE, ExemptType.PISTON, ExemptType.LIQUID, ExemptType.NEAR_VEHICLE, ExemptType.TELEPORT, ExemptType.WEB, ExemptType.TRAPDOOR);
-        if (jumped && !exempt) {
-            if (motionY < expectedJumpMotion) {
-                fail(packet, "Jump was lower than expected", "y=" + motionY + " expected=" + expectedJumpMotion);
-            }
-        }
+        if (jumped && !exempt && motionY < expectedJumpMotion) fail(packet, "Jump was lower than expected", "y=" + motionY + " expected=" + expectedJumpMotion);
     }
 }
