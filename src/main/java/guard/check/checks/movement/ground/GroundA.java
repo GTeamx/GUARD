@@ -14,7 +14,7 @@ public class GroundA extends GuardCheck {
         boolean exempt = isExempt(ExemptType.NEAR_VEHICLE, ExemptType.SLIME, ExemptType.TELEPORT, ExemptType.CLIMBABLE, ExemptType.JOINED, ExemptType.STAIRS);
         boolean mathGround = gp.to.getY() % 0.015625 == 0.0;
         debug("s=" + mathGround + " c=" + gp.playerGround);
-        if(!exempt && mathGround != gp.playerGround) fail(packet, "Spoofed onGround Value", "s=" + mathGround + " c=" + gp.playerGround);
+        if(!exempt && mathGround != gp.playerGround) fail(packet, "Spoofed ground state", "s=" + mathGround + " c=" + gp.playerGround);
         else removeBuffer();
     }
 }
