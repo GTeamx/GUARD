@@ -71,6 +71,7 @@ public class GuardPlayer {
     public boolean isInLiquid;
     public boolean isOnSlab;
     public boolean blockAbove;
+    public double lastBlockAbove;
     public boolean isDead;
     public long lastVelocity;
     public int ping;
@@ -81,7 +82,11 @@ public class GuardPlayer {
     public long brokeBlock;
     public boolean inWeb;
     public boolean onIce;
+    public double lastIce;
     public boolean onSlime;
+    public double lastSlime;
+    public boolean onLowBlock;
+    public double lastLowBlock;
     public boolean collidesHorizontally;
     public Entity target;
     public WrappedPacketInUseEntity.EntityUseAction useAction;
@@ -153,19 +158,19 @@ public class GuardPlayer {
                 }
                 buf += obj.toString() + ", ";
             }
-            final String text = "§7Check: §3" + check.name + " \n§7Information: §3" + Info + " \n§7Value: §3" + Value + " \n§7Buffer: §3" + Buffer + "§7/" + maxBuffer  + " \n§7State: §3" + state;
-            final String prefix = Guard.instance.configUtils.getStringFromConfig("config", "prefix","§3§lGuard §7»§f");
+            final String text = "§7Check: §9" + check.name + " \n§7Information: §9" + Info + " \n§7Value: §9" + Value + " \n§7Buffer: §9" + Buffer + "§7/" + maxBuffer  + " \n§7State: §9" + state;
+            final String prefix = Guard.instance.configUtils.getStringFromConfig("config", "prefix","§9§lGUARD §7»§f");
             for (Player p : Bukkit.getOnlinePlayers()) {
                 boolean d = Guard.instance.configUtils.getBooleanFromConfig("config", "testMode", false);
                 GuardPlayer gp = GuardPlayerManager.getGuardPlayer(p);
                 if ((gp.alertsToggled && !d) || (d && !p.getName().equals(player.getName()))) { // TODO: /alerts command test later && (!d && !player.getName().equals(p.getName()))
-                    TextComponent Flag = new TextComponent(prefix + " " + player.getName() + " §7failed §f" + check.name + " §7(§3x" + getFlags(player.getName(), check.name) + "§7)");
+                    TextComponent Flag = new TextComponent(prefix + " " + player.getName() + " §7failed §f" + check.name + " §7(§9x" + getFlags(player.getName(), check.name) + "§7)");
                     Flag.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder(text).create()));
                     p.spigot().sendMessage(Flag);
                 }
             }
             if(Guard.instance.configUtils.getBooleanFromConfig("config", "testMode", false)) {
-                TextComponent Flag = new TextComponent(prefix + " " + player.getName() + " §7failed §f" + check.name + " §7(§3x" + getFlags(player.getName(), check.name) + "§7)");
+                TextComponent Flag = new TextComponent(prefix + " " + player.getName() + " §7failed §f" + check.name + " §7(§9x" + getFlags(player.getName(), check.name) + "§7)");
                 Flag.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(text).create()));
                 player.spigot().sendMessage(Flag);
             }
@@ -192,6 +197,15 @@ public class GuardPlayer {
                 return Optional.of(potionEffect);
         }
         return Optional.empty();
+    }
+
+    public int getPotionEffectAmplifier(PotionEffectType type) {
+        for (PotionEffect effect : player.getActivePotionEffects()) {
+            if (effect.getType() == type) {
+                return (effect.getAmplifier() + 1);
+            }
+        }
+        return 0;
     }
 
     public int getDepthStriderLevel() {

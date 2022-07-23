@@ -1,18 +1,18 @@
 package guard.check;
 
 import guard.Guard;
-import guard.check.checks.movement.fly.FlyA;
-import guard.check.checks.movement.fly.FlyB;
-import guard.check.checks.movement.fly.FlyC;
-import guard.check.checks.movement.fly.FlyD;
+import guard.check.checks.movement.fastclimb.FastClimbA;
+import guard.check.checks.movement.fly.*;
 import guard.check.checks.movement.ground.GroundA;
-import guard.check.checks.movement.invalid.InvalidA;
+import guard.check.checks.movement.speed.*;
 import guard.check.checks.movement.jump.JumpA;
+import guard.check.checks.movement.step.StepA;
+import guard.check.checks.movement.step.StepB;
+import guard.check.checks.movement.step.StepC;
 import guard.check.checks.player.badpackets.*;
 import guard.check.checks.player.badpackets.post.*;
 import guard.check.checks.player.timer.TimerA;
 import guard.check.checks.player.timer.TimerB;
-import io.github.retrooper.packetevents.PacketEvents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +26,24 @@ public class GuardCheckManager {
         registerCheck(new FlyB());
         registerCheck(new FlyC());
         registerCheck(new FlyD());
+        registerCheck(new FlyE());
+        registerCheck(new FlyF());
 
         registerCheck(new JumpA());
 
         registerCheck(new GroundA());
 
-        registerCheck(new InvalidA());
+        registerCheck(new FastClimbA());
+
+        registerCheck(new SpeedA());
+        registerCheck(new SpeedB());
+        registerCheck(new SpeedC());
+        registerCheck(new SpeedD());
+        registerCheck(new SpeedE());
+
+        registerCheck(new StepA());
+        registerCheck(new StepB());
+        registerCheck(new StepC());
 
         registerCheck(new TimerA());
         registerCheck(new TimerB());

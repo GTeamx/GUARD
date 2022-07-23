@@ -207,7 +207,7 @@ public class PacketListener extends PacketListenerAbstract {
                 if(event.getPacketId() == PacketType.Play.Server.ENTITY_VELOCITY) {
                     WrappedPacketOutEntityVelocity velo = new WrappedPacketOutEntityVelocity(event.getNMSPacket());
                     if(velo.getEntityId() == p.getEntityId())
-                        gp.lastVelocity = System.currentTimeMillis();
+                            gp.lastVelocity = System.currentTimeMillis();
                 }
                 for (GuardCheck c : gp.getCheckManager().checks) {
                     c.gp = gp;
@@ -244,14 +244,19 @@ public class PacketListener extends PacketListenerAbstract {
         gp.inWeb = b.stream().anyMatch(block -> block.getType().toString().contains("WEB"));
         gp.inAir = b.stream().allMatch(block -> block.getType() == Material.AIR);
         gp.onIce = b.stream().anyMatch(block -> block.getType().toString().contains("ICE"));
+        if(gp.onIce) gp.lastIce = System.currentTimeMillis();
         gp.onSolidGround = b.stream().anyMatch(block -> block.getType().isSolid());
         gp.isOnSlab = b.stream().anyMatch(block -> block.getType().toString().contains("STEP") || block.getType().toString().contains("SLAB"));
         gp.isOnStair = b.stream().anyMatch(block -> block.getType().toString().contains("STAIR"));
         gp.nearTrapdoor = this.isCollidingAtLocation(gp,1.801, material -> material.toString().contains("TRAP_DOOR"));
         gp.blockAbove = b.stream().filter(block -> block.getLocation().getY() - gp.to.getY() > 1.5)
                 .anyMatch(block -> block.getType() != Material.AIR) || gp.nearTrapdoor;
+        if(gp.blockAbove) gp.lastBlockAbove = System.currentTimeMillis();
         gp.onSlime = b.stream().anyMatch(block -> block.getType().toString().equalsIgnoreCase("SLIME_BLOCK"));
+        if(gp.onSlime) System.currentTimeMillis();
         gp.nearPiston = b.stream().anyMatch(block -> block.getType().toString().contains("PISTON"));
+        gp.onLowBlock = b.stream().anyMatch(block -> block.getType().toString().contains("TRAP_DOOR") || block.getType().toString().contains("BED") || block.getType().toString().contains("CARPET") || block.getType().toString().contains("REPEATER") || block.getType().toString().contains("COMPARATOR") || block.getType().toString().contains("SLAB") || block.getType().toString().contains("SNOW") || block.getType().toString().contains("CAULDRON") || block.getType().toString().contains("BREWING") || block.getType().toString().contains("HOPPER") || block.getType().toString().contains("DETECTOR") || block.getType().toString().contains("ENCHANTING") || block.getType().toString().contains("END_PORTAL") || block.getType().toString().contains("POT") || block.getType().toString().contains("SOUL_SAND") || block.getType().toString().contains("STAIRS") || block.getType().toString().contains("SLAB") || block.getType().toString().contains("STAIR") || block.getType().toString().contains("STEP")  || block.getType().toString().contains("BED")  || block.getType().toString().contains("HEAD")  || block.getType().toString().contains("FENCE")  || block.getType().toString().contains("WALL")  || block.getType().toString().contains("PISTON")  || block.getType().toString().contains("SLIME"));
+        if(gp.onLowBlock) gp.lastLowBlock = System.currentTimeMillis();
         final Location location = gp.getPlayer().getLocation();
         final int var1 = NumberConversions.floor(location.getX());
         final int var2 = NumberConversions.floor(location.getY());

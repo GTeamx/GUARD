@@ -34,9 +34,9 @@ public class Command implements CommandExecutor {
                         GuardPlayer gp = GuardPlayerManager.getGuardPlayer(sender);
                         gp.alertsToggled = !gp.alertsToggled;
                         if (gp.alertsToggled) {
-                            sender.sendMessage("§3§lGUARD §7»§f §fAlert output §aenabled§f!");
+                            sender.sendMessage("§9§lGUARD §7»§f §fAlert output §aenabled§f!");
                         } else {
-                            sender.sendMessage("§3§lGUARD §7»§f §fAlert output §cdisabled§f!");
+                            sender.sendMessage("§9§lGUARD §7»§f §fAlert output §cdisabled§f!");
                         }
                         //sender.sendMessage("§a Guard!");
                         //Data.data.clearDataBase();
@@ -50,9 +50,9 @@ public class Command implements CommandExecutor {
                                     if (strings[1].equalsIgnoreCase(checkname)) {
                                         c.isDebugging = !c.isDebugging;
                                         if (c.isDebugging) {
-                                            sender.sendMessage("§3§lGUARD §7»§f §fDebugging output §aenabled§f for §a" + c.name + "!");
+                                            sender.sendMessage("§9§lGUARD §7»§f §fDebugging output §aenabled§f for §a" + c.name + "!");
                                         } else {
-                                            sender.sendMessage("§3§lGUARD §7»§f §fDebugging output §cdisabled§f for §a" + c.name + "!");
+                                            sender.sendMessage("§9§lGUARD §7»§f §fDebugging output §cdisabled§f for §a" + c.name + "!");
                                         }
                                     }
                                 }
@@ -69,11 +69,11 @@ public class Command implements CommandExecutor {
 
                                                 }
                                                 c.debugToPlayers.add(sender);
-                                                sender.sendMessage("§3§lGuard §7»§f §aEnabled§f §fdebugging " + c.name + "for §a" + target.getName() + "!");
+                                                sender.sendMessage("§9§LGUARD §7»§f §aEnabled§f §fdebugging " + c.name + "for §a" + target.getName() + "!");
                                             } else {
                                                 if(c.debugToPlayers.contains(sender)) {
                                                     c.debugToPlayers.remove(sender);
-                                                    sender.sendMessage("§3§lGuard §7»§f §cDisabled§f §fdebugging " + c.name + "for §a" + target.getName() + "!");
+                                                    sender.sendMessage("§9§LGUARD §7»§f §cDisabled§f §fdebugging " + c.name + "for §a" + target.getName() + "!");
                                                 }
                                                 if(c.debugToPlayers.isEmpty()) {
                                                     c.isDebugging = false;
