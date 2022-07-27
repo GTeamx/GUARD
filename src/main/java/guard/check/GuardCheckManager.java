@@ -12,8 +12,8 @@ import guard.check.checks.movement.step.StepB;
 import guard.check.checks.movement.step.StepC;
 import guard.check.checks.player.badpackets.*;
 import guard.check.checks.player.badpackets.post.*;
+import guard.check.checks.player.inventory.InventoryA;
 import guard.check.checks.player.timer.TimerA;
-import guard.check.checks.player.timer.TimerB;
 import guard.check.checks.world.baritone.BaritoneA;
 
 import java.util.ArrayList;
@@ -70,6 +70,8 @@ public class GuardCheckManager {
         registerCheck(new KillAuraA());
 
         registerCheck(new BaritoneA());
+
+        registerCheck(new InventoryA());
     }
 
     public void registerCheck(GuardCheck check) {
