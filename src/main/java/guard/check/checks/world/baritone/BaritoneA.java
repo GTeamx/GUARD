@@ -5,7 +5,6 @@ import guard.check.GuardCheck;
 import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
-import org.bukkit.Bukkit;
 
 @GuardCheckInfo(name = "Baritone A", category = GuardCategory.World, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class BaritoneA extends GuardCheck {
