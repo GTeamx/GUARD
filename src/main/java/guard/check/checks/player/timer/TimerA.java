@@ -41,9 +41,9 @@ public class TimerA extends GuardCheck {
                 }
             }
         }
-        if(bal > 12) {
+        if(bal > 15) {
             fail(packet, "Sent too many Move Packets", bal);
-            bal = 0;
+            bal = -2;
         } else removeBuffer();
         lastMS = now;
         lastBal = bal;
@@ -63,9 +63,9 @@ public class TimerA extends GuardCheck {
             if(now - joinTime < 6000) {
                 bal = -40;
             }
-            if(bal > 12) {
+            if(bal > 15) {
                 fail(packet, "Sent too many Move Packets", bal);
-                bal = 0;
+                bal = -5;
             }else removeBuffer();
             lastMS = now;
         }

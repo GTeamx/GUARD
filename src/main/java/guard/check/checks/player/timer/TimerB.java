@@ -9,7 +9,7 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.event.impl.PacketPlaySendEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 
-@GuardCheckInfo(name = "Timer B", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.15, maxBuffer = 1)
+@GuardCheckInfo(name = "Timer B", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.4, maxBuffer = 1)
 public class TimerB extends GuardCheck {
 
     double bal;
@@ -37,7 +37,7 @@ public class TimerB extends GuardCheck {
         if(bal > 10) {
             bal = 2;
         }
-        if(bal < -8) {
+        if(bal < -10) {
             balls.add(50 - rate);
             if(balls.isCollected()) {
                 if(balls.getAverageLong(balls) < 0) {

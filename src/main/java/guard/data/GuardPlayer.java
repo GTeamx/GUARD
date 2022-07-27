@@ -275,5 +275,15 @@ public class GuardPlayer {
     public double getLastDeltaXZ() {
         return Math.hypot(lastMotionX, lastMotionZ);
     }
+    public double getGCD(final double v1, final double v2) {
+        if(v1 < v2) {
+            return getGCD(v2, v1);
+        }
+        if(Math.abs(v2) < 0.001) {
+            return v1;
+        } else {
+            return getGCD(v2, v1 - Math.floor(v1 / v2) * v2);
+        }
+    }
 
 }

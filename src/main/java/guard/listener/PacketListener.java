@@ -22,7 +22,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
@@ -49,7 +51,7 @@ public class PacketListener extends PacketListenerAbstract {
         // Bukkit.broadcastMessage("s");
         if(gp != null) {
             //if (data.join++ > 50) {
-
+            gp.predictionProcessor.handle(event);
             if (event.getPacketId() == PacketType.Play.Client.KEEP_ALIVE) {
                 gp.ping = (int) (System.currentTimeMillis() - gp.serverKeepAlive);
             }
@@ -63,13 +65,11 @@ public class PacketListener extends PacketListenerAbstract {
                 gp.isDead = false;
             }
 
-
             if (event.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
                 WrappedPacketInUseEntity ue = new WrappedPacketInUseEntity(packet);
                 gp.target = ue.getEntity();
                 gp.useAction = ue.getAction();
             }
-            gp.predictionProcessor.handle(event);
             for (GuardCheck c : gp.getCheckManager().checks) {
                 c.gp = gp;
                 c.onPacket(event);
