@@ -15,6 +15,6 @@ public class FlyD extends GuardCheck {
         boolean exempt = isExempt(ExemptType.SLIME, ExemptType.SLAB, ExemptType.STAIRS, ExemptType.LIQUID, ExemptType.GLIDE, ExemptType.FLYING, ExemptType.NEAR_VEHICLE, ExemptType.INSIDE_VEHICLE, ExemptType.CLIMBABLE);
         motionPrediction = (lastMotionY - 0.08) * 0.9800000190734863;
         if(gp.isInAir() && !gp.playerGround && !gp.onSolidGround && gp.inAir && !exempt && (motionY  - motionPrediction > 0.7)) fail(packet, "Predictions unfollowed", "lmy=" + motionY + " py=" + motionPrediction + " result=" + (motionY - motionPrediction));
-        if(gp.isInAir() && !gp.playerGround && !gp.onSolidGround && gp.inAir && !exempt && motionY < 0.05 && motionY > 0.00000001) fail(packet, "Predictions unfollowed", "lmy=" + motionY + " py=" + motionPrediction + " result=" + (motionY    - motionPrediction));
+        if(gp.isInAir() && !gp.playerGround && !gp.onSolidGround && gp.inAir && !exempt && motionY < 0.05 && motionY > 0.003) fail(packet, "Predictions unfollowed", "lmy=" + motionY + " py=" + motionPrediction + " result=" + (motionY    - motionPrediction));
     }
 }
