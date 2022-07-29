@@ -29,11 +29,12 @@ public enum ExemptType {
     VOID(gp -> gp.getPlayer().getLocation().getY() < 4),
     DEPTH_STRIDER(gp -> gp.getDepthStriderLevel() > 0),
     FLYING(gp -> System.currentTimeMillis() - gp.lastFlyingTime < 3000L),
-    VELOCITY(gp -> System.currentTimeMillis() - gp.entityHit < 300L),
+    VELOCITY(gp -> System.currentTimeMillis() - gp.entityHit < 800L),
     HEALTH_CHANGE(gp -> gp.lastHealth > gp.getPlayer().getHealth()),
     GLIDE(gp -> System.currentTimeMillis() - gp.lastGlide < 4000),
     ICE(gp -> System.currentTimeMillis() - gp.lastIce < 2000),
-    PLACE(gp -> System.currentTimeMillis() - gp.lastBlockPlaced < 300L);
+    RESPAWN(gp -> System.currentTimeMillis() - gp.wasDead < 300L),
+    PLACE(gp -> System.currentTimeMillis() - gp.lastBlockPlaced < 1000L);
 
     private final Function<GuardPlayer, Boolean> exception;
 
