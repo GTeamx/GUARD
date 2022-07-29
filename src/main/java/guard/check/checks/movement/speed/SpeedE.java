@@ -19,7 +19,7 @@ public class SpeedE extends GuardCheck {
         if(!gp.playerGround) airTicks++;
         if(gp.playerGround) airTicks = 0;
         accel = 1e-12;
-        if(System.currentTimeMillis() - gp.lastAttack < 1200) accel = 0.006;
+        if(System.currentTimeMillis() - gp.lastAttack < 1200) accel = 0.04;
         final double prediction = gp.getLastDeltaXZ() * 0.91F + (isSprinting ? 0.026 : 0.02);
         final double difference = gp.getDeltaXZ() - prediction;
         final boolean exempt = isExempt(ExemptType.FLYING, ExemptType.NEAR_VEHICLE);
