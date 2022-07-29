@@ -7,7 +7,7 @@ import guard.check.GuardCheckState;
 import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "Ground A", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "Ground A", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 1)
 public class GroundA extends GuardCheck {
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
