@@ -1,7 +1,13 @@
 package guard.check;
 
 import guard.Guard;
+import guard.check.checks.combat.aim.*;
+import guard.check.checks.combat.aim.aimassist.AimAssistA;
+import guard.check.checks.combat.aim.aimassist.AimAssistB;
+import guard.check.checks.combat.aim.aimassist.AimAssistC;
 import guard.check.checks.combat.killaura.KillAuraA;
+import guard.check.checks.combat.killaura.KillAuraB;
+import guard.check.checks.combat.killaura.KillAuraC;
 import guard.check.checks.movement.fastclimb.FastClimbA;
 import guard.check.checks.movement.fly.*;
 import guard.check.checks.movement.ground.GroundA;
@@ -68,6 +74,18 @@ public class GuardCheckManager {
         registerCheck(new BadPacketP());
 
         registerCheck(new KillAuraA());
+        registerCheck(new KillAuraB());
+        registerCheck(new KillAuraC());
+        registerCheck(new AimA());
+        registerCheck(new AimB());
+        registerCheck(new AimC());
+        registerCheck(new AimD());
+        registerCheck(new AimE());
+        registerCheck(new AimF());
+        registerCheck(new AimG());
+        registerCheck(new AimAssistA());
+        registerCheck(new AimAssistB());
+        registerCheck(new AimAssistC());
 
         registerCheck(new BaritoneA());
 

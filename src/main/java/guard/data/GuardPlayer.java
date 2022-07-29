@@ -89,6 +89,7 @@ public class GuardPlayer {
     public double lastLowBlock;
     public boolean collidesHorizontally;
     public Entity target;
+    public Entity lastTarget;
     public WrappedPacketInUseEntity.EntityUseAction useAction;
     public boolean inAir;
     public boolean onSolidGround;
