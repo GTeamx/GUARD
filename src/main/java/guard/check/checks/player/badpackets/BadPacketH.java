@@ -4,6 +4,7 @@ import guard.check.GuardCategory;
 import guard.check.GuardCheck;
 import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
+import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 import io.github.retrooper.packetevents.packetwrappers.play.in.entityaction.WrappedPacketInEntityAction;
@@ -15,9 +16,10 @@ public class BadPacketH extends GuardCheck {
 
     public void onPacket(PacketPlayReceiveEvent packet) {
         if (packet.getPacketId() == PacketType.Play.Client.ENTITY_ACTION) {
+            boolean exempt = isExempt(ExemptType.RESPAWN, ExemptType.TELEPORT);
             WrappedPacketInEntityAction p = new WrappedPacketInEntityAction(packet.getNMSPacket());
             final boolean invalid = ++count > 1 && p.getAction() == lastAction;
-            if (invalid) fail(packet, "Invalid action", "ENTITY_ACTION_REPEATED");
+            if (invalid && !exempt) fail(packet, "Invalid action", "ENTITY_ACTION_REPEATED");
             this.lastAction = p.getAction();
         } else if (packet.getPacketId() == PacketType.Play.Client.FLYING) count = 0;
     }
