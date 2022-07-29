@@ -11,7 +11,7 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 public class FlyA extends GuardCheck {
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
-        boolean exempt = isExempt(ExemptType.FLYING);
+        boolean exempt = isExempt(ExemptType.FLYING, ExemptType.TELEPORT);
         double predictedMotionY = (lastMotionY - 0.08D) * (double)0.98F;
         double diff = Math.abs(predictedMotionY - motionY);
         if(diff > 0.0000000000004 && gp.isInAir() && !exempt) {
