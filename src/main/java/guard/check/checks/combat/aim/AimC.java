@@ -9,7 +9,7 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
 import java.util.function.Predicate;
 
-@GuardCheckInfo(name = "Aim C", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.25, maxBuffer = 1)
+@GuardCheckInfo(name = "Aim C", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.25, maxBuffer = 2)
 public class AimC extends GuardCheck {
     final Predicate<Float> validRotation = rotation -> rotation > 3F && rotation < 35F;
 
