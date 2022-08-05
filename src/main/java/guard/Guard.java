@@ -5,6 +5,7 @@ import guard.data.GuardPlayerManager;
 import guard.license.Auth;
 import guard.listener.Event;
 import guard.listener.PacketListener;
+import guard.processor.TicksProcessor;
 import guard.utils.ConfigUtils;
 import io.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.settings.PacketEventsSettings;
@@ -12,10 +13,6 @@ import io.github.retrooper.packetevents.utils.server.ServerVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
 
 public class Guard extends JavaPlugin {
 
@@ -45,6 +42,8 @@ public class Guard extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("§aGuard is now Enabled!");
         Bukkit.getPluginCommand("guard").setExecutor(new Command());
         configUtils = new ConfigUtils(this);
+        TicksProcessor tP = new TicksProcessor();
+        tP.start();
        /** try {
             auth.printCurrentWorkingDirectory1();
         } catch (IOException | NoSuchAlgorithmException e) {
@@ -72,6 +71,7 @@ public class Guard extends JavaPlugin {
     public void onDisable() {
         Bukkit.getConsoleSender().sendMessage("§cGuard is now Disabled!");
         PacketEvents.get().terminate();
+        TicksProcessor.stop();
         Bukkit.getScheduler().cancelTasks(this);
 
     }

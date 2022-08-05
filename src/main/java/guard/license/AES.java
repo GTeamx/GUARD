@@ -15,7 +15,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
-import java.util.Base64;
 
 public class AES {
     private static SecretKeySpec secretKey;

@@ -5,6 +5,8 @@ import guard.check.GuardCheck;
 import guard.check.GuardCheckManager;
 import guard.exempt.Exempt;
 import guard.processor.PredictionProcessor;
+import guard.utils.Pair;
+import guard.utils.SampleList;
 import io.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
 import io.github.retrooper.packetevents.utils.server.ServerVersion;
@@ -116,6 +118,7 @@ public class GuardPlayer {
     public double lastGlide;
     public double pMotionZ;
     public PredictionProcessor predictionProcessor = new PredictionProcessor(this);
+    private final SampleList<Pair<Location, Integer>> targetLocations = new SampleList<>(40);
 
     public GuardPlayer(Player player) {
         this.player = player;

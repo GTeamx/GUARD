@@ -22,9 +22,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
 
@@ -68,6 +66,7 @@ public class PacketListener extends PacketListenerAbstract {
             if (event.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
                 WrappedPacketInUseEntity ue = new WrappedPacketInUseEntity(packet);
                 gp.target = ue.getEntity();
+                gp.lastTarget = ue.getEntity();
                 gp.useAction = ue.getAction();
             }
             for (GuardCheck c : gp.getCheckManager().checks) {

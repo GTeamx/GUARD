@@ -5,6 +5,7 @@ import guard.check.checks.combat.aim.*;
 import guard.check.checks.combat.aim.aimassist.AimAssistA;
 import guard.check.checks.combat.aim.aimassist.AimAssistB;
 import guard.check.checks.combat.aim.aimassist.AimAssistC;
+import guard.check.checks.combat.hitbox.HitBoxA;
 import guard.check.checks.combat.killaura.KillAuraA;
 import guard.check.checks.combat.killaura.KillAuraB;
 import guard.check.checks.combat.killaura.KillAuraC;
@@ -83,9 +84,12 @@ public class GuardCheckManager {
         registerCheck(new AimE());
         registerCheck(new AimF());
         registerCheck(new AimG());
+        registerCheck(new AimH());
         registerCheck(new AimAssistA());
         registerCheck(new AimAssistB());
         registerCheck(new AimAssistC());
+
+        registerCheck(new HitBoxA());
 
         registerCheck(new BaritoneA());
 

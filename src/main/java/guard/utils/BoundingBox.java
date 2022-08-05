@@ -12,8 +12,12 @@ import java.util.List;
 @Getter
 public class BoundingBox {
 
-    private double minX, minY, minZ;
-    private double maxX, maxY, maxZ;
+    private double minX;
+    private double minY;
+    private double minZ;
+    private double maxX;
+    private double maxY;
+    private double maxZ;
 
     public BoundingBox(final double minX, final double maxX, final double minY, final double maxY, final double minZ, final double maxZ) {
         if (minX < maxX) {
