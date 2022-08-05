@@ -17,7 +17,7 @@ public class AimD extends GuardCheck {
 
         debug("accel=" + accelXz + " dY=" + deltaYaw);
 
-        if (deltaYaw > 10 && accelXz < 0.00001 && deltaXz != 0) {
+        if (deltaYaw > 3 && accelXz < 0.00001 && deltaXz != 0) {
             fail(packet, "Impossible Acceleration", "acc=" + accelXz);
         }
     }
