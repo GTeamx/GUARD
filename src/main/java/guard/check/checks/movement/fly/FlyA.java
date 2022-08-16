@@ -12,7 +12,7 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 public class FlyA extends GuardCheck {
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
-        boolean exempt = isExempt(ExemptType.FLYING, ExemptType.LIQUID, ExemptType.TELEPORT, ExemptType.SLIME, ExemptType.VELOCITY);
+        boolean exempt = isExempt(ExemptType.FLYING, ExemptType.BLOCK_ABOVE, ExemptType.LIQUID, ExemptType.TELEPORT, ExemptType.SLIME, ExemptType.VELOCITY);
         boolean lastPG = gp.lastPlayerGround;
         boolean jumped = !gp.playerGround && lastPG;
 
