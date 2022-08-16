@@ -20,10 +20,9 @@ public class FlyA extends GuardCheck {
         if(jumped) {
             predictedMotionY = 0.42F;
         }
-        double diff = Math.abs(predictedMotionY - motionY);
-
         boolean isBedrock = PacketEvents.get().getPlayerUtils().isGeyserPlayer(gp.player) || gp.player.getName().contains(".");
-        if(diff > (gp.isInLiquid ? 0.05 : (isBedrock ? 0.05: 0.0000000000004)) && !gp.playerGround && !exempt) {
+        double diff = Math.abs(predictedMotionY - motionY);
+        if(diff > (gp.isInLiquid ? 0.05 : (isBedrock ? 0.05: 0.0000000000004)) && gp.inAir && !exempt) {
             fail(packet, "Predictions unfollowed", "move=" + motionY + " predicted=" + predictedMotionY);
         }else removeBuffer();
     }

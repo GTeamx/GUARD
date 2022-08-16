@@ -16,7 +16,7 @@ public class FlyB extends GuardCheck {
         boolean exempt = isExempt(ExemptType.SLIME, ExemptType.SLAB, ExemptType.STAIRS, ExemptType.LIQUID, ExemptType.GLIDE, ExemptType.FLYING, ExemptType.NEAR_VEHICLE, ExemptType.INSIDE_VEHICLE, ExemptType.CLIMBABLE, ExemptType.VELOCITY);
         motionPrediction = (lastMotionY - 0.08) * (double)0.98f;
         boolean isBedrock = PacketEvents.get().getPlayerUtils().isGeyserPlayer(gp.player) || gp.player.getName().contains(".");
-        if(!gp.playerGround && !exempt && (motionPrediction - motionY > (isBedrock ? 0.005 : 0.000000000001))) fail(packet, "Predictions unfollowed", "lmy=" + motionY + " py=" + motionPrediction + " result=" + (motionPrediction - motionY));
-        if(gp.playerGround) removeBuffer();
+        if(gp.inAir && !exempt && (motionPrediction - motionY > (isBedrock ? 0.005 : 0.000000000001))) fail(packet, "Predictions unfollowed", "lmy=" + motionY + " py=" + motionPrediction + " result=" + (motionPrediction - motionY));
+        if(!gp.inAir) removeBuffer();
     }
 }

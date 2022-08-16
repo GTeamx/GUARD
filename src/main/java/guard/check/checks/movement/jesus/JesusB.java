@@ -19,7 +19,7 @@ public class JesusB extends GuardCheck {
                // if(patternMotionY.getAverageDouble(patternMotionY) > 0.1 && patternMotionY.getStandardDeviation(patternMotionY) < 0.09)
                     //debug("Pattern=" + patternMotionY.getAverageDouble(patternMotionY) + " std=" + patternMotionY.getStandardDeviation(patternMotionY));
             //}
-            if(Math.abs(motionY) <= 0.0025 && Math.abs( motionY) >= 0 && gp.blockAboveWater) {
+            if(Math.abs(motionY) <= 0.0025 && Math.abs( motionY) > 0 && gp.blockAboveWater) {
                 fail(null, "Invalid DeltaY", "motionY=" + Math.abs(motionY));
             }else removeBuffer();
 

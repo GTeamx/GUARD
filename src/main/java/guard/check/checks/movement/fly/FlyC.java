@@ -16,8 +16,8 @@ public class FlyC extends GuardCheck {
         boolean exempt = isExempt(ExemptType.SLIME, ExemptType.SLAB, ExemptType.STAIRS, ExemptType.LIQUID, ExemptType.GLIDE, ExemptType.FLYING, ExemptType.NEAR_VEHICLE, ExemptType.INSIDE_VEHICLE, ExemptType.CLIMBABLE);
         motionPrediction = (lastMotionY - 0.08) * (double)0.98f;
         boolean isBedrock = PacketEvents.get().getPlayerUtils().isGeyserPlayer(gp.player) || gp.player.getName().contains(".");
-        if(!gp.playerGround && !exempt && (motionY  - motionPrediction > (isBedrock ? 0.0001 : 0.0000000000001))) fail(packet, "Predictions unfollowed", "lmy=" + motionY + " py=" + motionPrediction + " result=" + (motionY    - motionPrediction));
-        if(gp.playerGround) removeBuffer();
+        if(gp.inAir && !exempt && (motionY  - motionPrediction > (isBedrock ? 0.0001 : 0.0000000000001))) fail(packet, "Predictions unfollowed", "lmy=" + motionY + " py=" + motionPrediction + " result=" + (motionY    - motionPrediction));
+        if(!gp.inAir) removeBuffer();
     }
 
 }
