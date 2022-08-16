@@ -16,7 +16,7 @@ public class BadPacketN extends GuardCheck {
             WrappedPacketInSteerVehicle wrapper = new WrappedPacketInSteerVehicle(packet.getNMSPacket());
             float forwards = Math.abs(wrapper.getForwardValue());
             float sideways = Math.abs(wrapper.getSideValue());
-            if (forwards > 0.98f || sideways > 0.98f) fail(packet, "Invalid packet", "fw=" + forwards + " sw=" + sideways);
+            if (forwards > 0.98f || sideways > 0.98f) fail(packet, "Invalid packet", "fw=" + forwards + " sw=" + sideways); else removeBuffer();
         }
     }
 

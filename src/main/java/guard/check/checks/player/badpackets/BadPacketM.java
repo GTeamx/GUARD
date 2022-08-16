@@ -20,7 +20,7 @@ public class BadPacketM extends GuardCheck {
             WrappedPacketInKeepAlive keepalive = new WrappedPacketInKeepAlive(packet.getNMSPacket());
             if(id != keepalive.getId()) {
                 fail(null, "Invalid packet", "id=" + id + " fakeid=" + keepalive.getId());
-            }
+            } else removeBuffer();
         }
     }
 

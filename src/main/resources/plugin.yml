@@ -7,6 +7,9 @@ authors:
   - Vagdedes2 (Du_bist_kein_Pro)
   - XIII___
 description: Guard Anticheat in Java
+softdepend:
+  - Viaversion
+  - ViaBackwards
 commands:
   guard:
       description: Guard Command

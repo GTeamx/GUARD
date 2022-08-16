@@ -12,7 +12,7 @@ public class BadPacketK extends GuardCheck {
 
     public void onPacket(PacketPlayReceiveEvent packet) {
         if(packet.getPacketId() == PacketType.Play.Client.STEER_VEHICLE) {
-            if(!packet.getPlayer().isInsideVehicle()) fail(packet, "Impossible packet", "STREE_VEHICLE_NULL");
+            if(!packet.getPlayer().isInsideVehicle()) fail(packet, "Impossible packet", "STEER_VEHICLE_NULL"); else removeBuffer();
         }
     }
 

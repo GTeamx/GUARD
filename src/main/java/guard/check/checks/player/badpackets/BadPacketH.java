@@ -5,6 +5,7 @@ import guard.check.GuardCheck;
 import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
 import guard.exempt.ExemptType;
+import io.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 import io.github.retrooper.packetevents.packetwrappers.play.in.entityaction.WrappedPacketInEntityAction;
@@ -18,8 +19,9 @@ public class BadPacketH extends GuardCheck {
         if (packet.getPacketId() == PacketType.Play.Client.ENTITY_ACTION) {
             boolean exempt = isExempt(ExemptType.RESPAWN, ExemptType.TELEPORT);
             WrappedPacketInEntityAction p = new WrappedPacketInEntityAction(packet.getNMSPacket());
+            boolean isBedrock = PacketEvents.get().getPlayerUtils().isGeyserPlayer(gp.player) || gp.player.getName().contains(".");
             final boolean invalid = ++count > 1 && p.getAction() == lastAction;
-            if (invalid && !exempt) fail(packet, "Invalid action", "ENTITY_ACTION_REPEATED");
+            if (invalid && !exempt && !isBedrock) fail(packet, "Invalid action", "ENTITY_ACTION_REPEATED"); else removeBuffer();
             this.lastAction = p.getAction();
         } else if (packet.getPacketId() == PacketType.Play.Client.FLYING) count = 0;
     }

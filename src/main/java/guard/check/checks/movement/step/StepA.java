@@ -12,19 +12,19 @@ public class StepA extends GuardCheck {
     int airTicks;
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
-        boolean exempt = isExempt(ExemptType.TELEPORT, ExemptType.BLOCK_ABOVE, ExemptType.LIQUID, ExemptType.CLIMBABLE, ExemptType.FLYING, ExemptType.GLIDE, ExemptType.PLACE, ExemptType.NEAR_VEHICLE, ExemptType.INSIDE_VEHICLE, ExemptType.FLYING, ExemptType.PISTON, ExemptType.STAIRS, ExemptType.SLAB, ExemptType.WEB);
+        boolean exempt = isExempt(ExemptType.TELEPORT, ExemptType.BLOCK_ABOVE, ExemptType.CLIMBABLE, ExemptType.FLYING, ExemptType.GLIDE, ExemptType.PLACE, ExemptType.NEAR_VEHICLE, ExemptType.INSIDE_VEHICLE, ExemptType.FLYING, ExemptType.PISTON, ExemptType.STAIRS, ExemptType.SLAB, ExemptType.WEB, ExemptType.VELOCITY);
         if(!exempt) {
             if (motionY > 0) {
                 if (airTicks < 4) {
                     airTicks++;
                 }
             } else {
-                if (motionY == 0 && !gp.inAir) {
+                if (motionY == 0 && gp.playerGround) {
                     if (airTicks < 4 && airTicks != 0 && airTicks > 0) {
-                        if(!gp.onLowBlock || !isExempt(ExemptType.STAIRS) || !isExempt(ExemptType.SLAB)) fail(packet, "Missing ticks", "aT=" + airTicks);
+                        if(!gp.onLowBlock && !isExempt(ExemptType.STAIRS) && !isExempt(ExemptType.SLAB)) fail(packet, "Missing ticks", "aT=" + airTicks);
                     } else {
                         if (airTicks != 0 && airTicks > 0)
-                            buffer = 0;
+                            removeBuffer();
                     }
                     airTicks = 0;
                 }
@@ -32,8 +32,9 @@ public class StepA extends GuardCheck {
         }
         if(exempt || gp.onLowBlock) {
             airTicks -= 2;
-            buffer = 0;
+            removeBuffer();
         }
+
     }
 
 }

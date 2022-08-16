@@ -1,4 +1,4 @@
-package guard.processor;
+package guard.check;
 
 import guard.Guard;
 import guard.data.GuardPlayer;
@@ -14,6 +14,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.FutureTask;
 
@@ -55,15 +56,9 @@ public class PredictionProcessor {
 
     public double[] predictUrAssOff() {
         double sdelta = 983475234;
-        float frictionblock = 0.6f;
-        if(getBlock(gp.to.clone().subtract(0, 1, 0)) != null) {
-            frictionblock = getFriction(getBlock(gp.to.clone().subtract(0, 1, 0)));
-        } else {
-            return new double[]{0, 0};
-        }
-
+        float frictionblock = getFriction(getBlock(gp.to.clone().subtract(0, 1, 0)));
         if (gp.onClimbable || System.currentTimeMillis() - gp.entityHit < 300L || gp.isInLiquid || gp.collidesHorizontally) {
-            return new double[]{0, 0};
+            return new double[]{0, 0, 0};
         }
         double playerMotionX = 0;
         double playerMotionZ = 0;

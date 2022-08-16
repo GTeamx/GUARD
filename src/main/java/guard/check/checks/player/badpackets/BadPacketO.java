@@ -14,7 +14,7 @@ public class BadPacketO extends GuardCheck {
     public void onPacket(PacketPlayReceiveEvent packet) {
         if(packet.getPacketId() == PacketType.Play.Client.LOOK || packet.getPacketId() == PacketType.Play.Client.POSITION_LOOK) {
             WrappedPacketInFlying wrapper = new WrappedPacketInFlying(packet.getNMSPacket());
-            if(wrapper.getPitch() > 90 || wrapper.getPitch() < -90) fail(packet, "Impossible rotations", "pitch=" + wrapper.getPitch());
+            if(wrapper.getPitch() > 90 || wrapper.getPitch() < -90) fail(packet, "Impossible rotations", "pitch=" + wrapper.getPitch()); else removeBuffer();
         }
     }
 

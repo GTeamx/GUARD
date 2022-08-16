@@ -4,42 +4,40 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 public class RayTrace {
-    private final Vector origin;
-    private final Vector direction;
 
-    public RayTrace(final Vector origin, final Vector direction) {
-        this.origin = origin;
-        this.direction = direction;
+    Vector direction;
+    Vector origin;
+
+    // Gets the info from the Player
+    public RayTrace(Player player) {
+        this.direction = player.getEyeLocation().getDirection().clone();
+        this.origin = player.getEyeLocation().toVector().clone();
     }
 
-    public RayTrace(final Player player) {
-        this.origin = player.getEyeLocation().toVector();
-        this.direction = player.getEyeLocation().getDirection();
-    }
-
-    public double origin(int i) {
-        switch (i) {
-            case 0:
-                return origin.getX();
-            case 1:
-                return origin.getY();
-            case 2:
-                return origin.getZ();
-            default:
-                return 0;
+    // Here we get the EyeLocation Vector... int is for the different Options
+    public double getOrigin(int i) {
+        if(i == 0) {
+            return origin.getX();
         }
-    }
-
-    public double direction(int i) {
-        switch (i) {
-            case 0:
-                return direction.getX();
-            case 1:
-                return direction.getY();
-            case 2:
-                return direction.getZ();
-            default:
-                return 0;
+        if(i == 1) {
+            return origin.getY();
         }
+        if(i == 2) {
+            return origin.getZ();
+        }
+        return 0;
+    }
+    // Here we get the EyeLocation Direction... int is for the different Options
+    public double getDirection(int i) {
+        if(i == 0) {
+            return direction.getX();
+        }
+        if(i == 1) {
+            return direction.getY();
+        }
+        if(i == 2) {
+            return direction.getZ();
+        }
+        return 0;
     }
 }

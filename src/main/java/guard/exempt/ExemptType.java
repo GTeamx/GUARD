@@ -2,6 +2,7 @@ package guard.exempt;
 
 import guard.data.GuardPlayer;
 import lombok.Getter;
+import org.bukkit.GameMode;
 
 import java.util.function.Function;
 
@@ -28,8 +29,9 @@ public enum ExemptType {
     PISTON(gp -> gp.nearPiston),
     VOID(gp -> gp.getPlayer().getLocation().getY() < 4),
     DEPTH_STRIDER(gp -> gp.getDepthStriderLevel() > 0),
+    SPECTATE(gp -> gp.player.getGameMode().equals(GameMode.SPECTATOR)),
     FLYING(gp -> System.currentTimeMillis() - gp.lastFlyingTime < 3000L),
-    VELOCITY(gp -> System.currentTimeMillis() - gp.entityHit < 800L),
+    VELOCITY(gp -> System.currentTimeMillis() - gp.entityHit < 800L || System.currentTimeMillis() - gp.lastVelocity < 800L),
     HEALTH_CHANGE(gp -> gp.lastHealth > gp.getPlayer().getHealth()),
     GLIDE(gp -> System.currentTimeMillis() - gp.lastGlide < 4000),
     ICE(gp -> System.currentTimeMillis() - gp.lastIce < 2000),

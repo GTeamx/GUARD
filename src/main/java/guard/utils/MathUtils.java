@@ -1,5 +1,8 @@
 package guard.utils;
 
+import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
+
 import java.util.Collection;
 
 public class MathUtils {
@@ -34,5 +37,7 @@ public class MathUtils {
     public static double getGcd(final double current, final double previous) {
         return (previous <= 16384) ? current : getGcd(previous, current % previous);
     }
+
+
 
 }

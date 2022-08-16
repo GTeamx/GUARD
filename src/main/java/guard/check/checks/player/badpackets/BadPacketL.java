@@ -13,7 +13,7 @@ public class BadPacketL extends GuardCheck {
 
     public void onPacket(PacketPlayReceiveEvent packet) {
         if(packet.getPacketId() == PacketType.Play.Client.SPECTATE) {
-            if(packet.getPlayer().getGameMode() != GameMode.SPECTATOR) fail(packet, "Impossible packet", "SPECTATE");
+            if(packet.getPlayer().getGameMode() != GameMode.SPECTATOR) fail(packet, "Impossible packet", "SPECTATE"); else removeBuffer();
         }
     }
 

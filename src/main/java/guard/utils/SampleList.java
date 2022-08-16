@@ -1,5 +1,6 @@
 package guard.utils;
 
+import java.util.Collection;
 import java.util.LinkedList;
 
 public final class SampleList<T> extends LinkedList<T> {
@@ -77,6 +78,27 @@ public final class SampleList<T> extends LinkedList<T> {
         return 0f;
     }
 
+    public double getStandardDeviation(final Collection<? extends Number> data) {
+        final double variance = getVariance(data);
+        return Math.sqrt(variance);
+    }
+
+    public double getVariance(final Collection<? extends Number> data) {
+        int count = 0;
+        double sum = 0.0;
+        double variance = 0.0;
+        double average;
+        for (final Number number : data) {
+            sum += number.doubleValue();
+            ++count;
+        }
+        average = sum / count;
+        for (final Number number : data) {
+            variance += Math.pow(number.doubleValue() - average, 2.0);
+        }
+        return variance;
+    }
+
     public long getAverageLong(SampleList<Long> list) {
         long n = 0L;
         int n2 = 0;
@@ -89,6 +111,23 @@ public final class SampleList<T> extends LinkedList<T> {
             return n / n2;
         }
         return 0L;
+    }
+
+    public int getMode(Collection<? extends Number> list) {
+        int mode = (int) list.toArray()[0];
+        int maxCount = 0;
+        for (Number value : list) {
+            int count = 1;
+            for (Number value2 : list) {
+                if (value2.equals(value))
+                    count++;
+                if (count > maxCount) {
+                    mode = (int) value;
+                    maxCount = count;
+                }
+            }
+        }
+        return mode;
     }
 
 }

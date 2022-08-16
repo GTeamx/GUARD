@@ -22,10 +22,10 @@ public class SpeedE extends GuardCheck {
         if(System.currentTimeMillis() - gp.lastAttack < 1200) accel = 0.04;
         final double prediction = gp.getLastDeltaXZ() * 0.91F + (isSprinting ? 0.026 : 0.02);
         final double difference = gp.getDeltaXZ() - prediction;
-        final boolean exempt = isExempt(ExemptType.FLYING, ExemptType.NEAR_VEHICLE);
+        final boolean exempt = isExempt(ExemptType.FLYING, ExemptType.NEAR_VEHICLE, ExemptType.VELOCITY);
 
-        if (difference > accel && airTicks > 2 && !exempt) fail(packet, "Predictions unfollowed", "diff=" + difference);
-        else buffer = Math.max(buffer - 1, 0);
+        if (difference > accel && airTicks > 2 && !exempt && !gp.isInLiquid) fail(packet, "Predictions unfollowed", "diff=" + difference);
+        else removeBuffer();
     }
 
 

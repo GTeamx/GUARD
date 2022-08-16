@@ -16,7 +16,7 @@ public class BadPacketG extends GuardCheck {
     public void onPacket(PacketPlayReceiveEvent packet) {
         if (packet.getPacketId() == PacketType.Play.Client.HELD_ITEM_SLOT) {
             WrappedPacketInHeldItemSlot p = new WrappedPacketInHeldItemSlot(packet.getNMSPacket());
-            if (p.getCurrentSelectedSlot() == lastSlot) fail(packet, "Invalid action", "HELD_ITEM_SLOT_REPEATED");
+            if (p.getCurrentSelectedSlot() == lastSlot) fail(packet, "Invalid action", "HELD_ITEM_SLOT_REPEATED"); else removeBuffer();
             lastSlot = p.getCurrentSelectedSlot();
         }
     }

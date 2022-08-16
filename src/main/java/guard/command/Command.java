@@ -4,6 +4,7 @@ import guard.Guard;
 import guard.check.GuardCheck;
 import guard.data.GuardPlayer;
 import guard.data.GuardPlayerManager;
+import io.github.retrooper.packetevents.PacketEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -21,12 +22,12 @@ public class Command implements CommandExecutor {
                         //Bukkit.broadcastMessage("§cReloading Guard");
                         sender.sendMessage("§cReloading Guard!");
                         // PacketEvents.get().getInjector().eject();
-                        //PacketEvents.get().getInjector().inject();
-                        // for(Player p : Bukkit.getOnlinePlayers()) {
-                        //     PacketEvents.get().getInjector().injectPlayer(p);
-                        // }
+
                         Guard.instance.configUtils.reloadConfigs();
                         GuardPlayerManager.clearGuardPlayers();
+                        for(Player p : Bukkit.getOnlinePlayers()) {
+                            GuardPlayerManager.addGuardPlayer(p);
+                        }
                         return true;
                     } else if (strings[0].equalsIgnoreCase("alerts")) {
                         //Bukkit.broadcastMessage("§cReloading Guard");
@@ -59,7 +60,7 @@ public class Command implements CommandExecutor {
                             } else {
                                 Player target = Bukkit.getPlayer(strings[2]);
                                 if(target != null) {
-                                    GuardPlayer gp = GuardPlayerManager.getGuardPlayer(sender);
+                                    GuardPlayer gp = GuardPlayerManager.getGuardPlayer(target);
                                     for (GuardCheck c : gp.getCheckManager().checks) {
                                         String checkname = c.name.replace(" ", "");
                                         if (strings[1].equalsIgnoreCase(checkname)) {
@@ -69,11 +70,11 @@ public class Command implements CommandExecutor {
 
                                                 }
                                                 c.debugToPlayers.add(sender);
-                                                sender.sendMessage("§9§LGUARD §7»§f §aEnabled§f §fdebugging " + c.name + "for §a" + target.getName() + "!");
+                                                sender.sendMessage("§9§LGUARD §7»§f §aEnabled§f §fdebugging " + c.name + " for §a" + target.getName() + "!");
                                             } else {
                                                 if(c.debugToPlayers.contains(sender)) {
                                                     c.debugToPlayers.remove(sender);
-                                                    sender.sendMessage("§9§LGUARD §7»§f §cDisabled§f §fdebugging " + c.name + "for §a" + target.getName() + "!");
+                                                    sender.sendMessage("§9§LGUARD §7»§f §cDisabled§f §fdebugging " + c.name + " for §a" + target.getName() + "!");
                                                 }
                                                 if(c.debugToPlayers.isEmpty()) {
                                                     c.isDebugging = false;

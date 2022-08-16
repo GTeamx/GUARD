@@ -4,12 +4,13 @@ import guard.check.GuardCategory;
 import guard.check.GuardCheck;
 import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
+import guard.exempt.ExemptType;
 import guard.utils.SampleList;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.event.impl.PacketPlaySendEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 
-@GuardCheckInfo(name = "Timer A", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "Timer A", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.02, maxBuffer = 2)
 public class TimerA extends GuardCheck {
     double bal;
     double lastBal;
@@ -23,6 +24,9 @@ public class TimerA extends GuardCheck {
         long now = System.currentTimeMillis();
         long rate = (System.currentTimeMillis() - lastMS);
         bal += 50 - rate;
+        if(now - gp.weirdTeleport < 1000 || isExempt(ExemptType.TELEPORT)) {
+            bal = -50;
+        }
         if(!wasFirst) {
             wasFirst = true;
             joinTime = now;
@@ -31,7 +35,7 @@ public class TimerA extends GuardCheck {
             bal = -40;
         }
         if(String.valueOf(bal).contains("E")) {
-            bal = 0;
+            bal = -5;
         }
         if(Math.abs(rate) >= 48 && Math.abs(rate) <= 52 && bal < -10) {
             balls.add(rate);
@@ -56,6 +60,9 @@ public class TimerA extends GuardCheck {
             long now = System.currentTimeMillis();
             double rate = (System.currentTimeMillis() - lastMS);
             bal += 50 - rate;
+            if(now - gp.weirdTeleport < 1000 || isExempt(ExemptType.TELEPORT)) {
+                bal = -50;
+            }
             if(!wasFirst) {
                 wasFirst = true;
                 joinTime = now;

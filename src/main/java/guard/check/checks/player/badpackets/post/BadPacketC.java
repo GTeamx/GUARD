@@ -11,7 +11,7 @@ import io.github.retrooper.packetevents.packettype.PacketType;
 public class BadPacketC extends GuardCheck {
 
     public void onPacket(PacketPlayReceiveEvent packet) {
-        if (isPost(packet.getPacketId(), PacketType.Play.Client.ENTITY_ACTION)) fail(packet,"Post packet", "ENTITY_ACTION");
+        if (isPost(packet.getPacketId(), PacketType.Play.Client.ENTITY_ACTION)) fail(packet,"Post packet", "ENTITY_ACTION"); else removeBuffer();
     }
 
 }

@@ -6,16 +6,22 @@ import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
 import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.DoubleSummaryStatistics;
 
 @GuardCheckInfo(name = "Speed C", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 6)
 public class SpeedC extends GuardCheck {
     double maxSpeed = 1;
     double cSpeed = 0;
     int groundTicks = 0;
+    DoubleSummaryStatistics stats = new DoubleSummaryStatistics();
+    DoubleSummaryStatistics stats2 = new DoubleSummaryStatistics();
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
         boolean exempt = isExempt(ExemptType.FLYING, ExemptType.TELEPORT);
+        boolean dontCheck = isExempt(ExemptType.JOINED);
         cSpeed = gp.getDistance(true);
 
         if(gp.playerGround) groundTicks++;
@@ -24,7 +30,7 @@ public class SpeedC extends GuardCheck {
         // BASIC | Ground - Air
         if(groundTicks > 12) {
             maxSpeed = 0.2868198;
-        } else maxSpeed = 0.338;
+        } else maxSpeed = 0.335;
 
         // BASIC | HitHead
         if(System.currentTimeMillis() - gp.lastBlockAbove < 1200) maxSpeed = 0.5;
@@ -63,23 +69,23 @@ public class SpeedC extends GuardCheck {
         // TODO: Support soul sand + soul speed enchantment
 
         // SPEED | Ground - Air
+        // Proper way to check for Speed...
         if(gp.player.hasPotionEffect(PotionEffectType.SPEED)) {
             if(groundTicks > 2) {
-                if(gp.getPotionEffectAmplifier(PotionEffectType.SPEED) == 1) maxSpeed = 0.34362;
-                if(gp.getPotionEffectAmplifier(PotionEffectType.SPEED) >= 2) maxSpeed = (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * 0.21);
+                maxSpeed += (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * .0573);
             } else {
-                maxSpeed = (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * 0.38);
+                maxSpeed += (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * .02313);
             }
         }
 
         // WATER | Ground - Air
         if(gp.isInLiquid && !gp.playerGround) {
             // TODO: Add support for tridents and their enchantments
-            maxSpeed = 0.21;
+            maxSpeed = 0.29;
             if(gp.getDepthStriderLevel() > 0) {
-                if(gp.getDepthStriderLevel() == 1) maxSpeed = 0.24;
-                if(gp.getDepthStriderLevel() == 2) maxSpeed = 0.26;
-                if(gp.getDepthStriderLevel() == 3) maxSpeed = 0.28;
+                if(gp.getDepthStriderLevel() == 1) maxSpeed += 0.03;
+                if(gp.getDepthStriderLevel() == 2) maxSpeed += 0.05;
+                if(gp.getDepthStriderLevel() == 3) maxSpeed += 0.07;
                 if(gp.getDepthStriderLevel() > 3) maxSpeed = (0.08 * gp.getDepthStriderLevel());
             }
         }
@@ -92,6 +98,7 @@ public class SpeedC extends GuardCheck {
             }
         }
 
+        debug("cs=" + cSpeed + " ms="+ maxSpeed + " b=" + buffer);
         if(cSpeed > maxSpeed  && !exempt) fail(packet, "Moving too fast", "cS=" + cSpeed + "mS=" + maxSpeed);
         if(cSpeed <= maxSpeed) removeBuffer();
     }

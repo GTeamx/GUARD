@@ -3,6 +3,8 @@ package guard.check;
 import guard.Guard;
 import guard.data.GuardPlayer;
 import guard.exempt.ExemptType;
+import guard.utils.packet.TransactionPacketClient;
+import guard.utils.packet.TransactionPacketServer;
 import io.github.retrooper.packetevents.event.eventtypes.CancellableNMSPacketEvent;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.event.impl.PacketPlaySendEvent;
@@ -36,21 +38,18 @@ public class GuardCheck {
     public List<Player> debugToPlayers = new ArrayList<>();
 
     public void onPacket(PacketPlayReceiveEvent packet) {
-        if(gp == null) {
-            return;
-        }
+    }
+
+    public void onTransaction(TransactionPacketClient packet, boolean found) {
+    }
+
+    public void onTransactionSend(TransactionPacketServer packet) {
     }
 
     public void onPacketSend(PacketPlaySendEvent packet) {
-        if(gp == null) {
-            return;
-        }
     }
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
-        if(gp == null) {
-            return;
-        }
     }
 
 

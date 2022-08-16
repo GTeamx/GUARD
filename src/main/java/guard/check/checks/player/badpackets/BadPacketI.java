@@ -17,7 +17,7 @@ public class BadPacketI extends GuardCheck {
             WrappedPacketInKeepAlive p = new WrappedPacketInKeepAlive(packet.getNMSPacket());
             if (p.getId() == lastId) {
                 fail(null, "Impossible packet", "KEEP_ALIVE");
-            }
+            } else removeBuffer();
             lastId = p.getId();
         }
     }
