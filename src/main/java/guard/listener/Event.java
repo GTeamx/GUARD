@@ -149,6 +149,10 @@ public class Event implements Listener {
             GuardPlayerManager.addGuardPlayerJoin(e.getPlayer());
 
             GuardPlayer gp = GuardPlayerManager.getGuardPlayer(e.getPlayer());
+            String version = String.valueOf(PacketEvents.get().getPlayerUtils().getClientVersion(e.getPlayer()));
+            String finalVersion = "" + version.substring(2);
+            finalVersion.replaceAll("_", ".");
+            for(Player p : Bukkit.getOnlinePlayers()) if(p.hasPermission("guard.joinalerts")) p.sendMessage("§9§lGUARD §7»§f " + e.getPlayer().getName() + " §7joined using §f" + PacketEvents.get().getPlayerUtils().getGameProfile(e.getPlayer()) + " §7in §f" + finalVersion);
             gp.joined = System.currentTimeMillis();
             gp.join = 0;
         });
