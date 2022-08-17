@@ -12,7 +12,7 @@ public class AimB extends GuardCheck {
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
 
-        if(deltaPitch > 1 || deltaPitch < -1) {
+        if(deltaPitch > 1) {
 
             final double expendedPitch = deltaPitch * MathUtils.EXPANDER;
             final double lastExpendedPitch = lastDeltaPitch * MathUtils.EXPANDER;
@@ -24,7 +24,7 @@ public class AimB extends GuardCheck {
 
             debug("dfP=" + dfPitch + " b=" + buffer);
 
-            if(dfPitch < 1.2E-5) fail(null, "GCD Flaw", "dfP=" + dfPitch);
+            if(dfPitch < 0.00008) fail(null, "GCD Flaw", "dfP=" + dfPitch);
             else removeBuffer();
         }
 
