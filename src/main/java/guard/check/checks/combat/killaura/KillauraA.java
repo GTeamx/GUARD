@@ -14,7 +14,6 @@ public class KillauraA extends GuardCheck {
     public double swings;
     public double hits;
 
-
     public void onPacket(PacketPlayReceiveEvent packet) {
         if(packet.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
             WrappedPacketInUseEntity ue = new WrappedPacketInUseEntity(packet.getNMSPacket());
