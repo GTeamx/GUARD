@@ -7,23 +7,21 @@ import guard.check.GuardCheckState;
 import guard.utils.SampleList;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "Jesus B", category = GuardCategory.Movement, state = GuardCheckState.Coding, addBuffer = 1, removeBuffer = 0.5, maxBuffer = 2)
+@GuardCheckInfo(name = "Jesus B", category = GuardCategory.Movement, state = GuardCheckState.Coding, addBuffer = 1, removeBuffer = 0.1, maxBuffer = 1)
 public class JesusB extends GuardCheck {
 
-    //SampleList<Double> patternMotionY = new SampleList<>(5);
-
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
-        if(gp.aboveLiquid || gp.isInFullLiquid ) {
-            //patternMotionY.add(Math.abs(motionY));
-            //if(patternMotionY.isCollected()) {
-               // if(patternMotionY.getAverageDouble(patternMotionY) > 0.1 && patternMotionY.getStandardDeviation(patternMotionY) < 0.09)
-                    //debug("Pattern=" + patternMotionY.getAverageDouble(patternMotionY) + " std=" + patternMotionY.getStandardDeviation(patternMotionY));
-            //}
-            if(Math.abs(motionY) <= 0.0025 && Math.abs( motionY) > 0 && gp.blockAboveWater) {
-                fail(null, "Invalid DeltaY", "motionY=" + Math.abs(motionY));
-            }else removeBuffer();
 
-            //debug("motionY=" + Math.abs(motionY));
-        }
+        final double multiplier = gp.isInLiquid ? 0.8 : 0.5;
+        final double accel = motionY - lastMotionY;
+
+        final double prediction = (lastMotionY + 0.03999999910593033D) * multiplier - 0.02D;
+        final double diff = Math.abs(motionY - prediction);
+
+        debug("diff=" + diff);
+
+        if(diff > 0.075 && motionY > 0.075 && accel >= 0.0 && gp.isInLiquid) fail(packet, "Predictions unfollowed", "pred=" + prediction + " mY=" + motionY);
+        else removeBuffer();
+
     }
 }

@@ -17,9 +17,9 @@ public class JesusF extends GuardCheck {
             patternMotionY.add(Math.abs(motionY));
             if(patternMotionY.isCollected()) {
                 if(patternMotionY.getAverageDouble(patternMotionY) >= 0.099 && patternMotionY.getAverageDouble(patternMotionY) < 0.2 && patternMotionY.getStandardDeviation(patternMotionY) < 0.09) {
-                    fail(null, "Invalid Pattern","avg=" + patternMotionY.getAverageDouble(patternMotionY) + " std=" + patternMotionY.getStandardDeviation(patternMotionY));
+                    //fail(null, "Invalid Pattern","avg=" + patternMotionY.getAverageDouble(patternMotionY) + " std=" + patternMotionY.getStandardDeviation(patternMotionY));
                 }else if(patternMotionY.getAverageDouble(patternMotionY) >= 0 && patternMotionY.getAverageDouble(patternMotionY) < 0.009 && patternMotionY.getStandardDeviation(patternMotionY) < 0.09 && patternMotionY.getStandardDeviation(patternMotionY) > 0.001 || patternMotionY.getStandardDeviation(patternMotionY) == 0) {
-                    fail(null, "Invalid Pattern","avg=" + patternMotionY.getAverageDouble(patternMotionY) + " std=" + patternMotionY.getStandardDeviation(patternMotionY));
+                    //fail(null, "Invalid Pattern","avg=" + patternMotionY.getAverageDouble(patternMotionY) + " std=" + patternMotionY.getStandardDeviation(patternMotionY));
                 }else removeBuffer();
 
             }
