@@ -68,7 +68,7 @@ public class Guard extends JavaPlugin {
         }
         for(Player player : Bukkit.getOnlinePlayers()) {
             GuardPlayerManager.addGuardPlayer(player);
-            final String prefix = Guard.instance.configUtils.getStringFromConfig("config", "prefix","§3§lGuard §7»§f");
+            final String prefix = Guard.instance.configUtils.getStringFromConfig("config", "prefix","§9§lGUARD §7»§f");
             player.sendMessage(prefix + " REJOIN PLS");
         }
     }

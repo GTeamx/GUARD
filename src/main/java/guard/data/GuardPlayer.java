@@ -204,7 +204,7 @@ public class GuardPlayer {
                 buf += obj.toString() + ", ";
             }
             final String text = "§7Check: §3" + check.name + " \n§7Information: §3" + Info + " \n§7Value: §3" + Value + " \n§7Buffer: §3" + Buffer + "§7/" + maxBuffer  + " \n§7State: §3" + state;
-            final String prefix = Guard.instance.configUtils.getStringFromConfig("config", "prefix","§3§lGuard §7»§f");
+            final String prefix = Guard.instance.configUtils.getStringFromConfig("config", "prefix","§9§lGUARD §7»§f");
             for (Player p : Bukkit.getOnlinePlayers()) {
                 boolean d = Guard.instance.configUtils.getBooleanFromConfig("config", "testMode", false);
                 GuardPlayer gp = GuardPlayerManager.getGuardPlayer(p);
