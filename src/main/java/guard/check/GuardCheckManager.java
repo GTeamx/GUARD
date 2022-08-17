@@ -1,9 +1,12 @@
 package guard.check;
 
 import guard.Guard;
+import guard.check.checks.combat.aim.AimA;
+import guard.check.checks.combat.aim.AimB;
+import guard.check.checks.combat.aim.AimC;
+import guard.check.checks.combat.aim.aimassist.AimAssistA;
 import guard.check.checks.combat.autoclicker.AutoClickerA;
 import guard.check.checks.combat.killaura.KillauraA;
-import guard.check.checks.combat.velocity.VelocityA;
 import guard.check.checks.movement.fastclimb.FastClimbA;
 import guard.check.checks.movement.fly.*;
 import guard.check.checks.movement.ground.GroundA;
@@ -20,6 +23,7 @@ import guard.check.checks.player.inventory.InventoryA;
 import guard.check.checks.player.inventory.InventoryB;
 import guard.check.checks.player.pingspoof.PingSpoofA;
 import guard.check.checks.player.timer.TimerA;
+import guard.check.checks.world.interact.InteractA;
 import guard.check.checks.world.scaffold.ScaffoldA;
 
 import java.util.ArrayList;
@@ -33,6 +37,12 @@ public class GuardCheckManager {
         registerCheck(new AutoClickerA());
 
         registerCheck(new KillauraA());
+
+        registerCheck(new AimAssistA());
+
+        registerCheck(new AimA());
+        registerCheck(new AimB());
+        registerCheck(new AimC());
 
         registerCheck(new FastClimbA());
 
@@ -81,6 +91,7 @@ public class GuardCheckManager {
         registerCheck(new BadPacketO());
         registerCheck(new BadPacketP());
         registerCheck(new BadPacketQ());
+        registerCheck(new BadPacketU());
 
         registerCheck(new InventoryA());
         registerCheck(new InventoryB());
@@ -90,6 +101,8 @@ public class GuardCheckManager {
         registerCheck(new TimerA());
 
         registerCheck(new ScaffoldA());
+
+        registerCheck(new InteractA());
 
     }
 
