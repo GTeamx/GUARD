@@ -19,7 +19,6 @@ public class AutoClickerA extends GuardCheck {
     double lastAvg;
     long lastBlockBreak;
 
-
     public void onPacket(PacketPlayReceiveEvent packet) {
         if(packet.getPacketId() == PacketType.Play.Client.ARM_ANIMATION) {
             if(!isBlockDig) {
