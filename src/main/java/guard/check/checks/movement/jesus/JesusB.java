@@ -4,6 +4,7 @@ import guard.check.GuardCategory;
 import guard.check.GuardCheck;
 import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
+import guard.exempt.ExemptType;
 import guard.utils.SampleList;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
@@ -20,7 +21,7 @@ public class JesusB extends GuardCheck {
 
         debug("diff=" + diff);
 
-        if(diff > 0.075 && motionY > 0.075 && accel >= 0.0 && gp.isInLiquid) fail(packet, "Predictions unfollowed", "pred=" + prediction + " mY=" + motionY);
+        if(diff > 0.075 && motionY > 0.075 && accel >= 0.0 && gp.isInLiquid && !isExempt(ExemptType.TELEPORT)) fail(packet, "Predictions unfollowed", "pred=" + prediction + " mY=" + motionY);
         else removeBuffer();
 
     }
