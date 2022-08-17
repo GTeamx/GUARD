@@ -7,8 +7,9 @@ import guard.check.GuardCheckState;
 import guard.utils.MathUtils;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
+import org.bukkit.Bukkit;
 
-@GuardCheckInfo(name = "Aim C", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "Aim C", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.25, maxBuffer = 3)
 public class AimC extends GuardCheck {
 
     int buf;
@@ -46,26 +47,24 @@ public class AimC extends GuardCheck {
 
                 final double fmP = Math.abs(Math.floor(mP) - mY);
                 final double fmY = Math.abs(Math.floor(mY) - mP);
-
-                debug("fmP=" + fmP + " fmY=" + fmY + " mP=" + mP + " mY=" + mY);
                 
                 final String sFMP = String.valueOf(fmP);
                 final String sFMY = String.valueOf(fmY);
                 final String sMP = String.valueOf(mP);
                 final String sMY = String.valueOf(mY);
                 
-                if(sFMP.contains("000") || sFMY.contains("000")) {
+                if(sFMP.contains("0000") || sFMY.contains("0000") || sMY.contains("0000") || sMP.contains("0000")) {
                     buf++;
-                    if(buf > 2) fail(null, "Rounded Rotations", "fmP=" + fmP + " fmY=" + fmY + " mP=" + mP + " mY=" + mY);
+                    if(buf > 6) fail(null, "Rounded Rotations", "fmP=" + fmP + " fmY=" + fmY + " mP=" + mP + " mY=" + mY);
                 } else if(buf > 0) buf--;
 
 
                 if(fmP == 0.0 || fmP == 1.0 || fmP == 2.0 || fmP == 3.0 || fmY == 0.0 || fmY == 1.0 || fmY == 2.0 || fmY == 3.0) {
                     buf2++;
-                    if(buf2 > 4) fail(null, "Rounded Rotation", "fmP=" + fmP + " fmY=" + fmY);
-                } else if(buf2 > 0) buf2--;
+                    if(buf2 > 6) fail(null, "Rounded Rotation", "fmP=" + fmP + " fmY=" + fmY);
+                } else buf2 = 0;
 
-                if(deltaPitch < 5 && deltaYaw < 5) {
+                if(Math.abs(deltaPitch) < 3 && Math.abs(deltaYaw) < 3) {
                     if(fmP > 70 || fmY > 70) fail(null, "Impossible Rotation", "fmP=" + fmP + " fmY=" + fmY + " dP=" + deltaPitch + " dY=" + deltaYaw);
                 }
 
