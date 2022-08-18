@@ -25,6 +25,7 @@ public enum ExemptType {
     NEAR_VEHICLE(gp -> gp.nearBoat),
     INSIDE_VEHICLE(gp -> System.currentTimeMillis() - gp.lastNearBoat < 20),
     LIQUID(gp -> gp.isInLiquid),
+    FULL_LIQUID(gp -> gp.isInFullLiquid),
     BLOCK_ABOVE(gp -> gp.blockAbove),
     PISTON(gp -> gp.nearPiston),
     VOID(gp -> gp.getPlayer().getLocation().getY() < 4),
@@ -36,7 +37,7 @@ public enum ExemptType {
     GLIDE(gp -> System.currentTimeMillis() - gp.lastGlide < 4000),
     ICE(gp -> System.currentTimeMillis() - gp.lastIce < 2000),
     RESPAWN(gp -> System.currentTimeMillis() - gp.wasDead < 300L),
-    PLACE(gp -> System.currentTimeMillis() - gp.lastBlockPlaced < 1000L);
+    PLACE(gp -> System.currentTimeMillis() - gp.lastBlockPlaced < 200L);
 
     private final Function<GuardPlayer, Boolean> exception;
 
