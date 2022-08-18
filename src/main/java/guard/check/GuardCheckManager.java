@@ -4,6 +4,9 @@ import guard.Guard;
 import guard.check.checks.combat.aim.AimA;
 import guard.check.checks.combat.aim.AimB;
 import guard.check.checks.combat.aim.AimC;
+import guard.check.checks.combat.aim.AimD;
+import guard.check.checks.combat.aim.aimassist.AimAssistA;
+import guard.check.checks.combat.autoblock.AutoBlockA;
 import guard.check.checks.combat.autoclicker.AutoClickerA;
 import guard.check.checks.combat.killaura.KillauraA;
 import guard.check.checks.movement.fastclimb.FastClimbA;
@@ -38,9 +41,14 @@ public class GuardCheckManager {
 
         registerCheck(new KillauraA());
 
+        registerCheck(new AimAssistA());
+
+        registerCheck(new AutoBlockA());
+
         registerCheck(new AimA());
         registerCheck(new AimB());
         registerCheck(new AimC());
+        registerCheck(new AimD());
 
         registerCheck(new FastClimbA());
 

@@ -138,6 +138,8 @@ public class GuardPlayer {
     public int sentTransaction;
     public int transactionTick;
     public long sentTransactionTime;
+    public boolean isDigging;
+    public String clientBrand;
     public List<TransactionPacketServer> transactions = new ArrayList<>();
     public PredictionProcessor predictionProcessor = new PredictionProcessor(this);
     public SampleList<Location> targetLocations = new SampleList<>(5, true);

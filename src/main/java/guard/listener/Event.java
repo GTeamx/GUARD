@@ -20,15 +20,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import java.util.ConcurrentModificationException;
-
 public class Event implements Listener {
-
-
 
     @EventHandler
     public void onTeleport(PlayerTeleportEvent e) {
@@ -95,11 +90,7 @@ public class Event implements Listener {
                 if(e.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION || e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE || e.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION || e.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION)
                     gp.validVelocityHit = true;
                 else if(PacketEvents.get().getServerUtils().getVersion().isNewerThanOrEquals(ServerVersion.v_1_9)) {
-                   if(e.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
-                       gp.validVelocityHit = true;
-                   } else {
-                       gp.validVelocityHit = false;
-                   }
+                    gp.validVelocityHit = e.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK;
                 } else {
                     gp.validVelocityHit = false;
                 }
@@ -150,9 +141,6 @@ public class Event implements Listener {
 
             GuardPlayer gp = GuardPlayerManager.getGuardPlayer(e.getPlayer());
             String version = String.valueOf(PacketEvents.get().getPlayerUtils().getClientVersion(e.getPlayer()));
-            String finalVersion = "" + version.substring(2);
-            finalVersion.replaceAll("_", ".");
-            for(Player p : Bukkit.getOnlinePlayers()) if(p.hasPermission("guard.joinalerts")) p.sendMessage("§9§lGUARD §7»§f " + e.getPlayer().getName() + " §7joined using §f" + PacketEvents.get().getPlayerUtils().getGameProfile(e.getPlayer()) + " §7in §f" + finalVersion);
             gp.joined = System.currentTimeMillis();
             gp.join = 0;
         });

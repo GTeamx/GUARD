@@ -20,12 +20,10 @@ public class AimC extends GuardCheck {
                 final double ctP = (MathUtils.getGcd(gp.deltaPitch * MathUtils.EXPANDER, gp.lastDeltaPitch * MathUtils.EXPANDER)) / MathUtils.EXPANDER;
                 final double ctY = (MathUtils.getGcd(gp.deltaYaw * MathUtils.EXPANDER, gp.lastDeltaYaw * MathUtils.EXPANDER)) / MathUtils.EXPANDER;
                 final double fmP = Math.abs(Math.floor(gp.deltaPitch / ctP % gp.lastDeltaPitch / ctP) - (gp.deltaYaw / ctY % gp.lastDeltaYaw / ctY));
-
                 if (Math.abs(fmP / (gp.deltaPitch * MathUtils.EXPANDER)) < 7E-10) fail(null, "Impossible Rotation", "fMp=" + Math.abs(fmP / (gp.deltaPitch * MathUtils.EXPANDER)));
                 else removeBuffer();
             }
 
         }
     }
-
 }
