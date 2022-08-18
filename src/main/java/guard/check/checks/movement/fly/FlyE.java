@@ -11,10 +11,22 @@ import org.bukkit.potion.PotionEffectType;
 @GuardCheckInfo(name = "Fly E", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0, maxBuffer = 1)
 public class FlyE extends GuardCheck {
 
+    boolean wasVelocity;
+    double tempBuffer = maxBuffer;
+    boolean setBuffer;
+
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
         final boolean exempt = isExempt(ExemptType.FLYING, ExemptType.FULL_LIQUID, ExemptType.CLIMBABLE, ExemptType.TELEPORT, ExemptType.GLIDE, ExemptType.NEAR_VEHICLE, ExemptType.PLACE);
-        maxBuffer = isExempt(ExemptType.VELOCITY) ? 1 : 3;
+        if(tempBuffer != maxBuffer) {
+            if(!setBuffer) {
+                tempBuffer = maxBuffer;
+                setBuffer = true;
+            }
+        }
+        if(gp.playerGround) wasVelocity = false;
+        if(isExempt(ExemptType.VELOCITY)) wasVelocity = true;
         final double predictedMotionY = (lastMotionY - 0.08D) * (double)0.98F;
+        maxBuffer = (wasVelocity ? tempBuffer + 3 : tempBuffer);
         if((motionY - predictedMotionY > 0.0000000001) && !gp.playerGround && !exempt) fail(packet, "Predictions unfollowed", "pred=" + predictedMotionY + " mY=" + motionY);
         else if(gp.playerGround && gp.serverGround) removeBuffer();
     }

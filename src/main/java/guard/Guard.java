@@ -55,7 +55,7 @@ public class Guard extends JavaPlugin {
 
         final Messenger messenger = Bukkit.getMessenger();
         Bukkit.getPluginManager().registerEvents(new ClientBrandListener(), this);
-        messenger.registerIncomingPluginChannel(this, "mc:brand", new ClientBrandListener());
+        messenger.registerIncomingPluginChannel(this, "MC|Brand", new ClientBrandListener());
 
         PacketEvents.get().getInjector().eject();
         PacketEvents.get().getInjector().inject();

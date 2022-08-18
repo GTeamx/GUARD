@@ -10,6 +10,7 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.event.impl.PacketPlaySendEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
+import io.github.retrooper.packetevents.utils.gameprofile.WrappedGameProfile;
 
 @GuardCheckInfo(name = "BadPacket P", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 1)
 public class BadPacketP extends GuardCheck {

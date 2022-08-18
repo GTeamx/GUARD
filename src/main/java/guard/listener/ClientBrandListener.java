@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
+import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 
 public final class ClientBrandListener implements PluginMessageListener, Listener {
@@ -22,6 +23,7 @@ public final class ClientBrandListener implements PluginMessageListener, Listene
             final String clientBrand = new String(msg, StandardCharsets.UTF_8).length() > 0 ? new String(msg, StandardCharsets.UTF_8).substring(1) : new String(msg, StandardCharsets.UTF_8);
             gp.clientBrand = clientBrand;
             for(Player p : Bukkit.getOnlinePlayers()) if(p.hasPermission("guard.joinalerts")) p.sendMessage("§9§lGUARD §7»§f " + player.getName() + " §7joined using §f" + clientBrand + " §7in §f" + PacketEvents.get().getPlayerUtils().getClientVersion(player).name().replaceAll("_", ".").substring(2));
+            Bukkit.broadcastMessage("sex");
         } catch (final Throwable t) {
             System.out.println("An error occurred with ClientBrandListener. You can ignore this.");
         }
@@ -36,7 +38,19 @@ public final class ClientBrandListener implements PluginMessageListener, Listene
         try {
             player.getClass().getMethod("addChannel", String.class).invoke(player, "MC|BRAND");
         } catch (final Exception e) {
-            e.printStackTrace();
+            try {
+                player.getClass().getMethod("addChannel", String.class).invoke(player, "mc|brand");
+            } catch (Exception ex) {
+                try {
+                    player.getClass().getMethod("addChannel", String.class).invoke(player, "MC:BRAND");
+                } catch (Exception ex2) {
+                    try {
+                        player.getClass().getMethod("addChannel", String.class).invoke(player, "mc:brand");
+                    } catch (Exception ex3) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
         }
     }
 }
