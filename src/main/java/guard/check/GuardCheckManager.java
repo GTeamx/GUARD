@@ -16,6 +16,7 @@ import guard.check.checks.movement.speed.*;
 import guard.check.checks.movement.step.StepA;
 import guard.check.checks.movement.step.StepB;
 import guard.check.checks.movement.step.StepC;
+import guard.check.checks.movement.vclip.vClipA;
 import guard.check.checks.player.badpackets.*;
 import guard.check.checks.player.badpackets.post.*;
 import guard.check.checks.player.inventory.InventoryA;
@@ -49,6 +50,8 @@ public class GuardCheckManager {
         registerCheck(new FlyD());
         registerCheck(new FlyE());
         registerCheck(new FlyF());
+
+        registerCheck(new vClipA());
 
         registerCheck(new GroundA());
         registerCheck(new GroundB());
