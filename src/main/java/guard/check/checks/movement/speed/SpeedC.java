@@ -30,7 +30,7 @@ public class SpeedC extends GuardCheck {
         // BASIC | Ground - Air
         if(groundTicks > 12) {
             maxSpeed = 0.2868198;
-        } else maxSpeed = 0.335;
+        } else maxSpeed = 0.3358;
 
         // BASIC | HitHead
         if(System.currentTimeMillis() - gp.lastBlockAbove < 1200) maxSpeed = 0.5;

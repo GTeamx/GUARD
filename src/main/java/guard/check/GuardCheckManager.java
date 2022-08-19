@@ -2,6 +2,7 @@ package guard.check;
 
 import guard.Guard;
 import guard.check.checks.combat.aim.*;
+import guard.check.checks.combat.aim.aimassist.AimAssistA;
 import guard.check.checks.combat.autoblock.AutoBlockA;
 import guard.check.checks.combat.autoclicker.AutoClickerA;
 import guard.check.checks.combat.killaura.KillauraA;
@@ -38,6 +39,8 @@ public class GuardCheckManager {
         registerCheck(new KillauraA());
 
         registerCheck(new AutoBlockA());
+
+        registerCheck(new AimAssistA());
 
         registerCheck(new AimA());
         registerCheck(new AimB());
