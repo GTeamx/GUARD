@@ -119,27 +119,29 @@ public class PacketListener extends PacketListenerAbstract {
                 boolean found = false;
                 TransactionPacketServer toRemove = null;
                 long foundTransactionTime = System.currentTimeMillis();
-                for (TransactionPacketServer server : gp.transactions) {
-                    if (server.ping.getId() == pong.getId()) {
-                        found = true;
-                        toRemove = server;
-                        foundTransactionTime = server.getTimeStamp();
+                try {
+                    for (TransactionPacketServer server : gp.transactions) {
+                        if (server.ping.getId() == pong.getId()) {
+                            found = true;
+                            toRemove = server;
+                            foundTransactionTime = server.getTimeStamp();
+                        }
                     }
-                }
-                long now = System.currentTimeMillis();
-                if (toRemove != null)
-                    gp.transactions.remove(toRemove);
-                if(found) {
-                    gp.transactionPackets.add((int) (now - foundTransactionTime));
+                    long now = System.currentTimeMillis();
+                    if (toRemove != null)
+                        gp.transactions.remove(toRemove);
+                    if (found) {
+                        gp.transactionPackets.add((int) (now - foundTransactionTime));
 
-                    if(gp.transactionPackets.isCollected()) {
-                        gp.transactionPing = gp.transactionPackets.getAverageInt(gp.transactionPackets);
+                        if (gp.transactionPackets.isCollected()) {
+                            gp.transactionPing = gp.transactionPackets.getAverageInt(gp.transactionPackets);
+                        }
                     }
-                }
-                for (GuardCheck c : gp.getCheckManager().checks) {
-                    c.gp = gp;
-                    c.onTransaction(new TransactionPacketClient(pong, now), found);
-                }
+                    for (GuardCheck c : gp.getCheckManager().checks) {
+                        c.gp = gp;
+                        c.onTransaction(new TransactionPacketClient(pong, now), found);
+                    }
+                }catch (ConcurrentModificationException stfu) {}
             }
             if (event.getPacketId() == PacketType.Play.Client.BLOCK_DIG) {
                 WrappedPacketInBlockDig dig = new WrappedPacketInBlockDig(packet);
