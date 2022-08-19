@@ -15,7 +15,7 @@ public class FlyF extends GuardCheck {
     double tempBuffer = maxBuffer;
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
-        final boolean exempt = isExempt(ExemptType.FLYING, ExemptType.FULL_LIQUID, ExemptType.CLIMBABLE, ExemptType.TELEPORT, ExemptType.GLIDE, ExemptType.NEAR_VEHICLE, ExemptType.SLIME, ExemptType.PLACE);
+        final boolean exempt = isExempt(ExemptType.FLYING, ExemptType.LIQUID, ExemptType.CLIMBABLE, ExemptType.TELEPORT, ExemptType.GLIDE, ExemptType.NEAR_VEHICLE, ExemptType.SLIME, ExemptType.PLACE);
         if(tempBuffer != maxBuffer) {
             if(!setBuffer) {
                 tempBuffer = maxBuffer;
