@@ -5,7 +5,6 @@ import com.viaversion.viabackwards.ViaBackwardsConfig;
 import guard.command.Command;
 import guard.data.GuardPlayerManager;
 import guard.license.Auth;
-import guard.listener.ClientBrandListener;
 import guard.listener.Event;
 import guard.listener.PacketListener;
 import guard.utils.ConfigUtils;
@@ -52,10 +51,6 @@ public class Guard extends JavaPlugin {
         configUtils = new ConfigUtils(this);
         PacketEvents.get().init();
         PacketEvents.get().registerListener(Guard.instance.listener);
-
-        final Messenger messenger = Bukkit.getMessenger();
-        Bukkit.getPluginManager().registerEvents(new ClientBrandListener(), this);
-        messenger.registerIncomingPluginChannel(this, "MC|Brand", new ClientBrandListener());
 
         PacketEvents.get().getInjector().eject();
         PacketEvents.get().getInjector().inject();
