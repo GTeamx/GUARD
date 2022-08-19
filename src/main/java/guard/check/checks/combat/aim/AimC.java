@@ -9,7 +9,7 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 import org.bukkit.Bukkit;
 
-@GuardCheckInfo(name = "Aim C", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.25, maxBuffer = 2.25)
+@GuardCheckInfo(name = "Aim C", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.25, maxBuffer = 3.25)
 public class AimC extends GuardCheck {
 
     public void onPacket(PacketPlayReceiveEvent packet) {
