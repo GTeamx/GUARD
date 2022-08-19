@@ -65,7 +65,6 @@ public class GuardCheckManager {
         registerCheck(new JesusC());
         registerCheck(new JesusD());
         registerCheck(new JesusE());
-        registerCheck(new JesusF());
 
         registerCheck(new SpeedA());
         registerCheck(new SpeedB());

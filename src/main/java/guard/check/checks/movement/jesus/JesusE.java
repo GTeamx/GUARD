@@ -6,7 +6,7 @@ import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "Jesus E", category = GuardCategory.Movement, state = GuardCheckState.Coding, addBuffer = 1, removeBuffer = 1, maxBuffer = 2)
+@GuardCheckInfo(name = "Jesus E", category = GuardCategory.Movement, state = GuardCheckState.Coding, addBuffer = 1, removeBuffer = 1, maxBuffer = 3)
 public class JesusE extends GuardCheck {
 
 
