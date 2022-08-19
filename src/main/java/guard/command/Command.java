@@ -49,11 +49,24 @@ public class Command implements CommandExecutor {
                                 for(GuardCheck c : gp.getCheckManager().checks) {
                                     String checkname = c.name.replace(" ", "");
                                     if (strings[1].equalsIgnoreCase(checkname)) {
-                                        c.isDebugging = !c.isDebugging;
-                                        if (c.isDebugging) {
-                                            sender.sendMessage("§9§lGUARD §7»§f §fDebugging output §aenabled§f for §a" + c.name + "!");
+                                        if(c.debugToPlayers.isEmpty()) {
+                                            if(!c.isDebugging) {
+                                                c.isDebugging = true;
+
+                                            }
+                                            c.debugToPlayers.add(sender);
+                                            sender.sendMessage("§9§LGUARD §7»§f §aEnabled§f §fdebug for " + c.name + "§f!");
                                         } else {
-                                            sender.sendMessage("§9§lGUARD §7»§f §fDebugging output §cdisabled§f for §a" + c.name + "!");
+                                            if(c.debugToPlayers.contains(sender)) {
+                                                c.debugToPlayers.remove(sender);
+                                                sender.sendMessage("§9§LGUARD §7»§f §cDisabled§f §fdebug for " + c.name + "§f!");
+                                            } else {
+                                                c.debugToPlayers.add(sender);
+                                                sender.sendMessage("§9§LGUARD §7»§f §aEnabled§f §fdebug for " + c.name + "§f!");
+                                            }
+                                            if(c.debugToPlayers.isEmpty()) {
+                                                c.isDebugging = false;
+                                            }
                                         }
                                     }
                                 }
@@ -75,6 +88,9 @@ public class Command implements CommandExecutor {
                                                 if(c.debugToPlayers.contains(sender)) {
                                                     c.debugToPlayers.remove(sender);
                                                     sender.sendMessage("§9§LGUARD §7»§f §cDisabled§f §fdebugging " + c.name + " for §a" + target.getName() + "!");
+                                                } else {
+                                                    c.debugToPlayers.add(sender);
+                                                    sender.sendMessage("§9§LGUARD §7»§f §aEnabled§f §fdebugging " + c.name + " for §a" + target.getName() + "!");
                                                 }
                                                 if(c.debugToPlayers.isEmpty()) {
                                                     c.isDebugging = false;
