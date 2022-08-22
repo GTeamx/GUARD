@@ -4,6 +4,7 @@ import guard.Guard;
 import guard.check.GuardCheck;
 import guard.data.GuardPlayer;
 import guard.data.GuardPlayerManager;
+import guard.exempt.ExemptType;
 import guard.runnable.RunnableTransaction;
 import guard.utils.BoundingBox;
 import guard.utils.packet.TransactionPacketClient;
@@ -20,6 +21,7 @@ import io.github.retrooper.packetevents.packetwrappers.play.in.flying.WrappedPac
 import io.github.retrooper.packetevents.packetwrappers.play.in.pong.WrappedPacketInPong;
 import io.github.retrooper.packetevents.packetwrappers.play.in.transaction.WrappedPacketInTransaction;
 import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
+import io.github.retrooper.packetevents.packetwrappers.play.out.animation.WrappedPacketOutAnimation;
 import io.github.retrooper.packetevents.packetwrappers.play.out.entityvelocity.WrappedPacketOutEntityVelocity;
 import io.github.retrooper.packetevents.packetwrappers.play.out.position.WrappedPacketOutPosition;
 import io.github.retrooper.packetevents.utils.player.ClientVersion;
@@ -284,6 +286,13 @@ public class PacketListener extends PacketListenerAbstract {
             GuardPlayerManager.addGuardPlayer(p);
             GuardPlayer gp = GuardPlayerManager.getGuardPlayer(p);
             if(gp != null) {
+                if(event.getPacketId() == PacketType.Play.Server.ANIMATION) {
+                    WrappedPacketOutAnimation animation = new WrappedPacketOutAnimation(event.getNMSPacket());
+
+                    if(animation.getAnimationType() == WrappedPacketOutAnimation.EntityAnimationType.TAKE_DAMAGE) {
+                        gp.lastTakeDamage = System.currentTimeMillis();
+                    }
+                }
                 if(event.getPacketId() == PacketType.Play.Server.KEEP_ALIVE) {
 
                     gp.serverKeepAlive = System.currentTimeMillis();

@@ -5,6 +5,7 @@ import com.viaversion.viabackwards.ViaBackwardsConfig;
 import guard.command.Command;
 import guard.data.GuardPlayerManager;
 import guard.license.Auth;
+import guard.listener.ClientBrandListener;
 import guard.listener.Event;
 import guard.listener.PacketListener;
 import guard.utils.ConfigUtils;
@@ -46,6 +47,7 @@ public class Guard extends JavaPlugin {
         listener = new PacketListener();
         GuardPlayerManager.clearGuardPlayers();
         Bukkit.getPluginManager().registerEvents(new Event(), this);
+        Bukkit.getPluginManager().registerEvents(new ClientBrandListener(), this);
         Bukkit.getConsoleSender().sendMessage("§aGuard is now Enabled!");
         Bukkit.getPluginCommand("guard").setExecutor(new Command());
         configUtils = new ConfigUtils(this);
@@ -54,6 +56,13 @@ public class Guard extends JavaPlugin {
 
         PacketEvents.get().getInjector().eject();
         PacketEvents.get().getInjector().inject();
+        if(PacketEvents.get().getServerUtils().getVersion().isNewerThanOrEquals(ServerVersion.v_1_13)) {
+            final Messenger messenger = Bukkit.getMessenger();
+            messenger.registerIncomingPluginChannel(this, "minecraft:brand", new ClientBrandListener());
+        } else {
+            final Messenger messenger = Bukkit.getMessenger();
+            messenger.registerIncomingPluginChannel(this, "MC|BRAND", new ClientBrandListener());
+        }
         if(getServer().getPluginManager().getPlugin("ViaBackwards") != null) {
             if(getServer().getPluginManager().getPlugin("ViaBackwards").isEnabled()) {
                 Class<?> ViaBackwardsClass = ViaBackwardsConfig.class;

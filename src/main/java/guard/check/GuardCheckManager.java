@@ -3,9 +3,15 @@ package guard.check;
 import guard.Guard;
 import guard.check.checks.combat.aim.*;
 import guard.check.checks.combat.aim.aimassist.AimAssistA;
+import guard.check.checks.combat.aim.aimassist.AimAssistB;
+import guard.check.checks.combat.aim.aimassist.AimAssistC;
+import guard.check.checks.combat.aim.aimassist.AimAssistD;
 import guard.check.checks.combat.autoblock.AutoBlockA;
 import guard.check.checks.combat.autoclicker.AutoClickerA;
 import guard.check.checks.combat.killaura.KillauraA;
+import guard.check.checks.combat.reach.ReachA;
+import guard.check.checks.combat.velocity.VelocityA;
+import guard.check.checks.combat.velocity.VelocityB;
 import guard.check.checks.movement.fastclimb.FastClimbA;
 import guard.check.checks.movement.fly.*;
 import guard.check.checks.movement.ground.GroundA;
@@ -23,6 +29,7 @@ import guard.check.checks.player.inventory.InventoryA;
 import guard.check.checks.player.inventory.InventoryB;
 import guard.check.checks.player.pingspoof.PingSpoofA;
 import guard.check.checks.player.timer.TimerA;
+import guard.check.checks.world.anticactus.AntiCactusA;
 import guard.check.checks.world.interact.InteractA;
 import guard.check.checks.world.scaffold.ScaffoldA;
 
@@ -34,19 +41,27 @@ public class GuardCheckManager {
     public List<GuardCheck> checks = new ArrayList<>();
 
     public GuardCheckManager() {
-        registerCheck(new AutoClickerA());
-
-        registerCheck(new KillauraA());
-
-        registerCheck(new AutoBlockA());
-
         registerCheck(new AimAssistA());
+        registerCheck(new AimAssistB());
+        registerCheck(new AimAssistC());
+        registerCheck(new AimAssistD());
 
         registerCheck(new AimA());
         registerCheck(new AimB());
         registerCheck(new AimC());
         registerCheck(new AimD());
         registerCheck(new AimE());
+
+        registerCheck(new AutoBlockA());
+
+        registerCheck(new AutoClickerA());
+
+        registerCheck(new KillauraA());
+
+        registerCheck(new ReachA());
+
+        registerCheck(new VelocityA());
+        registerCheck(new VelocityB());
 
         registerCheck(new FastClimbA());
 
@@ -105,9 +120,12 @@ public class GuardCheckManager {
 
         registerCheck(new TimerA());
 
-        registerCheck(new ScaffoldA());
+        registerCheck(new AntiCactusA());
 
         registerCheck(new InteractA());
+
+        registerCheck(new ScaffoldA());
+
 
     }
 

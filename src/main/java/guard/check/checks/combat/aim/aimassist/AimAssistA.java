@@ -8,7 +8,7 @@ import guard.utils.MathUtils;
 import guard.utils.SampleList;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "AimAssist A", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.5, maxBuffer = 4)
+@GuardCheckInfo(name = "AimAssist A", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.5, maxBuffer = 3)
 public class AimAssistA extends GuardCheck {
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
@@ -27,10 +27,9 @@ public class AimAssistA extends GuardCheck {
             double floorModuloY = Math.abs(Math.floor(moduloY) - moduloY);
             boolean invalidX = (moduloX > 90.0D && floorModuloX > 0.1D);
             boolean invalidY = (moduloY > 90.0D && floorModuloY > 0.1D);
-            if (invalidX && !gp.isCinematic) fail(packet, "Smooth Rotation", "iX");
-            else if (!invalidY) removeBuffer();
             if (invalidY && !gp.isCinematic) {fail(packet, "Smooth Rotation", "iY");
-            }
+
+            } else removeBuffer();
         }
     }
 }

@@ -30,6 +30,17 @@ public class BoundingBox {
         this.minZ = player.getLocation().getZ() - 0.3D;
     }
 
+    // Makes the Bukkit BoundingBox into a Guard BoundingBox
+    public BoundingBox(org.bukkit.util.BoundingBox bb) {
+        this.maxX = bb.getMaxX();
+        this.maxY = bb.getMaxY();
+        this.maxZ = bb.getMaxZ();
+        this.minX = bb.getMinX();
+        this.minY = bb.getMinY();
+        this.minZ = bb.getMinZ();
+    }
+
+
     // You will prob never need this
     public BoundingBox(double maxX, double maxY, double maxZ, double minX, double minY, double minZ) {
         this.maxX = maxX;

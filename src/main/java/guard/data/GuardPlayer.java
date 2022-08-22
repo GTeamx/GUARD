@@ -32,6 +32,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.*;
+import java.util.concurrent.FutureTask;
 
 @Getter
 @Setter
@@ -140,9 +141,12 @@ public class GuardPlayer {
     public long sentTransactionTime;
     public boolean isDigging;
     public String clientBrand;
+    public long lastTakeDamage;
+    public int movesNextToCactus;
     public List<TransactionPacketServer> transactions = new ArrayList<>();
     public PredictionProcessor predictionProcessor = new PredictionProcessor(this);
     public SampleList<Location> targetLocations = new SampleList<>(5, true);
+    public SampleList<BoundingBox> targetBoundingBoxes = new SampleList<>(5, true);
     public PacketTracker packetTracker;
 
     public GuardPlayer(Player player) {
@@ -162,6 +166,14 @@ public class GuardPlayer {
                     targetLocations.clear();
                 }
                 targetLocations.add(target.getLocation());
+            }
+        }, 1, 1);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(Guard.instance, () -> {
+            if(target != null) {
+                if(target != lastTarget) {
+                    targetBoundingBoxes.clear();
+                }
+                targetBoundingBoxes.add(new BoundingBox(target.getBoundingBox()));
             }
         }, 1, 1);
         alertsToggled = Guard.instance.configUtils.getBooleanFromConfig("config", "testMode", false);
@@ -399,6 +411,25 @@ public class GuardPlayer {
             return v1;
         } else {
             return getGCD(v2, v1 - Math.floor(v1 / v2) * v2);
+        }
+    }
+
+    //Taken from Fiona
+    public Block getBlock(final Location location) {
+        if (location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) {
+            return location.getBlock();
+        } else {
+            FutureTask<Block> futureTask = new FutureTask<>(() -> {
+                location.getWorld().loadChunk(location.getBlockX() >> 4, location.getBlockZ() >> 4);
+                return location.getBlock();
+            });
+            Bukkit.getScheduler().runTask(Guard.instance, futureTask);
+            try {
+                return futureTask.get();
+            } catch (final Exception exception) {
+                exception.printStackTrace();
+            }
+            return null;
         }
     }
 }

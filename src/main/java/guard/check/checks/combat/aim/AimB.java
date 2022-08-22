@@ -7,22 +7,40 @@ import guard.check.GuardCheckState;
 import guard.utils.MathUtils;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "Aim B", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "Aim B", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 2)
 public class AimB extends GuardCheck {
+
+    double lastModuloGCD3;
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
 
-        if(deltaPitch != 0) {
+        if(Math.abs(deltaPitch) > 0.8 && lastDeltaPitch != deltaPitch) {
+            final double moduloGCD = lastDeltaPitch % gp.realGCD;
+            final double moduloGCD2 = deltaPitch % gp.realGCD;
+            final double moduloGCD3 = gp.to.clone().getPitch() % gp.getGCD(Math.abs(deltaPitch), Math.abs(lastDeltaPitch));
+            final double diff = Math.abs(moduloGCD3 - moduloGCD);
+            final double justFuckingWork = moduloGCD3 % moduloGCD;
+            //
+            final double diffFuckingWork = Math.abs(moduloGCD3 - justFuckingWork);
 
-            double cPitch = deltaPitch * 16777216;
-            double cLastPitch = lastDeltaPitch * 16777216;
-            final double GCD = MathUtils.getGcd(cPitch, cLastPitch);
-            final double moduloGCD = GCD % lastDeltaPitch;
+            if(diff < 0.12 && justFuckingWork < 0.005 && justFuckingWork > -0.005 && String.valueOf(justFuckingWork).contains("E") && diffFuckingWork != 0 && diff > 0.008 && Math.abs(lastModuloGCD3 - moduloGCD3) < 0.002) {
+                   buffer++;
+                   if (buffer > 2) {
+                       debug("§fmoduloGCD=" + moduloGCD + "\n §amoduloGCD3=" + moduloGCD3 + "\n §3diff=" + diff + "\n§ajustFuckingWork=" + justFuckingWork + "\n§3diffFuckingWork=" + diffFuckingWork + "\n §fb=" + buffer);
+                       debug("§cFLAGERINO!!!!");
+                   }
+            } else {
+                if(buffer > 0) {
+                    buffer -= 0.25;
+                }
+            }
+            debug("Buffer=" + buffer);
+            if(Math.abs(moduloGCD3) < 0.09 && !String.valueOf(moduloGCD3).contains("E") && !String.valueOf(diff).contains("E") && diff < 0.004) {
 
-            debug("moduloGCD=" + moduloGCD + " b=" + buffer);
-
-            if(Math.abs(moduloGCD) > 20) fail(null, "GCD Flaw", "moduloGCD=" + moduloGCD);
-            else removeBuffer();
+            }
+            lastModuloGCD3 = moduloGCD3;
+            if(String.valueOf(moduloGCD).contains("E-4") && moduloGCD > 0 && !gp.isCinematic && Math.abs(moduloGCD2) < 0.0008) fail(null, "GCD Flaw", "moduloGCD=" + moduloGCD + " moduloGCD2=" + moduloGCD2);
+            //else removeBuffer();
         }
 
     }
