@@ -142,6 +142,7 @@ public class GuardPlayer {
     public boolean isDigging;
     public String clientBrand;
     public long lastTakeDamage;
+    public double lastCactusDamage;
     public int movesNextToCactus;
     public List<TransactionPacketServer> transactions = new ArrayList<>();
     public PredictionProcessor predictionProcessor = new PredictionProcessor(this);

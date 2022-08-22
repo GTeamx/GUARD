@@ -16,6 +16,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -110,6 +111,16 @@ public class Event implements Listener {
                     gp.lastHurtOther = System.currentTimeMillis();
             }
 
+        });
+    }
+    
+    @EventHandler
+    public void onCactusDamage(EntityDamageByBlockEvent e) {
+        Bukkit.getScheduler().runTaskAsynchronously(Guard.instance, () -> {
+            if(e.getDamager().getType() == Material.CACTUS) {
+                GuardPlayer gp = GuardPlayerManager.getGuardPlayer((Player) e.getEntity());
+                gp.lastCactusDamage = System.currentTimeMillis();
+            }
         });
     }
 

@@ -37,7 +37,7 @@ public class AntiCactusA extends GuardCheck {
             }
         }
         if(b.stream().anyMatch(block -> block.getType() == Material.CACTUS)) {
-            if (System.currentTimeMillis() - gp.lastTakeDamage > 1000) {
+            if (System.currentTimeMillis() - gp.lastCactusDamage > 1000) {
                 moves++;
                 if (moves > 20) {
                     sendMessage("CACTUS PREDICTION FAILED ");
