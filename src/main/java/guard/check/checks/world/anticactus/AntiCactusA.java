@@ -38,7 +38,6 @@ public class AntiCactusA extends GuardCheck {
             }
         }
         if(b.stream().anyMatch(block -> block.getType() == Material.CACTUS)) {
-            Bukkit.broadcastMessage("" + (System.currentTimeMillis() - gp.lastCactusDamage));
             if (System.currentTimeMillis() - gp.lastCactusDamage > 1000) {
                 moves++;
                 if (moves > 20) {
