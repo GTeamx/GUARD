@@ -8,7 +8,7 @@ import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import org.bukkit.potion.PotionEffectType;
 
-    @GuardCheckInfo(name = "Fly E", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0, maxBuffer = 2)
+@GuardCheckInfo(name = "Fly E", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0, maxBuffer = 3)
 public class FlyE extends GuardCheck {
 
     boolean wasVelocity;

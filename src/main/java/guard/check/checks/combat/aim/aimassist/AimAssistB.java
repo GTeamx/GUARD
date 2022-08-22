@@ -7,7 +7,6 @@ import guard.check.GuardCheckState;
 import guard.utils.BoundingBox;
 import guard.utils.SampleList;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
-import net.minecraft.util.MathHelper;
 import org.bukkit.util.Vector;
 
 import java.util.Collection;

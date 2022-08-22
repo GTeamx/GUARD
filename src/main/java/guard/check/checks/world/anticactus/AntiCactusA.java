@@ -6,6 +6,7 @@ import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
 import guard.utils.BoundingBox;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -37,6 +38,7 @@ public class AntiCactusA extends GuardCheck {
             }
         }
         if(b.stream().anyMatch(block -> block.getType() == Material.CACTUS)) {
+            Bukkit.broadcastMessage("" + (System.currentTimeMillis() - gp.lastCactusDamage));
             if (System.currentTimeMillis() - gp.lastCactusDamage > 1000) {
                 moves++;
                 if (moves > 20) {
