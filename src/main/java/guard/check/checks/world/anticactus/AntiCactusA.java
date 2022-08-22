@@ -19,7 +19,7 @@ public class AntiCactusA extends GuardCheck {
     int moves;
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
-        final BoundingBox boundingBox = new BoundingBox(gp.getPlayer());
+        final BoundingBox boundingBox = new BoundingBox(gp.getPlayer()).expand(0.001, 0, 0.001);
         final double minX = boundingBox.getMinX();
         final double minY = boundingBox.getMinY();
         final double minZ = boundingBox.getMinZ();
@@ -40,7 +40,7 @@ public class AntiCactusA extends GuardCheck {
             if (System.currentTimeMillis() - gp.lastCactusDamage > 1000) {
                 moves++;
                 if (moves > 20) {
-                    sendMessage("CACTUS PREDICTION FAILED ");
+                    fail(null, "AntiCactus Prediction Gone Wrong", "time=" + (System.currentTimeMillis() - gp.lastCactusDamage) + " moves="+ moves);
                 }
             } else moves = 0;
         } else {
