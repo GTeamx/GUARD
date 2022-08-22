@@ -21,7 +21,7 @@ public class AimD extends GuardCheck {
 
             debug("moduloGCD=" + moduloGCD);
 
-            if(String.valueOf(moduloGCD).substring(1).equalsIgnoreCase(".0")) fail(packet, "Perfect Rotation", "mGCD=" + moduloGCD);
+            if(String.valueOf(moduloGCD).length() <= 3) fail(packet, "Perfect Rotation", "mGCD=" + moduloGCD);
 
         }
     }
