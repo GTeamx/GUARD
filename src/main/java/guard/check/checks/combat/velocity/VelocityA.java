@@ -5,17 +5,11 @@ import guard.check.GuardCheck;
 import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
 import guard.exempt.ExemptType;
-import guard.utils.BoundingBox;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.event.impl.PacketPlaySendEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 import io.github.retrooper.packetevents.packetwrappers.play.out.entityvelocity.WrappedPacketOutEntityVelocity;
 import io.github.retrooper.packetevents.utils.vector.Vector3d;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @GuardCheckInfo(name = "Velocity A", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 3)
 public class VelocityA extends GuardCheck {

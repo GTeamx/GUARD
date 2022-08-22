@@ -4,7 +4,6 @@ import guard.Guard;
 import guard.check.GuardCheck;
 import guard.data.GuardPlayer;
 import guard.data.GuardPlayerManager;
-import io.github.retrooper.packetevents.PacketEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

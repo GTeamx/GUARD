@@ -1,7 +1,6 @@
 package guard.utils;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 

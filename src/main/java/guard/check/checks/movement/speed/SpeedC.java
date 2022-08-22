@@ -6,7 +6,6 @@ import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
 import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.DoubleSummaryStatistics;

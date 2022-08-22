@@ -6,7 +6,6 @@ import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
 import guard.utils.BoundingBox;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

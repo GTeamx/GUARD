@@ -1,8 +1,5 @@
 package guard.utils;
 
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
-
 import java.util.Collection;
 
 public class MathUtils {

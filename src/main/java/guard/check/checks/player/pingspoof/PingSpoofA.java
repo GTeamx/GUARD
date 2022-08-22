@@ -8,7 +8,6 @@ import guard.utils.SampleList;
 import guard.utils.packet.TransactionPacketClient;
 import guard.utils.packet.TransactionPacketServer;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
-import io.github.retrooper.packetevents.event.impl.PacketPlaySendEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 
 @GuardCheckInfo(name = "PingSpoof A", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 1)

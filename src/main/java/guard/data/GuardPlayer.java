@@ -14,7 +14,6 @@ import guard.utils.packet.TransactionPacketServer;
 import io.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
 import io.github.retrooper.packetevents.utils.server.ServerVersion;
-import io.github.retrooper.packetevents.utils.versionlookup.viaversion.ViaVersionAccessor;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.chat.ComponentBuilder;

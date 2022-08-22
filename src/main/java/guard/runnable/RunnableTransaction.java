@@ -3,14 +3,11 @@ package guard.runnable;
 import guard.check.GuardCheck;
 import guard.data.GuardPlayer;
 import guard.data.GuardPlayerManager;
-import guard.utils.packet.TransactionPacketClient;
 import guard.utils.packet.TransactionPacketServer;
 import io.github.retrooper.packetevents.PacketEvents;
-import io.github.retrooper.packetevents.packetwrappers.NMSPacket;
 import io.github.retrooper.packetevents.packetwrappers.play.out.ping.WrappedPacketOutPing;
 import io.github.retrooper.packetevents.packetwrappers.play.out.transaction.WrappedPacketOutTransaction;
 import io.github.retrooper.packetevents.utils.server.ServerVersion;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 

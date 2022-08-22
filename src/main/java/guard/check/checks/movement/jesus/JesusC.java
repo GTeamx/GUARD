@@ -7,10 +7,6 @@ import guard.check.GuardCheckState;
 import io.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.utils.player.ClientVersion;
-import io.github.retrooper.packetevents.utils.server.ServerUtils;
-import io.github.retrooper.packetevents.utils.server.ServerVersion;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
 
 @GuardCheckInfo(name = "Jesus C", category = GuardCategory.Movement, state = GuardCheckState.Coding, addBuffer = 1, removeBuffer = 0.01, maxBuffer = 1)
 public class JesusC extends GuardCheck {
