@@ -20,7 +20,7 @@ public class JesusB extends GuardCheck {
 
         debug("diff=" + diff);
 
-        if(diff > 0.075 && motionY > 0.075 && accel >= 0.0 && gp.isInLiquid && !isExempt(ExemptType.TELEPORT)) fail(packet, "Predictions unfollowed", "pred=" + prediction + " mY=" + motionY);
+        if(diff > 0.075 && motionY > 0.075 && accel >= 0.0 && gp.isInLiquid && !isExempt(ExemptType.TELEPORT, ExemptType.FLYING)) fail(packet, "Predictions unfollowed", "pred=" + prediction + " mY=" + motionY);
         else removeBuffer();
 
     }
