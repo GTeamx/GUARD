@@ -9,6 +9,7 @@ import guard.check.checks.combat.aim.aimassist.AimAssistD;
 import guard.check.checks.combat.autoblock.AutoBlockA;
 import guard.check.checks.combat.autoclicker.AutoClickerA;
 import guard.check.checks.combat.killaura.KillAuraB;
+import guard.check.checks.combat.killaura.KillAuraC;
 import guard.check.checks.combat.killaura.KillauraA;
 import guard.check.checks.combat.reach.ReachA;
 import guard.check.checks.combat.velocity.VelocityA;
@@ -59,6 +60,7 @@ public class GuardCheckManager {
 
         registerCheck(new KillauraA());
         registerCheck(new KillAuraB());
+        registerCheck(new KillAuraC());
 
         registerCheck(new ReachA());
 
@@ -114,6 +116,7 @@ public class GuardCheckManager {
         registerCheck(new BadPacketP());
         registerCheck(new BadPacketQ());
         registerCheck(new BadPacketU());
+        registerCheck(new BadPacketR());
 
         registerCheck(new InventoryA());
         registerCheck(new InventoryB());
