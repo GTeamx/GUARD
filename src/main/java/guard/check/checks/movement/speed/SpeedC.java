@@ -68,7 +68,6 @@ public class SpeedC extends GuardCheck {
         // TODO: Support soul sand + soul speed enchantment
 
         // SPEED | Ground - Air
-        // Proper way to check for Speed...
         if(gp.player.hasPotionEffect(PotionEffectType.SPEED)) {
             if(groundTicks > 2) {
                 maxSpeed += (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * .0573);
@@ -89,6 +88,9 @@ public class SpeedC extends GuardCheck {
             }
         }
 
+        // STAIRS/SLABS | Ground - Air
+        if(isExempt(ExemptType.STAIRS) || isExempt(ExemptType.SLAB)) maxSpeed = 0.35;
+
         // DAMAGE | Air
         if(isExempt(ExemptType.VELOCITY)) {
             maxSpeed = 0.8;
@@ -96,6 +98,9 @@ public class SpeedC extends GuardCheck {
                 maxSpeed = (gp.kbLevel * 0.95);
             }
         }
+
+        // /SPEED | Ground - Air
+        if(gp.getPlayer().getWalkSpeed() > 0.2) maxSpeed += (gp.getPlayer().getWalkSpeed());
 
         debug("cs=" + cSpeed + " ms="+ maxSpeed + " b=" + buffer);
         if(cSpeed > maxSpeed  && !exempt) fail(packet, "Moving too fast", "cS=" + cSpeed + "mS=" + maxSpeed);
