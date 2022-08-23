@@ -6,7 +6,7 @@ import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "KillAura B", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 6)
+@GuardCheckInfo(name = "KillAura B", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 0)
 public class KillAuraB extends GuardCheck {
 
     double lastDistance;
@@ -18,8 +18,9 @@ public class KillAuraB extends GuardCheck {
 
             double distance = gp.getDistance(true);
             if(lastDistance != 0) {
-                if(Math.abs(distance - lastDistance) < 0.001 && packet.getPlayer().isSprinting()) fail(packet, "Impossible Acceleration", "accel=" + Math.abs(distance - lastDistance));
+                if(String.valueOf(distance - lastDistance).contains("E7") && packet.getPlayer().isSprinting()) fail(packet, "Impossible Acceleration", "accel=" + Math.abs(distance - lastDistance));
                 else removeBuffer();
+                debug("accel=" + (distance - lastDistance) + " b=" + buffer);
             }
             lastDistance = distance;
 
