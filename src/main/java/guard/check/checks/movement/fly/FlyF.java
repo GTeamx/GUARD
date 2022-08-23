@@ -7,7 +7,7 @@ import guard.check.GuardCheckState;
 import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "Fly F", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0, maxBuffer = 5)
+@GuardCheckInfo(name = "Fly F", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0, maxBuffer = 7)
 public class FlyF extends GuardCheck {
 
     boolean wasVelocity;
@@ -24,7 +24,7 @@ public class FlyF extends GuardCheck {
         }
         if(gp.playerGround) wasVelocity = false;
         if(isExempt(ExemptType.VELOCITY)) wasVelocity = true;
-        maxBuffer = (wasVelocity ? tempBuffer + 1 : tempBuffer);
+        maxBuffer = (wasVelocity ? tempBuffer + 2 : tempBuffer);
         final double predictedMotionY = (lastMotionY - 0.08D) * (double)0.98F;
         if((Math.abs(motionY - predictedMotionY) > 0.00000000001) && !gp.playerGround && !exempt) fail(packet, "Predictions unfollowed", "pred=" + predictedMotionY + " mY=" + motionY);
         else if(gp.playerGround && gp.serverGround) removeBuffer();
