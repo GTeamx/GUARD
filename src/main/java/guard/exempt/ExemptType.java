@@ -37,6 +37,7 @@ public enum ExemptType {
     GLIDE(gp -> System.currentTimeMillis() - gp.lastGlide < 4000),
     ICE(gp -> System.currentTimeMillis() - gp.lastIce < 2000),
     RESPAWN(gp -> System.currentTimeMillis() - gp.wasDead < 300L),
+    SWIMMING(gp -> gp.getPlayer().isSwimming()),
     PLACE(gp -> System.currentTimeMillis() - gp.lastBlockPlaced < 600L);
 
     private final Function<GuardPlayer, Boolean> exception;
