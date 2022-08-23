@@ -18,7 +18,7 @@ public class SpeedB extends GuardCheck {
         boolean step = mathOnGround(motionY) && mathOnGround(gp.from.getY());
         if(gp.playerGround) invalidA++;
         if(!gp.playerGround) invalidA = 0;
-        if(invalidA >= 8) maxSpeed = 0.2895 + (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) > 0 ? (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * 0.0573) : 0);;
+        if(invalidA >= 8) maxSpeed = 0.2897+ (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) > 0 ? (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * 0.0573) : 0);;
         if(invalidA < 8) maxSpeed = 0.62 + (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) > 0 ? (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * .02313 + 0.2) : 0);
         if(step && (isExempt(ExemptType.STAIRS) || isExempt(ExemptType.SLAB))) maxSpeed += 0.2;
         if(isExempt(ExemptType.VELOCITY)) {
@@ -29,6 +29,7 @@ public class SpeedB extends GuardCheck {
         if(isExempt(ExemptType.SLIME)) maxSpeed += 0.3;
         if(isExempt(ExemptType.BLOCK_ABOVE))
             maxSpeed += 0.08;
+        if(gp.getPlayer().getWalkSpeed() > 0.2) maxSpeed += (gp.getPlayer().getWalkSpeed());
         if(gp.getDeltaXZ() >= maxSpeed && !exempt) fail(packet, "Teleported horizontally", "cS=" + gp.getDeltaXZ() + " mS=" + maxSpeed); else removeBuffer();
     }
 
