@@ -20,7 +20,7 @@ public class GroundC extends GuardCheck {
         if(motionY >= 0 || !gp.inAir && !exempt) {
             startY = gp.to.clone().getY();
         } else  {
-            if(Math.abs(gp.player.getFallDistance() - Math.abs(gp.to.clone().getY() - startY)) - Math.abs(predictedMotionY) > 0.7 && !exempt && !isBedrock) {
+            if(Math.abs(gp.player.getFallDistance() - Math.abs(gp.to.clone().getY() - startY)) - Math.abs(predictedMotionY) > 1 && !exempt && !isBedrock) {
                 fail(packet, "Spoofed FallDistance", Math.abs(gp.player.getFallDistance() - Math.abs(gp.to.clone().getY() - startY)) - Math.abs(predictedMotionY));
             }
         }
