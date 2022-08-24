@@ -20,7 +20,7 @@ public class AimAssistC extends GuardCheck {
         debug("accelAccelAccel=" + accelAccelAccel + " % 5=" + (Math.floor(accelAccelAccel * 100)) % 2);
         if(String.valueOf(accelAccel).length() < 14 && accelAccel != 0) {
             debug("accelAccel=" + accelAccel);
-            fail(null, "Accel your ass off", "accelAccel=" + accelAccel);
+            fail(null, "Acceleration Flaw", "accelAccel=" + accelAccel);
         } else {
             removeBuffer();
         }
