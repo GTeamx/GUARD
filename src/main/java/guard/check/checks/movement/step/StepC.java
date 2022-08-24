@@ -13,7 +13,7 @@ public class StepC extends GuardCheck {
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
         boolean exempt = isExempt(ExemptType.FLYING, ExemptType.SLIME, ExemptType.TELEPORT, ExemptType.JOINED, ExemptType.INSIDE_VEHICLE, ExemptType.NEAR_VEHICLE, ExemptType.CLIMBABLE, ExemptType.LIQUID, ExemptType.STAIRS, ExemptType.SLAB, ExemptType.WEB);
         if(lastMotionY - motionY < 0.01)  {
-            if(!exempt && motionY != 0 && !gp.onLowBlock) fail(packet, "Repeated motion", "lmY=" + lastMotionY + " mY=" + motionY);
+            if(!exempt && motionY != 0 && !gp.onLowBlock && motionY > -3.45) fail(packet, "Repeated motion", "lmY=" + lastMotionY + " mY=" + motionY);
         }
         if(lastMotionY - motionY > 0.01) removeBuffer();
     }
