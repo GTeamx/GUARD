@@ -21,7 +21,7 @@ public class AimAssistD extends GuardCheck {
         if(String.valueOf(accelAccel).length() < 15 && accelAccel != 0) {
             debug("accelAccel=" + accelAccel);
             if(accelAccel == 3.0361328125 || String.valueOf(accelAccel).length() < 6) {
-                fail(null, "Accel your ass off2", "accelAccel=" + accelAccel);
+                fail(null, "Rotation Flaw", "accelAccel=" + accelAccel);
             }
         } else {
             removeBuffer();
