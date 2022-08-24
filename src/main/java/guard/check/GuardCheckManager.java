@@ -93,6 +93,7 @@ public class GuardCheckManager {
         registerCheck(new SpeedC());
         registerCheck(new SpeedD());
         registerCheck(new SpeedE());
+        registerCheck(new SpeedF());
 
         registerCheck(new StepA());
         registerCheck(new StepB());
