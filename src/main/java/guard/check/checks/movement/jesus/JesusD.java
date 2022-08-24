@@ -19,7 +19,7 @@ public class JesusD extends GuardCheck {
                 exempt = true;
             }
         }
-        if(gp.isInFullLiquid && gp.blockAboveWater && !isExempt(ExemptType.FLYING)) {
+        if(gp.isInFullLiquid && gp.blockAboveWater && !isExempt(ExemptType.FLYING, ExemptType.TELEPORT)) {
             if(motionY - lastMotionY <= 0.0025 && motionY - lastMotionY >= 0 && motionY < 0.09 && motionY > -0.1 && !exempt && !String.valueOf(motionY).startsWith("0.03999999") && !String.valueOf(motionY).startsWith("0.040000000")) {
                 fail(null, "Same DeltaY", "motionY=" + motionY);
                 debug("" +( motionY - lastMotionY));
