@@ -26,9 +26,12 @@ public class AimAssistA extends GuardCheck {
             double floorModuloY = Math.abs(Math.floor(moduloY) - moduloY);
             boolean invalidX = (moduloX > 90.0D && floorModuloX > 0.1D);
             boolean invalidY = (moduloY > 90.0D && floorModuloY > 0.1D);
-            if (invalidY && !gp.isCinematic) {fail(packet, "Smooth Rotation", "iY");
-
-            } else removeBuffer();
+            if(invalidY && !gp.isCinematic) fail(packet, "Smooth Rotation", "iY");
+            else removeBuffer();
+            if(invalidX && invalidY) {
+                maxBuffer = 0;
+                fail(packet, "Smooth Rotation", "iY + iX");
+            } else maxBuffer = 3;
         }
     }
 }
