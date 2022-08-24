@@ -4,6 +4,7 @@ import guard.check.GuardCategory;
 import guard.check.GuardCheck;
 import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
+import guard.exempt.ExemptType;
 import guard.utils.MathUtils;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
@@ -21,7 +22,7 @@ public class AimD extends GuardCheck {
 
             debug("moduloGCD=" + moduloGCD);
 
-            if(String.valueOf(moduloGCD).length() <= 3) fail(packet, "Perfect Rotation", "mGCD=" + moduloGCD);
+            if(String.valueOf(moduloGCD).length() <= 3 && !isExempt(ExemptType.TELEPORT)) fail(packet, "Perfect Rotation", "mGCD=" + moduloGCD);
 
         }
     }
