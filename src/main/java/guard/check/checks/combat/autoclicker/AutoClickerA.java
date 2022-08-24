@@ -35,7 +35,8 @@ public class AutoClickerA extends GuardCheck {
                 }
                 lastDelay = now;
             } else {
-                delay.removeFirst();
+                if(!delay.isEmpty())
+                    delay.removeFirst();
             }
         }
         if(packet.getPacketId() == PacketType.Play.Client.BLOCK_DIG) {

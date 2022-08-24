@@ -9,6 +9,7 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
 @GuardCheckInfo(name = "AimAssist A", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.5, maxBuffer = 3)
 public class AimAssistA extends GuardCheck {
+    double tempBuffer;
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
         double divisorYaw = MathUtils.getGcd((long) (deltaYaw * MathUtils.EXPANDER), (long) (lastDeltaYaw * MathUtils.EXPANDER));
@@ -29,9 +30,10 @@ public class AimAssistA extends GuardCheck {
             if(invalidY && !gp.isCinematic) fail(packet, "Smooth Rotation", "iY");
             else removeBuffer();
             if(invalidX && invalidY) {
+                tempBuffer = maxBuffer;
                 maxBuffer = 0;
                 fail(packet, "Smooth Rotation", "iY + iX");
-            } else maxBuffer = 3;
+            } else maxBuffer = tempBuffer;
         }
     }
 }

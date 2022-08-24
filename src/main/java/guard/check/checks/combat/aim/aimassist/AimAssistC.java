@@ -18,7 +18,7 @@ public class AimAssistC extends GuardCheck {
         double accelAccel = Math.abs(lastAccel - (Math.abs(matherino)));
         double accelAccelAccel = Math.abs(lastAccelAccel - accelAccel);
         debug("accelAccelAccel=" + accelAccelAccel + " % 5=" + (Math.floor(accelAccelAccel * 100)) % 2);
-        if(String.valueOf(accelAccel).length() < 14 && accelAccel != 0) {
+        if(String.valueOf(accelAccel).length() < 12 && accelAccel != 0) {
             debug("accelAccel=" + accelAccel);
             fail(null, "Acceleration Flaw", "accelAccel=" + accelAccel);
         } else {

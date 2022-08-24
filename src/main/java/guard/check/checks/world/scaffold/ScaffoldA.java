@@ -15,7 +15,7 @@ import org.bukkit.block.Block;
 
 import java.util.concurrent.FutureTask;
 
-@GuardCheckInfo(name = "Scaffold A", category = GuardCategory.World, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 1)
+@GuardCheckInfo(name = "Scaffold A", category = GuardCategory.World, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0, maxBuffer = 5)
 public class ScaffoldA extends GuardCheck {
 
     boolean placedBlock;

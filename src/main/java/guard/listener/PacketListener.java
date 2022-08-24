@@ -195,12 +195,6 @@ public class PacketListener extends PacketListenerAbstract {
                     } else {
                         gp.ticks = 0;
                     }
-                    if (gp.onSlime) {
-                        gp.sinceSlimeTicks = 0;
-                    } else {
-                        gp.sinceSlimeTicks++;
-                    }
-
 
                     gp.lastLastPlayerGround = gp.lastPlayerGround;
                     gp.lastPlayerGround = gp.playerGround;
@@ -239,6 +233,11 @@ public class PacketListener extends PacketListenerAbstract {
                         }
                     }
                     handleBlocks(gp);
+                    if (gp.onSlime) {
+                        gp.sinceSlimeTicks = 0;
+                    } else {
+                        gp.sinceSlimeTicks++;
+                    }
                     if (gp.getPlayer().isFlying()) {
                         gp.lastFlyingTime = System.currentTimeMillis();
                     }
