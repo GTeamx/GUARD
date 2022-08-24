@@ -4,6 +4,7 @@ import guard.check.GuardCategory;
 import guard.check.GuardCheck;
 import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
+import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.utils.player.ClientVersion;
@@ -19,7 +20,7 @@ public class JesusC extends GuardCheck {
                     exempt = true;
                 }
             }
-            if(motionY > 0.15 && !exempt) {
+            if(motionY > 0.15 && !exempt && !isExempt(ExemptType.TELEPORT)) {
                 fail(null, "Jumped Higher in Water", "motionY=" + motionY);
             }
         } else {
