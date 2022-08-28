@@ -19,6 +19,7 @@ import guard.check.checks.movement.fly.*;
 import guard.check.checks.movement.ground.GroundA;
 import guard.check.checks.movement.ground.GroundB;
 import guard.check.checks.movement.ground.GroundC;
+import guard.check.checks.movement.invalid.InvalidA;
 import guard.check.checks.movement.jesus.*;
 import guard.check.checks.movement.speed.*;
 import guard.check.checks.movement.step.StepA;
@@ -77,6 +78,8 @@ public class GuardCheckManager {
         registerCheck(new FlyF());
 
         registerCheck(new vClipA());
+
+        registerCheck(new InvalidA());
 
         registerCheck(new GroundA());
         registerCheck(new GroundB());
