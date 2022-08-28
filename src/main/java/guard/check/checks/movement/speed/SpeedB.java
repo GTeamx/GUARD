@@ -29,7 +29,7 @@ public class SpeedB extends GuardCheck {
         if(isExempt(ExemptType.SLIME)) maxSpeed += 0.3;
         if(isExempt(ExemptType.BLOCK_ABOVE))
             maxSpeed += 0.08;
-        if(gp.getPlayer().getWalkSpeed() > 0.2) maxSpeed += (gp.getPlayer().getWalkSpeed());
+        //if(gp.getPlayer().getWalkSpeed() > 0.2) maxSpeed += (gp.getPlayer().getWalkSpeed());
         if(gp.getDeltaXZ() >= maxSpeed && !exempt) fail(packet, "Teleported horizontally", "cS=" + gp.getDeltaXZ() + " mS=" + maxSpeed); else removeBuffer();
     }
 

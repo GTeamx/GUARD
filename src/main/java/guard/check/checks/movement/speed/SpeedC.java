@@ -12,19 +12,17 @@ import java.util.DoubleSummaryStatistics;
 
 @GuardCheckInfo(name = "Speed C", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 6)
 public class SpeedC extends GuardCheck {
+
     double maxSpeed = 1;
     double cSpeed = 0;
     int groundTicks = 0;
-    DoubleSummaryStatistics stats = new DoubleSummaryStatistics();
-    DoubleSummaryStatistics stats2 = new DoubleSummaryStatistics();
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
         boolean exempt = isExempt(ExemptType.FLYING, ExemptType.TELEPORT);
-        boolean dontCheck = isExempt(ExemptType.JOINED);
         cSpeed = gp.getDistance(true);
 
-        if(gp.playerGround) groundTicks++;
-        if(!gp.playerGround) groundTicks = 0;
+        if(!gp.inAir) groundTicks++;
+        else groundTicks = 0;
 
         // BASIC | Ground - Air
         if(groundTicks > 12) {
@@ -100,7 +98,7 @@ public class SpeedC extends GuardCheck {
         }
 
         // /SPEED | Ground - Air
-        if(gp.getPlayer().getWalkSpeed() > 0.2) maxSpeed += (gp.getPlayer().getWalkSpeed());
+        //if(gp.getPlayer().getWalkSpeed() > 0.2) maxSpeed += (gp.getPlayer().getWalkSpeed());
 
         debug("cs=" + cSpeed + " ms="+ maxSpeed + " b=" + buffer);
         if(cSpeed > maxSpeed  && !exempt) fail(packet, "Moving too fast", "cS=" + cSpeed + "mS=" + maxSpeed);
