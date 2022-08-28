@@ -15,7 +15,7 @@ public class FlyD extends GuardCheck {
         boolean exempt = isExempt(ExemptType.SLIME, ExemptType.SLAB, ExemptType.STAIRS, ExemptType.LIQUID, ExemptType.GLIDE, ExemptType.FLYING, ExemptType.NEAR_VEHICLE, ExemptType.INSIDE_VEHICLE, ExemptType.CLIMBABLE, ExemptType.TELEPORT, ExemptType.VELOCITY, ExemptType.FULL_LIQUID);
         motionPrediction = (lastMotionY - 0.08) * (double) 0.98F;
         if(motionY < 0 && gp.inAir && !exempt) debug("r=" + Math.abs(motionY - motionPrediction) + " my=" + motionY + " d=" + (motionY - lastMotionY) + " fD=" + gp.getLastFallDistance());
-        if(motionY < 0 && gp.inAir && !gp.onSolidGround && !gp.serverGround && !exempt && (Math.abs(motionY  - motionPrediction) > (gp.player.getFallDistance() > 2 ? 8.7E-13 : 8.7E-15)) && ((motionY - motionPrediction) > -0.08141626303492274)) fail(packet, "Predictions Unfollowed", "res=" + (motionY - motionPrediction));
+        if(motionY < 0 && gp.inAir && !gp.onSolidGround && !gp.serverGround && !exempt && (Math.abs(motionY  - motionPrediction) > (gp.player.getFallDistance() > 2 ? 8.7E-13 : 8.7E-15)) && ((motionY - motionPrediction) > -0.08141626303492273)) fail(packet, "Predictions Unfollowed", "res=" + (motionY - motionPrediction));
         if(gp.inAir && Math.abs(motionY) >= 0.01 && Math.abs(motionY) <= 0.1 && (Math.abs(motionY  - motionPrediction) > 8.7E-15) && !isExempt(ExemptType.SLIME)) fail(packet, "Predictions Unfollowed", "res=" + (motionY - motionPrediction));
     }
 }
