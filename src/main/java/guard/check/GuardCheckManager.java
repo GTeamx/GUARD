@@ -10,7 +10,7 @@ import guard.check.checks.combat.autoblock.AutoBlockA;
 import guard.check.checks.combat.autoclicker.AutoClickerA;
 import guard.check.checks.combat.killaura.KillAuraB;
 import guard.check.checks.combat.killaura.KillAuraC;
-import guard.check.checks.combat.killaura.KillauraA;
+import guard.check.checks.combat.killaura.KillAuraA;
 import guard.check.checks.combat.reach.ReachA;
 import guard.check.checks.combat.velocity.VelocityA;
 import guard.check.checks.combat.velocity.VelocityB;
@@ -21,6 +21,7 @@ import guard.check.checks.movement.ground.GroundB;
 import guard.check.checks.movement.ground.GroundC;
 import guard.check.checks.movement.invalid.InvalidA;
 import guard.check.checks.movement.jesus.*;
+import guard.check.checks.movement.motion.MotionA;
 import guard.check.checks.movement.speed.*;
 import guard.check.checks.movement.step.StepA;
 import guard.check.checks.movement.step.StepB;
@@ -59,7 +60,7 @@ public class GuardCheckManager {
 
         registerCheck(new AutoClickerA());
 
-        registerCheck(new KillauraA());
+        registerCheck(new KillAuraA());
         registerCheck(new KillAuraB());
         registerCheck(new KillAuraC());
 
@@ -78,6 +79,8 @@ public class GuardCheckManager {
         registerCheck(new FlyF());
 
         registerCheck(new vClipA());
+
+        registerCheck(new MotionA());
 
         registerCheck(new InvalidA());
 

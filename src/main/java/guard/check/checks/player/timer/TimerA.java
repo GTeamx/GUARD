@@ -10,7 +10,7 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.event.impl.PacketPlaySendEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 
-@GuardCheckInfo(name = "Timer A", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.02, maxBuffer = 2)
+@GuardCheckInfo(name = "Timer A", category = GuardCategory.Player, state = GuardCheckState.EXPERIMENTAL, addBuffer = 1, removeBuffer = 0.02, maxBuffer = 2)
 public class TimerA extends GuardCheck {
     double bal;
     double lastBal;
@@ -46,7 +46,7 @@ public class TimerA extends GuardCheck {
             }
         }
         if(bal > 15) {
-            fail(packet, "Sent too many Move Packets", bal);
+            fail(packet, "Sent packets too fast", "bal §9" + bal);
             bal = -2;
         } else removeBuffer();
         lastMS = now;

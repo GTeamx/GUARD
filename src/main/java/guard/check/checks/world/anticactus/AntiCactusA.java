@@ -13,7 +13,7 @@ import org.bukkit.block.Block;
 import java.util.ArrayList;
 import java.util.List;
 
-@GuardCheckInfo(name = "AntiCactus A", category = GuardCategory.World, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "AntiCactus A", category = GuardCategory.World, state = GuardCheckState.STABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class AntiCactusA extends GuardCheck {
 
     int moves;
@@ -40,7 +40,7 @@ public class AntiCactusA extends GuardCheck {
             if (System.currentTimeMillis() - gp.lastCactusDamage > 1000) {
                 moves++;
                 if (moves > 20) {
-                    fail(null, "AntiCactus Prediction Gone Wrong", "time=" + (System.currentTimeMillis() - gp.lastCactusDamage) + " moves="+ moves);
+                    fail(null, "Moved wrongly next to a cactus", "lcD §9" + (System.currentTimeMillis() - gp.lastCactusDamage) + "\n" + " §8»§f moves §9" + moves);
                 }
             } else moves = 0;
         } else {

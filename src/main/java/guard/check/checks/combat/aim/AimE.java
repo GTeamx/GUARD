@@ -7,7 +7,7 @@ import guard.check.GuardCheckState;
 import guard.utils.MathUtils;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "Aim E", category = GuardCategory.Combat, state = GuardCheckState.Coding, addBuffer = 1, removeBuffer = 0.01, maxBuffer = 2)
+@GuardCheckInfo(name = "Aim E", category = GuardCategory.Combat, state = GuardCheckState.STABLE, addBuffer = 1, removeBuffer = 0.01, maxBuffer = 2)
 public class AimE extends GuardCheck {
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
@@ -21,7 +21,7 @@ public class AimE extends GuardCheck {
 
             debug("PITCH=" + moduloGCD);
 
-            if(Math.abs(moduloGCD) > 20) fail(null, "GCD Flaw", "moduloGCD=" + moduloGCD);
+            if(Math.abs(moduloGCD) > 20) fail(null, "GCD Flaw", "mGCD §9" + moduloGCD);
             else removeBuffer();
         }
 

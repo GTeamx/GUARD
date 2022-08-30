@@ -10,7 +10,7 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
 
-@GuardCheckInfo(name = "BadPacket P", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.5, maxBuffer = 1)
+@GuardCheckInfo(name = "BadPacket P", category = GuardCategory.Player, state = GuardCheckState.STABLE, addBuffer = 1, removeBuffer = 0.5, maxBuffer = 1)
 public class BadPacketP extends GuardCheck {
 
     boolean cSwing;
@@ -20,7 +20,7 @@ public class BadPacketP extends GuardCheck {
         if (packet.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
             WrappedPacketInUseEntity wrapper = new WrappedPacketInUseEntity(packet.getNMSPacket());
             debug("cSwing=" + cSwing);
-            if (wrapper.getAction() == WrappedPacketInUseEntity.EntityUseAction.ATTACK && !cSwing) fail(packet, "Missing packet", "ARM_ANIMATION ? USE_ENTITY");
+            if (wrapper.getAction() == WrappedPacketInUseEntity.EntityUseAction.ATTACK && !cSwing) fail(packet, "Invalid packet", "§9ARM_ANIMATION ? USE_ENTITY");
             else removeBuffer();
             cSwing = false;
         }

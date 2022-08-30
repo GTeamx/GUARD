@@ -17,7 +17,7 @@ import org.bukkit.block.Block;
 import java.util.ArrayList;
 import java.util.List;
 
-@GuardCheckInfo(name = "Velocity B", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 3)
+@GuardCheckInfo(name = "Velocity B", category = GuardCategory.Combat, state = GuardCheckState.EXPERIMENTAL, addBuffer = 1, removeBuffer = 1, maxBuffer = 3)
 public class VelocityB extends GuardCheck {
 
     Vector3d veloVector;
@@ -63,7 +63,7 @@ public class VelocityB extends GuardCheck {
                     double percentage2 = gp.getLastDeltaXZ() / predictedVelocityXZ * 100;
                     debug("percentage=" + percentage + " percentage2=" + percentage2);
                     if ((percentage < 30) && percentage >= 0 && !String.valueOf(percentage).equals("-0.0")) { // TODO: check if player is moving, if yes then check the next not the current flying
-                        fail(null, "Velocity Ignored", "percentage=" + percentage);
+                        fail(null, "Modified horizontal velocity", "velocity §9" + percentage + "%");
                     } else removeBuffer();
                     ticks = 0;
                     hit = false;

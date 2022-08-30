@@ -7,7 +7,7 @@ import guard.check.GuardCheckState;
 import guard.utils.MathUtils;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "AimAssist A", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.5, maxBuffer = 3)
+@GuardCheckInfo(name = "AimAssist A", category = GuardCategory.Combat, state = GuardCheckState.STABLE, addBuffer = 1, removeBuffer = 0.10, maxBuffer = 3)
 public class AimAssistA extends GuardCheck {
     double tempBuffer;
 
@@ -29,11 +29,7 @@ public class AimAssistA extends GuardCheck {
             boolean invalidY = (moduloY > 90.0D && floorModuloY > 0.1D);
             if(invalidY && !gp.isCinematic) fail(packet, "Smooth Rotation", "iY");
             else removeBuffer();
-            if(invalidX && invalidY) {
-                tempBuffer = maxBuffer;
-                maxBuffer = 0;
-                fail(packet, "Smooth Rotation", "iY + iX");
-            } else maxBuffer = tempBuffer;
+            if(invalidX && invalidY) fail(packet, "Smooth Rotation", "iY=§aTRUE" + "\n" + " §8»§f iX=§aTRUE");
         }
     }
 }

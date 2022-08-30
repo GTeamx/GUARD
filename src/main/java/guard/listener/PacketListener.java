@@ -402,15 +402,24 @@ public class PacketListener extends PacketListenerAbstract {
         gp.isOnSlab = b.stream().anyMatch(block -> block.getType().toString().contains("STEP") || block.getType().toString().contains("SLAB"));
         gp.isOnStair = b.stream().anyMatch(block -> block.getType().toString().contains("STAIR"));
         gp.nearTrapdoor = this.isCollidingAtLocation(gp,1.801, material -> material.toString().contains("TRAP_DOOR"));
+        gp.nearTrapdoor = b.stream().anyMatch(block -> block.getType().toString().contains("TRAPDOOR"));
         gp.blockAbove = b.stream().filter(block -> block.getLocation().getY() - gp.to.getY() > 1.5)
                 .anyMatch(block -> block.getType() != Material.AIR) || gp.nearTrapdoor;
         if(gp.blockAbove) gp.lastBlockAbove = System.currentTimeMillis();
         gp.blockAboveWater = b.stream().filter(block -> block.getLocation().getY() - gp.to.getY() > 1.5)
                 .allMatch(block -> block.isLiquid() || block.getType() == Material.AIR) || gp.nearTrapdoor;
         gp.onSlime = b.stream().anyMatch(block -> block.getType().toString().equalsIgnoreCase("SLIME_BLOCK"));
+        gp.onSoulSand = b.stream().anyMatch(block -> block.getType().toString().contains("SOUL"));
+        gp.onCake = b.stream().anyMatch(block -> block.getType().toString().contains("CAKE"));
+        gp.nearBerry = b.stream().anyMatch(block -> block.getType().toString().contains("BUSH"));
         gp.nearPiston = b.stream().anyMatch(block -> block.getType().toString().contains("PISTON"));
-        gp.onLowBlock = b.stream().anyMatch(block -> block.getType().toString().contains("TRAP_DOOR") || block.getType().toString().contains("BED") || block.getType().toString().contains("CARPET") || block.getType().toString().contains("REPEATER") || block.getType().toString().contains("COMPARATOR") || block.getType().toString().contains("SLAB") || block.getType().toString().contains("SNOW") || block.getType().toString().contains("CAULDRON") || block.getType().toString().contains("BREWING") || block.getType().toString().contains("HOPPER") || block.getType().toString().contains("DETECTOR") || block.getType().toString().contains("ENCHANTING") || block.getType().toString().contains("END_PORTAL") || block.getType().toString().contains("POT") || block.getType().toString().contains("SOUL_SAND") || block.getType().toString().contains("STAIRS") || block.getType().toString().contains("SLAB") || block.getType().toString().contains("STAIR") || block.getType().toString().contains("STEP")  || block.getType().toString().contains("BED")  || block.getType().toString().contains("HEAD")  || block.getType().toString().contains("FENCE")  || block.getType().toString().contains("WALL")  || block.getType().toString().contains("PISTON")  || block.getType().toString().contains("SLIME"));
+        gp.onLowBlock = b.stream().anyMatch(block -> block.getType().toString().contains("TRAP_DOOR") || block.getType().toString().contains("BED") || block.getType().toString().contains("CARPET") || block.getType().toString().contains("REPEATER") || block.getType().toString().contains("COMPARATOR") || block.getType().toString().contains("SLAB") || block.getType().toString().contains("SNOW") || block.getType().toString().contains("CAULDRON") || block.getType().toString().contains("BREWING") || block.getType().toString().contains("HOPPER") || block.getType().toString().contains("DETECTOR") || block.getType().toString().contains("ENCHANTING") || block.getType().toString().contains("END_PORTAL") || block.getType().toString().contains("POT") || block.getType().toString().contains("SOUL") || block.getType().toString().contains("STAIRS") || block.getType().toString().contains("SLAB") || block.getType().toString().contains("CAKE") || block.getType().toString().contains("STEP")  || block.getType().toString().contains("BED")  || block.getType().toString().contains("HEAD")  || block.getType().toString().contains("FENCE")  || block.getType().toString().contains("WALL")  || block.getType().toString().contains("PISTON")  || block.getType().toString().contains("SLIME") || block.getType().toString().contains("CANDLE"));
         if(gp.onLowBlock) gp.lastLowBlock = System.currentTimeMillis();
+        if(gp.onSoulSand) gp.lastOnSoulSand = System.currentTimeMillis();
+        if(gp.nearBerry) gp.lastNearBerry = System.currentTimeMillis();
+        if(System.currentTimeMillis() - gp.lastLowBlock < 600) gp.onLowBlock = true;
+        if(System.currentTimeMillis() - gp.lastOnSoulSand < 600) gp.onSoulSand = true;
+        if(System.currentTimeMillis() - gp.lastNearBerry < 300) gp.nearBerry = true;
         final Location location = gp.getPlayer().getLocation();
         final int var1 = NumberConversions.floor(location.getX());
         final int var2 = NumberConversions.floor(location.getY());

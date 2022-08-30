@@ -7,12 +7,12 @@ import guard.check.GuardCheckState;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 
-@GuardCheckInfo(name = "BadPacket K", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "BadPacket K", category = GuardCategory.Player, state = GuardCheckState.STABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class BadPacketK extends GuardCheck {
 
     public void onPacket(PacketPlayReceiveEvent packet) {
         if(packet.getPacketId() == PacketType.Play.Client.STEER_VEHICLE) {
-            if(!packet.getPlayer().isInsideVehicle()) fail(packet, "Impossible packet", "STEER_VEHICLE_NULL"); else removeBuffer();
+            if(!packet.getPlayer().isInsideVehicle()) fail(packet, "Impossible packet", "§9STEER_VEHICLE_NULL"); else removeBuffer();
         }
     }
 

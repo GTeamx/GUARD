@@ -15,7 +15,7 @@ import org.bukkit.block.Block;
 
 import java.util.concurrent.FutureTask;
 
-@GuardCheckInfo(name = "Scaffold A", category = GuardCategory.World, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0, maxBuffer = 5)
+@GuardCheckInfo(name = "Scaffold A", category = GuardCategory.World, state = GuardCheckState.EXPERIMENTAL, addBuffer = 1, removeBuffer = 0, maxBuffer = 5)
 public class ScaffoldA extends GuardCheck {
 
     boolean placedBlock;
@@ -50,7 +50,7 @@ public class ScaffoldA extends GuardCheck {
         } else {
             if(wasAboveBlock) {
                 if(!wasSneaking && gp.player.isSneaking() && System.currentTimeMillis() - lastBlock < 600) {
-                    fail(null, "Used Eagle", "EAGLE");
+                    fail(null, "Impossible perfect egle pattern", "§4NaN");
                 } else removeBuffer();
             }
             wasSneaking = false;

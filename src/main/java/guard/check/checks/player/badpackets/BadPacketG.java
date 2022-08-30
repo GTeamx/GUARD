@@ -8,7 +8,7 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 import io.github.retrooper.packetevents.packetwrappers.play.in.helditemslot.WrappedPacketInHeldItemSlot;
 
-@GuardCheckInfo(name = "BadPacket G", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "BadPacket G", category = GuardCategory.Player, state = GuardCheckState.STABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class BadPacketG extends GuardCheck {
 
     int lastSlot = -1;
@@ -16,7 +16,7 @@ public class BadPacketG extends GuardCheck {
     public void onPacket(PacketPlayReceiveEvent packet) {
         if (packet.getPacketId() == PacketType.Play.Client.HELD_ITEM_SLOT) {
             WrappedPacketInHeldItemSlot p = new WrappedPacketInHeldItemSlot(packet.getNMSPacket());
-            if (p.getCurrentSelectedSlot() == lastSlot) fail(packet, "Invalid action", "HELD_ITEM_SLOT_REPEATED"); else removeBuffer();
+            if (p.getCurrentSelectedSlot() == lastSlot) fail(packet, "Invalid action", "§9HELD_ITEM_SLOT"); else removeBuffer();
             lastSlot = p.getCurrentSelectedSlot();
         }
     }

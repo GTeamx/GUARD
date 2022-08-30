@@ -9,7 +9,7 @@ import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import org.bukkit.Bukkit;
 
-@GuardCheckInfo(name = "vClip A", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "vClip A", category = GuardCategory.Movement, state = GuardCheckState.STABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class vClipA extends GuardCheck {
 
     @Override
@@ -20,10 +20,7 @@ public class vClipA extends GuardCheck {
         final double absMotion = Math.abs(motionY);
         final double finalMaxMotion = maxMotion + Math.abs(lastMotionY);
 
-        if(absMotion > finalMaxMotion && !exempt) {
-            fail(packet, "Teleported vertically", "absM=" + absMotion + " fMM=" + finalMaxMotion);
-            Bukkit.getScheduler().runTask(Guard.instance, () -> gp.getPlayer().teleport(gp.getFrom()));
-        }
+        if(absMotion > finalMaxMotion && !exempt) fail(packet, "Teleported vertically", "mY §9" + absMotion + "§8/§9" + finalMaxMotion);
 
     }
 }

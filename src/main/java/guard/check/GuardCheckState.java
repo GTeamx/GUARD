@@ -2,5 +2,5 @@ package guard.check;
 
 public enum GuardCheckState {
 
-    Release, Testing, Coding
+    STABLE, EXPERIMENTAL, UNSTABLE
 }

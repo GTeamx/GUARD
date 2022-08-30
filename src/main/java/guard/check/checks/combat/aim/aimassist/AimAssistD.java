@@ -6,7 +6,7 @@ import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "AimAssist D", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 0.5, maxBuffer = 1)
+@GuardCheckInfo(name = "AimAssist D", category = GuardCategory.Combat, state = GuardCheckState.EXPERIMENTAL, addBuffer = 1, removeBuffer = 0.5, maxBuffer = 1.5)
 public class AimAssistD extends GuardCheck {
 
     double lastAccel;
@@ -21,7 +21,7 @@ public class AimAssistD extends GuardCheck {
         if(String.valueOf(accelAccel).length() < 15 && accelAccel != 0) {
             debug("accelAccel=" + accelAccel);
             if(accelAccel == 3.0361328125 || String.valueOf(accelAccel).length() < 6) {
-                fail(null, "Rotation Flaw", "accelAccel=" + accelAccel);
+                fail(null, "Rotation flaw", "accel §9" + accelAccel);
             }
         } else {
             removeBuffer();

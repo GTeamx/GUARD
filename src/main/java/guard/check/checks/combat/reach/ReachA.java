@@ -7,7 +7,7 @@ import guard.check.GuardCheckState;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
-@GuardCheckInfo(name = "Reach A", category = GuardCategory.Combat, state = GuardCheckState.Coding, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "Reach A", category = GuardCategory.Combat, state = GuardCheckState.UNSTABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class ReachA extends GuardCheck {
 
 

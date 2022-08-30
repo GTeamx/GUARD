@@ -6,6 +6,7 @@ import com.viaversion.viaversion.api.protocol.packet.PacketTracker;
 import guard.Guard;
 import guard.check.GuardCheck;
 import guard.check.GuardCheckManager;
+import guard.check.GuardCheckState;
 import guard.check.PredictionProcessor;
 import guard.exempt.Exempt;
 import guard.utils.BoundingBox;
@@ -131,6 +132,11 @@ public class GuardPlayer {
     public float lastAccelPitch;
     public int cinematicTicks;
     public long lastCinematic;
+    public boolean onSoulSand;
+    public double lastOnSoulSand;
+    public boolean onCake;
+    public boolean nearBerry;
+    public double lastNearBerry;
     public boolean isCinematic;
     public ArrayDeque<Integer> sensitivitySamples = new ArrayDeque<>();
     public int sensitivity;
@@ -217,15 +223,22 @@ public class GuardPlayer {
                 }
                 buf += obj.toString() + ", ";
             }
-            final String text = "§7Check: §9" + check.name + " \n§7Information: §9" + Info + " \n§7Value: §9" + Value + " \n§7Buffer: §9" + Buffer + "§7/§9" + maxBuffer  + " \n§7State: §9" + state;
+            final String text = "     §9§lINFORMATIONS" + "\n" + "\n" + " §7» §f" + Info + "\n" + " §7» §f" + Value + "\n" + " §7» §9" + Buffer + "§7/§9" + maxBuffer + "\n" + "         §7§nClick to teleport !";
             final String prefix = Guard.instance.configUtils.getStringFromConfig("config", "prefix","§9§lGUARD §7»§f");
             for (Player p : Bukkit.getOnlinePlayers()) {
                 boolean d = Guard.instance.configUtils.getBooleanFromConfig("config", "testMode", false);
                 GuardPlayer gp = GuardPlayerManager.getGuardPlayer(p);
                 if ((gp.alertsToggled)) { // TODO: /alerts command test later && (!d && !player.getName().equals(p.getName()))         || (d && !p.getName().equals(player.getName()))
-                    TextComponent Flag = new TextComponent(prefix + " " + player.getName() + " §7failed §f" + check.name + " §7(§9x" + getFlags(player.getName(), check.name) + "§7)");
-                    Flag.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ComponentBuilder(text).create()));
-                    p.spigot().sendMessage(Flag);
+                    if(!state.equalsIgnoreCase("EXPERIMENTAL")) {
+                        TextComponent Flag = new TextComponent(prefix + " " + player.getName() + " §7failed §f" + check.name + " §7(§9x" + getFlags(player.getName(), check.name) + "§7)");
+                        Flag.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(text).create()));
+                        p.spigot().sendMessage(Flag);
+                    }
+                    if(state.equalsIgnoreCase("EXPERIMENTAL")) {
+                        TextComponent Flag = new TextComponent(prefix + " " + player.getName() + " §7failed §f" + check.name + " (Experimental) §7(§9x" + getFlags(player.getName(), check.name) + "§7)");
+                        Flag.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(text).create()));
+                        p.spigot().sendMessage(Flag);
+                    }
                 }
             }
            /** if(Guard.instance.configUtils.getBooleanFromConfig("config", "testMode", false)) {

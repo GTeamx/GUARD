@@ -12,7 +12,7 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 import org.bukkit.Bukkit;
 
-@GuardCheckInfo(name = "PingSpoof A", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 1)
+@GuardCheckInfo(name = "PingSpoof A", category = GuardCategory.Player, state = GuardCheckState.UNSTABLE, addBuffer = 1, removeBuffer = 1, maxBuffer = 1)
 public class PingSpoofA extends GuardCheck {
 
     long lastTransaction;

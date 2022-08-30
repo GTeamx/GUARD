@@ -9,7 +9,7 @@ import io.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.utils.player.ClientVersion;
 
-@GuardCheckInfo(name = "Jesus C", category = GuardCategory.Movement, state = GuardCheckState.Coding, addBuffer = 1, removeBuffer = 0.01, maxBuffer = 1)
+@GuardCheckInfo(name = "Jesus C", category = GuardCategory.Movement, state = GuardCheckState.EXPERIMENTAL, addBuffer = 1, removeBuffer = 0.01, maxBuffer = 1)
 public class JesusC extends GuardCheck {
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
@@ -21,7 +21,7 @@ public class JesusC extends GuardCheck {
                 }
             }
             if(motionY > 0.15 && !exempt && !isExempt(ExemptType.TELEPORT)) {
-                fail(null, "Jumped Higher in Water", "motionY=" + motionY);
+                fail(null, "Jumped too high in a liquid", "mY §9" + motionY);
             }
         } else {
             removeBuffer();

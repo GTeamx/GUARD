@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.DoubleSummaryStatistics;
 
-@GuardCheckInfo(name = "Speed C", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 6)
+@GuardCheckInfo(name = "Speed C", category = GuardCategory.Movement, state = GuardCheckState.STABLE, addBuffer = 1, removeBuffer = 1, maxBuffer = 6)
 public class SpeedC extends GuardCheck {
 
     double maxSpeed = 1;
@@ -21,7 +21,7 @@ public class SpeedC extends GuardCheck {
         boolean exempt = isExempt(ExemptType.FLYING, ExemptType.TELEPORT);
         cSpeed = gp.getDistance(true);
 
-        if(!gp.inAir) groundTicks++;
+        if(gp.playerGround) groundTicks++;
         else groundTicks = 0;
 
         // BASIC | Ground - Air
@@ -65,14 +65,8 @@ public class SpeedC extends GuardCheck {
         // SOUL SAND | Ground
         // TODO: Support soul sand + soul speed enchantment
 
-        // SPEED | Ground - Air
-        if(gp.player.hasPotionEffect(PotionEffectType.SPEED)) {
-            if(groundTicks > 2) {
-                maxSpeed += (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * .0573);
-            } else {
-                maxSpeed += (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * .02313);
-            }
-        }
+        // STAIRS/SLABS | Ground - Air
+        if(isExempt(ExemptType.STAIRS) || isExempt(ExemptType.SLAB)) maxSpeed = 0.4;
 
         // WATER | Ground - Air
         if(gp.isInLiquid && !gp.playerGround) {
@@ -86,8 +80,14 @@ public class SpeedC extends GuardCheck {
             }
         }
 
-        // STAIRS/SLABS | Ground - Air
-        if(isExempt(ExemptType.STAIRS) || isExempt(ExemptType.SLAB)) maxSpeed = 0.35;
+        // SPEED | Ground - Air
+        if(gp.player.hasPotionEffect(PotionEffectType.SPEED)) {
+            if(groundTicks > 2) {
+                maxSpeed += (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * .0573);
+            } else {
+                maxSpeed += (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * .02313);
+            }
+        }
 
         // DAMAGE | Air
         if(isExempt(ExemptType.VELOCITY)) {
@@ -98,10 +98,11 @@ public class SpeedC extends GuardCheck {
         }
 
         // /SPEED | Ground - Air
-        //if(gp.getPlayer().getWalkSpeed() > 0.2) maxSpeed += (gp.getPlayer().getWalkSpeed());
+        maxSpeed += gp.getPlayer().getWalkSpeed() > 0.2f ? (double) gp.getPlayer().getWalkSpeed() : 0;
 
+        debug("speed=" + gp.getPlayer().getWalkSpeed());
         debug("cs=" + cSpeed + " ms="+ maxSpeed + " b=" + buffer);
-        if(cSpeed > maxSpeed  && !exempt) fail(packet, "Moving too fast", "cS=" + cSpeed + "mS=" + maxSpeed);
+        if(cSpeed > maxSpeed  && !exempt) fail(packet, "Went over the attributed speed limit", "speed §9" + cSpeed + "§8/§9" + maxSpeed);
         if(cSpeed <= maxSpeed) removeBuffer();
     }
 

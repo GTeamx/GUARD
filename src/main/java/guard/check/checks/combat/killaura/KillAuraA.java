@@ -8,8 +8,8 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
 
-@GuardCheckInfo(name = "Killaura A", category = GuardCategory.Combat, state = GuardCheckState.Coding, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
-public class KillauraA extends GuardCheck {
+@GuardCheckInfo(name = "Killaura A", category = GuardCategory.Combat, state = GuardCheckState.STABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+public class KillAuraA extends GuardCheck {
 
     public double swings;
     public double hits;
@@ -30,7 +30,7 @@ public class KillauraA extends GuardCheck {
                 if(hits > 40) {
                     double accuracy = 100 - hits / swings;
                     debug("accuracy=" + accuracy + "%");
-                    fail(packet, "Suspicious accuracy", "accuracy=" + accuracy + "%");
+                    fail(packet, "Impossible hit accuracy", "accuracy §9" + accuracy + "%");
                 } else {
                     removeBuffer();
                 }

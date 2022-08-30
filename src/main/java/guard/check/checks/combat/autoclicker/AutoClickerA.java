@@ -8,8 +8,9 @@ import guard.utils.SampleList;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 import io.github.retrooper.packetevents.packetwrappers.play.in.blockdig.WrappedPacketInBlockDig;
+import io.github.retrooper.packetevents.packetwrappers.play.in.windowclick.WrappedPacketInWindowClick;
 
-@GuardCheckInfo(name = "AutoClicker A", category = GuardCategory.Combat, state = GuardCheckState.Coding, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "AutoClicker A", category = GuardCategory.Combat, state = GuardCheckState.STABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class AutoClickerA extends GuardCheck {
 
     boolean isBlockDig;
@@ -18,6 +19,7 @@ public class AutoClickerA extends GuardCheck {
     double lastStd;
     double lastAvg;
     long lastBlockBreak;
+    boolean isExempt = false;
 
     public void onPacket(PacketPlayReceiveEvent packet) {
         if(packet.getPacketId() == PacketType.Play.Client.ARM_ANIMATION) {
@@ -25,9 +27,9 @@ public class AutoClickerA extends GuardCheck {
                 long now = System.currentTimeMillis();
                 delay.add((now - lastDelay));
                 if(System.currentTimeMillis() - lastBlockBreak < 200) delay.clear();
-                if(delay.isCollected()) {
+                if(delay.isCollected() && !isExempt) {
                     if(Math.abs(delay.getStandardDeviation(delay) - lastStd) < 10 && Math.abs(delay.getAverageLong(delay) - lastAvg) < 5 && System.currentTimeMillis() - lastBlockBreak > 200) {
-                        fail(null, "Suspicous Clicking", "std=" + delay.getStandardDeviation(delay) + " avg=" + delay.getAverageLong(delay));
+                        fail(null, "Suspicious clicking pattern", "std §9" + delay.getStandardDeviation(delay) + "\n" + " §8»§f avg §9" + delay.getAverageLong(delay));
                         debug("std=" + delay.getStandardDeviation(delay) + " avg=" + delay.getAverageLong(delay));
                     }
                     lastStd = delay.getStandardDeviation(delay);
@@ -39,6 +41,11 @@ public class AutoClickerA extends GuardCheck {
                     delay.removeFirst();
             }
         }
+
+        if(packet.getPacketId() == PacketType.Play.Client.WINDOW_CLICK) {
+            isExempt = true;
+        } else isExempt = false;
+
         if(packet.getPacketId() == PacketType.Play.Client.BLOCK_DIG) {
             WrappedPacketInBlockDig dig = new WrappedPacketInBlockDig(packet.getNMSPacket());
             if(dig.getDigType() == WrappedPacketInBlockDig.PlayerDigType.START_DESTROY_BLOCK) {

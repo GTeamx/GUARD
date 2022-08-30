@@ -8,7 +8,7 @@ import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "Ground C", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "Ground C", category = GuardCategory.Movement, state = GuardCheckState.STABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class GroundC extends GuardCheck {
 
     double startY;
@@ -17,11 +17,11 @@ public class GroundC extends GuardCheck {
         double predictedMotionY = (lastMotionY - 0.08D) * (double)0.98F;
         boolean exempt = isExempt(ExemptType.NEAR_VEHICLE, ExemptType.SLIME, ExemptType.TELEPORT, ExemptType.CLIMBABLE, ExemptType.JOINED, ExemptType.STAIRS, ExemptType.VELOCITY, ExemptType.FLYING);
         boolean isBedrock = PacketEvents.get().getPlayerUtils().isGeyserPlayer(gp.player) || gp.player.getName().contains(".");
-        if(motionY >= 0 || !gp.inAir && !exempt) {
+        if(motionY >= 0 || !gp.inAir) {
             startY = gp.to.clone().getY();
         } else  {
-            if(Math.abs(gp.player.getFallDistance() - Math.abs(gp.to.clone().getY() - startY)) - Math.abs(predictedMotionY) > 1 && !exempt && !isBedrock) {
-                fail(packet, "Spoofed FallDistance", Math.abs(gp.player.getFallDistance() - Math.abs(gp.to.clone().getY() - startY)) - Math.abs(predictedMotionY));
+            if(Math.abs(gp.player.getFallDistance() - Math.abs(gp.to.clone().getY() - startY)) - Math.abs(predictedMotionY) > 1.4 && !exempt && !isBedrock && !gp.onLowBlock) {
+                fail(packet, "Modified fallDistance", "fD §9" + (Math.abs(gp.player.getFallDistance() - Math.abs(gp.to.clone().getY() - startY)) - Math.abs(predictedMotionY)));
             }
         }
     }

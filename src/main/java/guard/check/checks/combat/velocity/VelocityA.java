@@ -11,7 +11,7 @@ import io.github.retrooper.packetevents.packettype.PacketType;
 import io.github.retrooper.packetevents.packetwrappers.play.out.entityvelocity.WrappedPacketOutEntityVelocity;
 import io.github.retrooper.packetevents.utils.vector.Vector3d;
 
-@GuardCheckInfo(name = "Velocity A", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 3)
+@GuardCheckInfo(name = "Velocity A", category = GuardCategory.Combat, state = GuardCheckState.EXPERIMENTAL, addBuffer = 1, removeBuffer = 1, maxBuffer = 3)
 public class VelocityA extends GuardCheck {
 
     Vector3d veloVector;
@@ -43,7 +43,7 @@ public class VelocityA extends GuardCheck {
                     double percentage = motionY / predictedVelocityY * 100;
                     debug("percentage=" + percentage);
                     if ((percentage < 99.999 || percentage > 153) && percentage >= 0 && !String.valueOf(percentage).equals("-0.0")) {
-                        fail(null, "Velocity Ignored", "percentage=" + percentage);
+                        fail(null, "Modified vertical velocity", "velocity §9" + percentage + "%");
                     } else removeBuffer();
                     ticks = 0;
                     hit = false;

@@ -10,7 +10,7 @@ import io.github.retrooper.packetevents.packettype.PacketType;
 import io.github.retrooper.packetevents.packetwrappers.play.in.keepalive.WrappedPacketInKeepAlive;
 import io.github.retrooper.packetevents.packetwrappers.play.out.keepalive.WrappedPacketOutKeepAlive;
 
-@GuardCheckInfo(name = "BadPacket M", category = GuardCategory.Player, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "BadPacket M", category = GuardCategory.Player, state = GuardCheckState.STABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class BadPacketM extends GuardCheck {
 
     long id;
@@ -19,7 +19,7 @@ public class BadPacketM extends GuardCheck {
         if(packet.getPacketId() == PacketType.Play.Client.KEEP_ALIVE) {
             WrappedPacketInKeepAlive keepalive = new WrappedPacketInKeepAlive(packet.getNMSPacket());
             if(id != keepalive.getId()) {
-                fail(null, "Invalid packet", "id=" + id + " fakeid=" + keepalive.getId());
+                fail(null, "Invalid packet", "ID §9" + id + "\n" + " §8»§f cID §9" + keepalive.getId());
             } else removeBuffer();
         }
     }

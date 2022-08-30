@@ -6,7 +6,7 @@ import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "Aim B", category = GuardCategory.Combat, state = GuardCheckState.Testing, addBuffer = 1, removeBuffer = 1, maxBuffer = 2)
+@GuardCheckInfo(name = "Aim B", category = GuardCategory.Combat, state = GuardCheckState.STABLE, addBuffer = 1, removeBuffer = 1, maxBuffer = 2)
 public class AimB extends GuardCheck {
 
     double lastModuloGCD3;
@@ -38,7 +38,7 @@ public class AimB extends GuardCheck {
 
             }
             lastModuloGCD3 = moduloGCD3;
-            if(String.valueOf(moduloGCD).contains("E-4") && moduloGCD > 0 && !gp.isCinematic && Math.abs(moduloGCD2) < 0.0008) fail(null, "GCD Flaw", "moduloGCD=" + moduloGCD + " moduloGCD2=" + moduloGCD2);
+            if(String.valueOf(moduloGCD).contains("E-4") && moduloGCD > 0 && !gp.isCinematic && Math.abs(moduloGCD2) < 0.0008) fail(null, "GCD Flaw", "mGCD §9" + moduloGCD + "\n" + " §8»§f mGCD2 §9" + moduloGCD2);
             //else removeBuffer();
         }
 

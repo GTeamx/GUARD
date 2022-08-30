@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 public @interface GuardCheckInfo {
     String name() default "Test";
     GuardCategory category() default GuardCategory.Movement;
-    GuardCheckState state() default GuardCheckState.Coding;
+    GuardCheckState state() default GuardCheckState.UNSTABLE;
     boolean enabled() default true;
     boolean kickable() default true;
     boolean bannable() default true;

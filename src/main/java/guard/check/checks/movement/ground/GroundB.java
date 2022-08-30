@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.FutureTask;
 
-@GuardCheckInfo(name = "Ground B", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "Ground B", category = GuardCategory.Movement, state = GuardCheckState.EXPERIMENTAL, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class GroundB extends GuardCheck {
 
 
@@ -36,7 +36,7 @@ public class GroundB extends GuardCheck {
 
         boolean exempt = isExempt(ExemptType.NEAR_VEHICLE, ExemptType.SLIME, ExemptType.TELEPORT, ExemptType.CLIMBABLE, ExemptType.JOINED, ExemptType.STAIRS, ExemptType.VELOCITY);
         debug("s=" + gp.serverGround + " c=" + gp.playerGround + " air=" + gp.inAir);
-        if(gp.serverGround && gp.playerGround && getBlock(gp.player.getLocation().clone().subtract(0,1,0)).getType() == Material.AIR && gp.inAir && !exempt && b.stream().allMatch(block -> block.getType() == Material.AIR)) fail(packet, "Spoofed ground state", "s=true c=true");
+        if(gp.serverGround && gp.playerGround && getBlock(gp.player.getLocation().clone().subtract(0,1,0)).getType() == Material.AIR && gp.inAir && !exempt && b.stream().allMatch(block -> block.getType() == Material.AIR)) fail(packet, "Spoofed ground state", "s=§aTRUE" + "\n"  + " §8»§f c=§aTRUE");
         else removeBuffer();
     }
 

@@ -8,7 +8,7 @@ import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import org.bukkit.potion.PotionEffectType;
 
-@GuardCheckInfo(name = "Jump A", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "Jump A", category = GuardCategory.Movement, state = GuardCheckState.UNSTABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class JumpA extends GuardCheck {
 
 

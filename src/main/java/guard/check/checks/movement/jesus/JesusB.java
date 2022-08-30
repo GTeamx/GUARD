@@ -7,7 +7,7 @@ import guard.check.GuardCheckState;
 import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "Jesus B", category = GuardCategory.Movement, state = GuardCheckState.Coding, addBuffer = 1, removeBuffer = 0.1, maxBuffer = 1.31)
+@GuardCheckInfo(name = "Jesus B", category = GuardCategory.Movement, state = GuardCheckState.EXPERIMENTAL, addBuffer = 1, removeBuffer = 0.1, maxBuffer = 1.31)
 public class JesusB extends GuardCheck {
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
@@ -20,7 +20,7 @@ public class JesusB extends GuardCheck {
 
         debug("diff=" + diff);
 
-        if(diff > 0.075 && motionY > 0.075 && accel >= 0.0 && gp.isInLiquid && !isExempt(ExemptType.TELEPORT, ExemptType.FLYING)) fail(packet, "Predictions unfollowed", "pred=" + prediction + " mY=" + motionY);
+        if(diff > 0.075 && motionY > 0.075 && accel >= 0.0 && gp.isInLiquid && !isExempt(ExemptType.TELEPORT, ExemptType.FLYING)) fail(packet, "Modified motion in liquid", "predicted §9" + prediction + "\n" + " §8»§f mY §9" + motionY);
         else removeBuffer();
 
     }

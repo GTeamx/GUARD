@@ -12,7 +12,7 @@ import org.bukkit.block.Block;
 
 import java.util.Objects;
 
-@GuardCheckInfo(name = "Interact A", category = GuardCategory.World, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "Interact A", category = GuardCategory.World, state = GuardCheckState.STABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class InteractA extends GuardCheck {
 
     public void onPacket(PacketPlayReceiveEvent packet) {
@@ -22,7 +22,7 @@ public class InteractA extends GuardCheck {
             final Location blockLoc = new Location(gp.getPlayer().getWorld(), wrapper.getBlockPosition().getX(), wrapper.getBlockPosition().getY(), wrapper.getBlockPosition().getZ());
             final Block block = Objects.requireNonNull(blockLoc.getWorld()).getBlockAt(blockLoc);
 
-            if(block.isLiquid()) fail(packet, "Liquid Interaction", "iL=true");
+            if(block.isLiquid()) fail(packet, "Interacted with a liquid", "iL=§aTRUE");
         }
     }
 

@@ -8,7 +8,7 @@ import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import org.bukkit.potion.PotionEffectType;
 
-@GuardCheckInfo(name = "Speed B", category = GuardCategory.Movement, state = GuardCheckState.Testing, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
+@GuardCheckInfo(name = "Speed B", category = GuardCategory.Movement, state = GuardCheckState.STABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class SpeedB extends GuardCheck {
     int invalidA;
     double maxSpeed;
@@ -19,7 +19,7 @@ public class SpeedB extends GuardCheck {
         if(gp.playerGround) invalidA++;
         if(!gp.playerGround) invalidA = 0;
         if(invalidA >= 8) maxSpeed = 0.2897+ (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) > 0 ? (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * 0.0573) : 0);;
-        if(invalidA < 8) maxSpeed = 0.62 + (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) > 0 ? (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * .02313 + 0.2) : 0);
+        if(invalidA < 8) maxSpeed = 0.628 + (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) > 0 ? (gp.getPotionEffectAmplifier(PotionEffectType.SPEED) * .02313 + 0.2) : 0);
         if(step && (isExempt(ExemptType.STAIRS) || isExempt(ExemptType.SLAB))) maxSpeed += 0.2;
         if(isExempt(ExemptType.VELOCITY)) {
             maxSpeed += gp.kbLevel;
@@ -29,8 +29,8 @@ public class SpeedB extends GuardCheck {
         if(isExempt(ExemptType.SLIME)) maxSpeed += 0.3;
         if(isExempt(ExemptType.BLOCK_ABOVE))
             maxSpeed += 0.08;
-        //if(gp.getPlayer().getWalkSpeed() > 0.2) maxSpeed += (gp.getPlayer().getWalkSpeed());
-        if(gp.getDeltaXZ() >= maxSpeed && !exempt) fail(packet, "Teleported horizontally", "cS=" + gp.getDeltaXZ() + " mS=" + maxSpeed); else removeBuffer();
+        maxSpeed += gp.getPlayer().getWalkSpeed() > 0.2f ? (double) gp.getPlayer().getWalkSpeed() : 0;
+        if(gp.getDeltaXZ() >= maxSpeed && !exempt) fail(packet, "Teleported horizontally", "speed §9" + gp.getDeltaXZ() + "§8/§9" + maxSpeed); else removeBuffer();
     }
 
 }
