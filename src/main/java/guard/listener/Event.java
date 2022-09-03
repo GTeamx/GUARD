@@ -21,6 +21,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -149,13 +150,17 @@ public class Event implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Bukkit.getScheduler().runTaskAsynchronously(Guard.instance, () -> {
             GuardPlayerManager.addGuardPlayerJoin(e.getPlayer());
-
             GuardPlayer gp = GuardPlayerManager.getGuardPlayer(e.getPlayer());
             String version = String.valueOf(PacketEvents.get().getPlayerUtils().getClientVersion(e.getPlayer()));
             gp.joined = System.currentTimeMillis();
             gp.join = 0;
         });
 
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onQuit(PlayerQuitEvent e) {
+        PacketEvents.get().getInjector().ejectPlayer(e.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

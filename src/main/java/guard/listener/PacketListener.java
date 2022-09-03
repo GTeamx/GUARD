@@ -48,83 +48,51 @@ public class PacketListener extends PacketListenerAbstract {
     @Override
     public void onPacketPlayReceive(PacketPlayReceiveEvent event) {
         Player p = event.getPlayer();
-        GuardPlayerManager.addGuardPlayer(p);
-        GuardPlayer gp = GuardPlayerManager.getGuardPlayer(p);
-        NMSPacket packet = event.getNMSPacket();
+        if(GuardPlayerManager.doesGuardPlayerExist(p)) {
+            GuardPlayer gp = GuardPlayerManager.getGuardPlayer(p);
+            NMSPacket packet = event.getNMSPacket();
 
-        if(gp != null) {
-            if (event.getPacketId() == PacketType.Play.Client.KEEP_ALIVE) {
-                gp.ping = (int) (System.currentTimeMillis() - gp.serverKeepAlive);
-            }
-            if (p.isDead()) {
-                gp.isDead = true;
-                gp.wasDead = System.currentTimeMillis();
-            } else {
-                if (gp.isDead) {
+            if (gp != null) {
+                if (event.getPacketId() == PacketType.Play.Client.KEEP_ALIVE) {
+                    gp.ping = (int) (System.currentTimeMillis() - gp.serverKeepAlive);
+                }
+                if (p.isDead()) {
+                    gp.isDead = true;
                     gp.wasDead = System.currentTimeMillis();
+                } else {
+                    if (gp.isDead) {
+                        gp.wasDead = System.currentTimeMillis();
+                    }
+                    gp.isDead = false;
                 }
-                gp.isDead = false;
-            }
 
 
-
-            if (event.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
-                WrappedPacketInUseEntity ue = new WrappedPacketInUseEntity(packet);
-                gp.target = ue.getEntity();
-                gp.useAction = ue.getAction();
-                if(ue.getAction() == WrappedPacketInUseEntity.EntityUseAction.ATTACK) {
-                    gp.lastAttack = System.currentTimeMillis();
-                }
-            }
-            gp.predictionProcessor.handle(event);
-            for (GuardCheck c : gp.getCheckManager().checks) {
-                c.gp = gp;
-                c.onPacket(event);
-            }
-            if (event.getPacketId() == PacketType.Play.Client.TRANSACTION) {
-                if (gp.packetTracker != null) {
-                    gp.packetTracker.setIntervalPackets(0);
-                }
-                WrappedPacketInTransaction trans = new WrappedPacketInTransaction(event.getNMSPacket());
-                boolean found = false;
-                long foundTransactionTime = System.currentTimeMillis();
-                TransactionPacketServer toRemove = null;
-                for (TransactionPacketServer server : gp.transactions) {
-                    if (server.transaction.getWindowId() == trans.getWindowId()) {
-                        found = true;
-                        foundTransactionTime = server.getTimeStamp();
-                        toRemove = server;
+                if (event.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
+                    WrappedPacketInUseEntity ue = new WrappedPacketInUseEntity(packet);
+                    gp.target = ue.getEntity();
+                    gp.useAction = ue.getAction();
+                    if (ue.getAction() == WrappedPacketInUseEntity.EntityUseAction.ATTACK) {
+                        gp.lastAttack = System.currentTimeMillis();
                     }
                 }
-                long now = System.currentTimeMillis();
-                if (toRemove != null)
-                    gp.transactions.remove(toRemove);
-                if(found) {
-                    gp.transactionPackets.add((int) (now - foundTransactionTime));
-
-                    if(gp.transactionPackets.isCollected()) {
-                        gp.transactionPing = gp.transactionPackets.getAverageInt(gp.transactionPackets);
-                    }
-                }
+                gp.predictionProcessor.handle(event);
                 for (GuardCheck c : gp.getCheckManager().checks) {
                     c.gp = gp;
-                    c.onTransaction(new TransactionPacketClient(trans, now), found);
+                    c.onPacket(event);
                 }
-            }
-            if (event.getPacketId() == PacketType.Play.Client.PONG) {
-                if (gp.packetTracker != null) {
-                    gp.packetTracker.setIntervalPackets(0);
-                }
-                WrappedPacketInPong pong = new WrappedPacketInPong(packet);
-                boolean found = false;
-                TransactionPacketServer toRemove = null;
-                long foundTransactionTime = System.currentTimeMillis();
-                try {
+                if (event.getPacketId() == PacketType.Play.Client.TRANSACTION) {
+                    if (gp.packetTracker != null) {
+                        gp.packetTracker.setIntervalPackets(0);
+                    }
+                    WrappedPacketInTransaction trans = new WrappedPacketInTransaction(event.getNMSPacket());
+                    boolean found = false;
+                    long foundTransactionTime = System.currentTimeMillis();
+                    TransactionPacketServer toRemove = null;
                     for (TransactionPacketServer server : gp.transactions) {
-                        if (server.ping.getId() == pong.getId()) {
+                        if (server.transaction.getWindowId() == trans.getWindowId()) {
                             found = true;
-                            toRemove = server;
                             foundTransactionTime = server.getTimeStamp();
+                            toRemove = server;
                         }
                     }
                     long now = System.currentTimeMillis();
@@ -139,141 +107,175 @@ public class PacketListener extends PacketListenerAbstract {
                     }
                     for (GuardCheck c : gp.getCheckManager().checks) {
                         c.gp = gp;
-                        c.onTransaction(new TransactionPacketClient(pong, now), found);
-                    }
-                }catch (ConcurrentModificationException stfu) {}
-            }
-            if (event.getPacketId() == PacketType.Play.Client.BLOCK_DIG) {
-                WrappedPacketInBlockDig dig = new WrappedPacketInBlockDig(packet);
-                if (dig.getDigType().toString().contains("START_DESTROY_BLOCK")) {
-                    gp.sentStartDestroy = true;
-                }
-                if (dig.getDigType().toString().contains("ABORT_DESTROY_BLOCK")) {
-                    gp.sentStartDestroy = false;
-                }
-                if (dig.getDigType().toString().contains("STOP_DESTROY_BLOCK")) {
-                    if (gp.sentStartDestroy) {
-                        if (dig.getDirection().toString().contains("UP")) {
-                            gp.brokeBlock = System.currentTimeMillis();
-                        }
-                    }
-                    gp.sentStartDestroy = false;
-                }
-            }
-            if (event.getPacketId() == PacketType.Play.Client.POSITION || event.getPacketId() == PacketType.Play.Client.POSITION_LOOK) {
-                WrappedPacketInFlying ps = new WrappedPacketInFlying(packet);
-                Location from = new Location(p.getWorld(), ps.getPosition().getX(), ps.getPosition().getY(), ps.getPosition().getZ());
-
-                if(gp.to != null) {
-                    if (PacketEvents.get().getPlayerUtils().getClientVersion(p).isNewerThanOrEquals(ClientVersion.v_1_17) && ps.isPosition() && ps.isLook() && sameLocation(gp, ps)) {
-                        gp.noCheckNextFlying = true;
+                        c.onTransaction(new TransactionPacketClient(trans, now), found);
                     }
                 }
-
-                if(!gp.noCheckNextFlying) {
-                    new RunnableTransaction(gp.player).runTaskAsynchronously(Guard.instance);
-                    if (ps.isRotating()) {
-                        from.setYaw(ps.getYaw());
-                        from.setPitch(ps.getPitch());
-                    } else {
-                        from.setYaw(p.getLocation().getYaw());
-                        from.setPitch(p.getLocation().getPitch());
+                if (event.getPacketId() == PacketType.Play.Client.PONG) {
+                    if (gp.packetTracker != null) {
+                        gp.packetTracker.setIntervalPackets(0);
                     }
-
-                    if (gp.teleports.size() > 0) {
-                        gp.teleportTickFix = 2;
-                        gp.isTeleporting = true;
-                    }
-
-                    if (gp.teleports.size() == 0) {
-                        if (--gp.teleportTickFix < 0) {
-                            gp.isTeleporting = false;
-                        }
-                    }
-                    if (gp.isTeleporting) {
-                        gp.ticks++;
-                    } else {
-                        gp.ticks = 0;
-                    }
-
-                    gp.lastLastPlayerGround = gp.lastPlayerGround;
-                    gp.lastPlayerGround = gp.playerGround;
-                    gp.playerGround = ps.isOnGround();
-                    gp.serverGround = from.clone().getY() % 0.015625 == 0.0;
-                    gp.from = gp.to;
-                    gp.to = from;
-                    gp.sFrom = gp.sTo;
-                    gp.sTo = from;
-                    gp.doMove();
-                    if (ps.isRotating()) {
-                        float yawAccelAccel = Math.abs(gp.lastAccelYaw - Math.abs(Math.abs(gp.deltaYaw) - Math.abs(gp.lastDeltaYaw)));
-                        float pitchAccelAccel = Math.abs(gp.lastAccelPitch - Math.abs(Math.abs(gp.deltaPitch) - Math.abs(gp.lastDeltaPitch)));
-                        if ((String.valueOf(yawAccelAccel).contains("E") || String.valueOf(pitchAccelAccel).contains("E")) && gp.sensitivity < 100) {
-                            gp.cinematicTicks += 3;
-                        } else if (yawAccelAccel < .06 && yawAccelAccel > 0 || pitchAccelAccel < .06 && pitchAccelAccel > 0) {
-                            gp.cinematicTicks += 1;
-                        } else if (gp.cinematicTicks > 0) gp.cinematicTicks--;
-                        if (gp.cinematicTicks > 20) gp.cinematicTicks--;
-                        gp.isCinematic = gp.cinematicTicks > 8 || System.currentTimeMillis() - gp.lastCinematic < 250;
-                        if (gp.cinematicTicks > 8 && gp.isCinematic) gp.lastCinematic = System.currentTimeMillis();
-                        gp.lastAccelPitch = Math.abs(Math.abs(gp.deltaPitch) - Math.abs(gp.lastDeltaPitch));
-                        gp.lastAccelYaw = Math.abs(Math.abs(gp.deltaYaw) - Math.abs(gp.lastDeltaYaw));
-                        if (Math.abs(gp.deltaPitch) > 0 && Math.abs(gp.deltaPitch) < 30) {
-                            float gcd = (float) gp.getGCD(Math.abs(gp.deltaPitch), Math.abs(gp.lastDeltaPitch));
-                            double modifier = Math.cbrt(0.8333 * gcd);
-                            double nextStep = (modifier / .6) - 0.3333;
-                            double lastStep = nextStep * 200;
-                            gp.sensitivitySamples.add((int) lastStep);
-                            if (gp.sensitivitySamples.size() >= 20) {
-                                gp.sensitivity = getMode(gp.sensitivitySamples);
-                                float gcdOne = (gp.sensitivity / 200F) * 0.6F + 0.2F;
-                                gp.realGCD = gcdOne * gcdOne * gcdOne * 1.2F;
-                                gp.sensitivitySamples.clear();
+                    WrappedPacketInPong pong = new WrappedPacketInPong(packet);
+                    boolean found = false;
+                    TransactionPacketServer toRemove = null;
+                    long foundTransactionTime = System.currentTimeMillis();
+                    try {
+                        for (TransactionPacketServer server : gp.transactions) {
+                            if (server.ping.getId() == pong.getId()) {
+                                found = true;
+                                toRemove = server;
+                                foundTransactionTime = server.getTimeStamp();
                             }
                         }
-                    }
-                    handleBlocks(gp);
-                    if (gp.onSlime) {
-                        gp.sinceSlimeTicks = 0;
-                    } else {
-                        gp.sinceSlimeTicks++;
-                    }
-                    if (gp.getPlayer().isFlying()) {
-                        gp.lastFlyingTime = System.currentTimeMillis();
-                    }
-                    if (gp.teleports.size() > 150) {
-                        gp.teleports.remove(0);
-                    }
-                    if (gp.ticks > 50) {
-                        gp.teleports.clear();
-                    }
-                    if (!gp.inAnimation) {
-                        try {
-                            for (Vector vector : gp.teleports) {
-                                final double dx = Math.abs(from.getX() - vector.getX());
-                                final double dy = Math.abs(from.getY() - vector.getY());
-                                final double dz = Math.abs(from.getZ() - vector.getZ());
+                        long now = System.currentTimeMillis();
+                        if (toRemove != null)
+                            gp.transactions.remove(toRemove);
+                        if (found) {
+                            gp.transactionPackets.add((int) (now - foundTransactionTime));
 
-                                if (dx == 0 && dy == 0 && dz == 0) {
-                                    gp.teleports.remove(vector);
+                            if (gp.transactionPackets.isCollected()) {
+                                gp.transactionPing = gp.transactionPackets.getAverageInt(gp.transactionPackets);
+                            }
+                        }
+                        for (GuardCheck c : gp.getCheckManager().checks) {
+                            c.gp = gp;
+                            c.onTransaction(new TransactionPacketClient(pong, now), found);
+                        }
+                    } catch (ConcurrentModificationException stfu) {
+                    }
+                }
+                if (event.getPacketId() == PacketType.Play.Client.BLOCK_DIG) {
+                    WrappedPacketInBlockDig dig = new WrappedPacketInBlockDig(packet);
+                    if (dig.getDigType().toString().contains("START_DESTROY_BLOCK")) {
+                        gp.sentStartDestroy = true;
+                    }
+                    if (dig.getDigType().toString().contains("ABORT_DESTROY_BLOCK")) {
+                        gp.sentStartDestroy = false;
+                    }
+                    if (dig.getDigType().toString().contains("STOP_DESTROY_BLOCK")) {
+                        if (gp.sentStartDestroy) {
+                            if (dig.getDirection().toString().contains("UP")) {
+                                gp.brokeBlock = System.currentTimeMillis();
+                            }
+                        }
+                        gp.sentStartDestroy = false;
+                    }
+                }
+                if (event.getPacketId() == PacketType.Play.Client.POSITION || event.getPacketId() == PacketType.Play.Client.POSITION_LOOK) {
+                    WrappedPacketInFlying ps = new WrappedPacketInFlying(packet);
+                    Location from = new Location(p.getWorld(), ps.getPosition().getX(), ps.getPosition().getY(), ps.getPosition().getZ());
+
+                    if (gp.to != null) {
+                        if (PacketEvents.get().getPlayerUtils().getClientVersion(p).isNewerThanOrEquals(ClientVersion.v_1_17) && ps.isPosition() && ps.isLook() && sameLocation(gp, ps)) {
+                            gp.noCheckNextFlying = true;
+                        }
+                    }
+
+                    if (!gp.noCheckNextFlying) {
+                        new RunnableTransaction(gp.player).runTaskAsynchronously(Guard.instance);
+                        if (ps.isRotating()) {
+                            from.setYaw(ps.getYaw());
+                            from.setPitch(ps.getPitch());
+                        } else {
+                            from.setYaw(p.getLocation().getYaw());
+                            from.setPitch(p.getLocation().getPitch());
+                        }
+
+                        if (gp.teleports.size() > 0) {
+                            gp.teleportTickFix = 2;
+                            gp.isTeleporting = true;
+                        }
+
+                        if (gp.teleports.size() == 0) {
+                            if (--gp.teleportTickFix < 0) {
+                                gp.isTeleporting = false;
+                            }
+                        }
+                        if (gp.isTeleporting) {
+                            gp.ticks++;
+                        } else {
+                            gp.ticks = 0;
+                        }
+
+                        gp.lastLastPlayerGround = gp.lastPlayerGround;
+                        gp.lastPlayerGround = gp.playerGround;
+                        gp.playerGround = ps.isOnGround();
+                        gp.serverGround = from.clone().getY() % 0.015625 == 0.0;
+                        gp.from = gp.to;
+                        gp.to = from;
+                        gp.sFrom = gp.sTo;
+                        gp.sTo = from;
+                        gp.doMove();
+                        if (ps.isRotating()) {
+                            float yawAccelAccel = Math.abs(gp.lastAccelYaw - Math.abs(Math.abs(gp.deltaYaw) - Math.abs(gp.lastDeltaYaw)));
+                            float pitchAccelAccel = Math.abs(gp.lastAccelPitch - Math.abs(Math.abs(gp.deltaPitch) - Math.abs(gp.lastDeltaPitch)));
+                            if ((String.valueOf(yawAccelAccel).contains("E") || String.valueOf(pitchAccelAccel).contains("E")) && gp.sensitivity < 100) {
+                                gp.cinematicTicks += 3;
+                            } else if (yawAccelAccel < .06 && yawAccelAccel > 0 || pitchAccelAccel < .06 && pitchAccelAccel > 0) {
+                                gp.cinematicTicks += 1;
+                            } else if (gp.cinematicTicks > 0) gp.cinematicTicks--;
+                            if (gp.cinematicTicks > 20) gp.cinematicTicks--;
+                            gp.isCinematic = gp.cinematicTicks > 8 || System.currentTimeMillis() - gp.lastCinematic < 250;
+                            if (gp.cinematicTicks > 8 && gp.isCinematic) gp.lastCinematic = System.currentTimeMillis();
+                            gp.lastAccelPitch = Math.abs(Math.abs(gp.deltaPitch) - Math.abs(gp.lastDeltaPitch));
+                            gp.lastAccelYaw = Math.abs(Math.abs(gp.deltaYaw) - Math.abs(gp.lastDeltaYaw));
+                            if (Math.abs(gp.deltaPitch) > 0 && Math.abs(gp.deltaPitch) < 30) {
+                                float gcd = (float) gp.getGCD(Math.abs(gp.deltaPitch), Math.abs(gp.lastDeltaPitch));
+                                double modifier = Math.cbrt(0.8333 * gcd);
+                                double nextStep = (modifier / .6) - 0.3333;
+                                double lastStep = nextStep * 200;
+                                gp.sensitivitySamples.add((int) lastStep);
+                                if (gp.sensitivitySamples.size() >= 20) {
+                                    gp.sensitivity = getMode(gp.sensitivitySamples);
+                                    float gcdOne = (gp.sensitivity / 200F) * 0.6F + 0.2F;
+                                    gp.realGCD = gcdOne * gcdOne * gcdOne * 1.2F;
+                                    gp.sensitivitySamples.clear();
                                 }
                             }
-                        } catch (ConcurrentModificationException ignored) {}
-                    } else {
-                        gp.teleports.clear();
-                        gp.isTeleporting = true;
-                    }
+                        }
+                        handleBlocks(gp);
+                        if (gp.onSlime) {
+                            gp.sinceSlimeTicks = 0;
+                        } else {
+                            gp.sinceSlimeTicks++;
+                        }
+                        if (gp.getPlayer().isFlying()) {
+                            gp.lastFlyingTime = System.currentTimeMillis();
+                        }
+                        if (gp.teleports.size() > 150) {
+                            gp.teleports.remove(0);
+                        }
+                        if (gp.ticks > 50) {
+                            gp.teleports.clear();
+                        }
+                        if (!gp.inAnimation) {
+                            try {
+                                for (Vector vector : gp.teleports) {
+                                    final double dx = Math.abs(from.getX() - vector.getX());
+                                    final double dy = Math.abs(from.getY() - vector.getY());
+                                    final double dz = Math.abs(from.getZ() - vector.getZ());
 
-                    for (GuardCheck c : gp.getCheckManager().checks) {
-                        c.gp = gp;
-                        c.onMove(event, gp.motionX, gp.motionY, gp.motionZ, gp.lastMotionX, gp.lastMotionY, gp.lastMotionZ, gp.deltaYaw, gp.deltaPitch, gp.lastDeltaYaw, gp.lastDeltaPitch);
+                                    if (dx == 0 && dy == 0 && dz == 0) {
+                                        gp.teleports.remove(vector);
+                                    }
+                                }
+                            } catch (ConcurrentModificationException ignored) {
+                            }
+                        } else {
+                            gp.teleports.clear();
+                            gp.isTeleporting = true;
+                        }
+
+                        for (GuardCheck c : gp.getCheckManager().checks) {
+                            c.gp = gp;
+                            c.onMove(event, gp.motionX, gp.motionY, gp.motionZ, gp.lastMotionX, gp.lastMotionY, gp.lastMotionZ, gp.deltaYaw, gp.deltaPitch, gp.lastDeltaYaw, gp.lastDeltaPitch);
+                        }
                     }
+                    gp.noCheckNextFlying = false;
+                    gp.lastHealth = p.getHealth();
                 }
-                gp.noCheckNextFlying = false;
-                gp.lastHealth = p.getHealth();
+                gp.lastFallDistance = p.getFallDistance();
             }
-            gp.lastFallDistance = p.getFallDistance();
-        }
+        } else GuardPlayerManager.addGuardPlayer(p);
     }
 
     @Override

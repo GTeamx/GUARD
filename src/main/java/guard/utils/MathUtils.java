@@ -35,6 +35,11 @@ public class MathUtils {
         return (previous <= 16384) ? current : getGcd(previous, current % previous);
     }
 
+    public static float distanceBetweenAngles(float value1, float value2) {
+        float valueDiff = Math.abs(value2 - value1) % 360.0F;
+        return valueDiff > 180.0F ? 360.0F - valueDiff : valueDiff;
+    }
+
 
 
 }

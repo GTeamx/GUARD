@@ -6,6 +6,7 @@ import guard.check.GuardCheckInfo;
 import guard.check.GuardCheckState;
 import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.potion.PotionEffectType;
 
 @GuardCheckInfo(name = "Speed B", category = GuardCategory.Movement, state = GuardCheckState.STABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
@@ -24,6 +25,11 @@ public class SpeedB extends GuardCheck {
         if(isExempt(ExemptType.VELOCITY)) {
             maxSpeed += gp.kbLevel;
             maxSpeed += 0.45;
+        }
+        if(gp.player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() != 0.10000000149011612) {
+            double timesModified = gp.player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() / 0.10000000149011612;
+            timesModified = Math.ceil(timesModified * 100.0) / 100.0;
+            debug("timesModified=" + timesModified + " mS=" + (maxSpeed + timesModified / 10) + " diff=" + (gp.getDeltaXZ() - (maxSpeed + timesModified / 10)));
         }
         if(System.currentTimeMillis() - gp.lastIce < 1800) maxSpeed += 0.35;
         if(isExempt(ExemptType.SLIME)) maxSpeed += 0.3;

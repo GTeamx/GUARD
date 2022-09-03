@@ -1,8 +1,7 @@
 name: Guard
 main: guard.Guard
 version: 0.0.1
-load: POSTWORLD
-api-version: 1.13
+api-version: 1.17
 authors:
   - Vagdedes2 (Du_bist_kein_Pro)
   - XIII___

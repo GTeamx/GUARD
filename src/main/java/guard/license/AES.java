@@ -15,6 +15,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
+import java.util.Base64;
 
 public class AES {
     private static SecretKeySpec secretKey;
@@ -116,15 +117,10 @@ public class AES {
             byte[] ivkey1337 = Arrays.copyOf(sha256RealGoogle(ivkey34).getBytes(), 16);;
             IvParameterSpec ivspec = new IvParameterSpec(ivkey1337);
             byte[] finalKey;
-            finalKey = Arrays.copyOf(enckey1337, 16); // copying fist 16 bytes from hashed secret key to finaly key which to use in algo
+            finalKey = enckey1337; // copying fist 16 bytes from hashed secret key to finaly key which to use in algo
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-
             SecretKeySpec secretKey = new SecretKeySpec(finalKey, "AES");
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
-            String hexString = "981abdd9ba91acb8e6716f39baacb09d";
-            byte[] bytes = Hex.decodeHex(hexString.toCharArray());
-
-            //System.out.println("BYTE: " + AESDecrypt(new String(bytes, "UTF-8"), enckey34, ivkey34));
             return new String(Hex.encodeHex(cipher.doFinal(text.getBytes())));
         }
         catch (Exception ex)
@@ -135,6 +131,26 @@ public class AES {
 
     } // CnWxG0pBjjpLNk8W19u4sQ==
     //   CnWxG0pBjjpLNk8W19u4sQ==  981abdd9ba91acb8e6716f39baacb09d
+
+    public static String AESEncrypt2(String text, String enckey34, String ivkey34)
+    {
+        try
+        {
+            byte[] enckey1337 = sha256RealGoogle(enckey34).substring(0, 32).getBytes(StandardCharsets.UTF_8);
+            byte[] ivkey1337 = sha256RealGoogle(ivkey34).substring(0, 16).getBytes(StandardCharsets.UTF_8);
+            IvParameterSpec ivspec = new IvParameterSpec(ivkey1337);
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            SecretKeySpec secretKey = new SecretKeySpec(enckey1337, "AES");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
+            return new String(Hex.encodeHex(cipher.doFinal(text.getBytes()))); //
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return "";
+
+    }
 
     public static String sha256(final String base) {
         MessageDigest sha = null;

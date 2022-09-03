@@ -4,6 +4,7 @@ import com.viaversion.viabackwards.ViaBackwards;
 import com.viaversion.viabackwards.ViaBackwardsConfig;
 import guard.command.Command;
 import guard.data.GuardPlayerManager;
+import guard.license.AES;
 import guard.license.Auth;
 import guard.listener.ClientBrandListener;
 import guard.listener.Event;
@@ -40,8 +41,8 @@ public class Guard extends JavaPlugin {
         PacketEvents.get().load();
        // PacketEvents.get().loadAsyncNewThread();
     }
-    @Override
 
+    @Override
     public void onEnable() {
         instance = this;
         listener = new PacketListener();
@@ -54,8 +55,12 @@ public class Guard extends JavaPlugin {
         PacketEvents.get().init();
         PacketEvents.get().registerListener(Guard.instance.listener);
 
-        PacketEvents.get().getInjector().eject();
-        PacketEvents.get().getInjector().inject();
+        // FOR TESTING AUTH ENCRYPTION
+        System.out.println("OUTPUT: " + AES.AESEncrypt2("1.0", "12a7150c1688bf2b86c549c966c6c68cc33411d8accc397bcad1ca26e525a33e", "643134ed859db780df3d505ac459ef06d52c470b2979ec7ab2588dd67e5817e7"));
+
+
+        //PacketEvents.get().getInjector().eject();
+        //PacketEvents.get().getInjector().inject();
         if(PacketEvents.get().getServerUtils().getVersion().isNewerThanOrEquals(ServerVersion.v_1_13)) {
             final Messenger messenger = Bukkit.getMessenger();
             messenger.registerIncomingPluginChannel(this, "minecraft:brand", new ClientBrandListener());
@@ -86,8 +91,8 @@ public class Guard extends JavaPlugin {
     @Override
     public void onDisable() {
         Bukkit.getConsoleSender().sendMessage("§cGuard is now Disabled!");
-        PacketEvents.get().getInjector().eject();
-        for(Player player : Bukkit.getOnlinePlayers()) {
+        //PacketEvents.get().getInjector().eject();
+        /**for(Player player : Bukkit.getOnlinePlayers()) {
             UUID uuid = player.getUniqueId();
             InetSocketAddress address = player.getAddress();
             PacketEvents.get().getPlayerUtils().loginTime.remove(uuid);
@@ -98,7 +103,7 @@ public class Guard extends JavaPlugin {
             PacketEvents.get().getPlayerUtils().keepAliveMap.remove(uuid);
             PacketEvents.get().getPlayerUtils().channels.remove(player.getName());
             PacketEvents.get().getServerUtils().entityCache.remove(player.getEntityId());
-        }
+        } */
         PacketEvents.get().terminate();
         Bukkit.getScheduler().cancelTasks(this);
 

@@ -14,6 +14,8 @@ import guard.utils.SampleList;
 import guard.utils.packet.TransactionPacketServer;
 import io.github.retrooper.packetevents.PacketEvents;
 import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
+import io.github.retrooper.packetevents.utils.npc.NPC;
+import io.github.retrooper.packetevents.utils.npc.NPCManager;
 import io.github.retrooper.packetevents.utils.server.ServerVersion;
 import lombok.Getter;
 import lombok.Setter;
@@ -288,9 +290,9 @@ public class GuardPlayer {
         return 0;
     }
 
-    public float[] getPerfectHit(Player target) {
+    public float[] getPerfectHit(Entity target) {
         final Vector eyesPos = new Vector(player.getLocation().clone().getX(), player.getLocation().clone().getY() + getEyeHeight(), player.getLocation().clone().getZ());
-        final BoundingBox bb = new BoundingBox(target);
+        final BoundingBox bb = new BoundingBox(target.getBoundingBox());
         final Vector vec = new Vector(bb.getMinX() + (bb.getMaxX() - bb.getMinX()) * 0.5, bb.getMinY() + (bb.getMaxY() - bb.getMinY()) * 0.5, bb.getMinZ() + (bb.getMaxZ() - bb.getMinZ()) * 0.5);
         final double diffX = vec.getX() - eyesPos.getX();
         final double diffY = vec.getY() - eyesPos.getY();
