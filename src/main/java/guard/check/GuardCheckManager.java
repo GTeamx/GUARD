@@ -55,6 +55,8 @@ public class GuardCheckManager {
         registerCheck(new AimC());
         registerCheck(new AimD());
         registerCheck(new AimE());
+        registerCheck(new AimF());
+        registerCheck(new AimG());
 
         registerCheck(new AutoBlockA());
 

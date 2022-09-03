@@ -14,7 +14,7 @@ public class AimA extends GuardCheck {
 
         if(deltaPitch != 0) {
             final double GCD = MathUtils.getGcd(deltaPitch * MathUtils.EXPANDER, lastDeltaPitch * MathUtils.EXPANDER);
-
+            debug("gcd=" + GCD + " c=" + gp.isCinematic);
             if(GCD < 131072 && !gp.isCinematic && deltaPitch > 0.5 && deltaPitch < 20) fail(null, "Didn't follow GCD", "gcd §9" + GCD);
             if(GCD > 131072 && !gp.isCinematic) removeBuffer();
 
