@@ -23,7 +23,7 @@ public class AimD extends GuardCheck {
             debug("moduloGCD=" + moduloGCD);
 
             if(String.valueOf(moduloGCD).length() <= 3 && !isExempt(ExemptType.TELEPORT)) fail(packet, "Rounded pitch rotation", "mGCD §9" + moduloGCD);
-
+            else removeBuffer();
         }
     }
 }

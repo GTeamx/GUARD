@@ -22,8 +22,8 @@ public class ClientBrandListener implements PluginMessageListener, Listener {
             final String clientBrand = new String(msg, StandardCharsets.UTF_8).length() > 0 ? new String(msg, StandardCharsets.UTF_8).substring(1) : new String(msg, StandardCharsets.UTF_8);
             gp.clientBrand = clientBrand;
             for(Player p : Bukkit.getOnlinePlayers()) if(p.hasPermission("guard.joinalerts")) p.sendMessage("§9§lGUARD §7»§f " + player.getName() + " §7joined using §f" + clientBrand + " §7in §f" + PacketEvents.get().getPlayerUtils().getClientVersion(player).name().replaceAll("_", ".").substring(2));
-        } catch (final Throwable t) {
-            System.out.println("An error occurred with ClientBrandListener. You can ignore this.");
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 

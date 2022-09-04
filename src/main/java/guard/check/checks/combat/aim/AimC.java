@@ -16,7 +16,7 @@ public class AimC extends GuardCheck {
         if(packet.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
 
             if(gp.deltaYaw != 0) {
-                if (gp.getPlayer().getLocation().getPitch() - previousPitch < 0.2) fail(packet, "Repeated pitch pattern", "result §9" + (gp.getPlayer().getLocation().getPitch() - previousPitch));
+                if (Math.abs(gp.getPlayer().getLocation().getPitch() - previousPitch) < 0.1) fail(packet, "Repeated pitch pattern", "result §9" + Math.abs(gp.getPlayer().getLocation().getPitch() - previousPitch));
                 else removeBuffer();
                 previousPitch = gp.getPlayer().getLocation().getPitch();
             }
