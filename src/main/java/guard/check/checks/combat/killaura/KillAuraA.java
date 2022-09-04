@@ -30,7 +30,7 @@ public class KillAuraA extends GuardCheck {
                 if(hits > 40) {
                     double accuracy = 100 - hits / swings;
                     debug("accuracy=" + accuracy + "%");
-                    fail(packet, "Impossible hit accuracy", "accuracy §9" + accuracy + "%");
+                    fail(packet, "Suspicious hit accuracy", "accuracy §9" + accuracy + "%");
                 } else {
                     removeBuffer();
                 }

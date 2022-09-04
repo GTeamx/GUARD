@@ -10,12 +10,15 @@ import io.github.retrooper.packetevents.packettype.PacketType;
 @GuardCheckInfo(name = "Aim C", category = GuardCategory.Combat, state = GuardCheckState.EXPERIMENTAL, addBuffer = 1, removeBuffer = 1, maxBuffer = 4)
 public class AimC extends GuardCheck {
 
+    double previousPitch;
+
     public void onPacket(PacketPlayReceiveEvent packet) {
         if(packet.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
 
             if(gp.deltaYaw != 0) {
-                if (gp.deltaPitch == gp.lastDeltaPitch) fail(packet, "Repeated deltaPitch", "deltaPitch §9" + gp.deltaPitch);
+                if (gp.getPlayer().getLocation().getPitch() - previousPitch < 0.2) fail(packet, "Repeated pitch pattern", "result §9" + (gp.getPlayer().getLocation().getPitch() - previousPitch));
                 else removeBuffer();
+                previousPitch = gp.getPlayer().getLocation().getPitch();
             }
         }
     }

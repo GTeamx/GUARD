@@ -16,6 +16,8 @@ import java.util.List;
 @GuardCheckInfo(name = "AntiCactus A", category = GuardCategory.World, state = GuardCheckState.STABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class AntiCactusA extends GuardCheck {
 
+    // Was a meme at first but it actually works lmao
+
     int moves;
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {

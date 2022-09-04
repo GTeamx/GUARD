@@ -23,7 +23,7 @@ public class AimAssistB extends GuardCheck {
                 double avgYaw = yawSamples.getAverageFloat(yawSamples);
                 double avgPitch = pitchSamples.getAverageFloat(pitchSamples);
                 if(stdPitch < 5 && stdYaw < 5 && avgYaw > 5.2 && avgPitch > 0.9 && avgPitch < 2.4) {
-                    fail(null, "Smooth Aim", "sP=" + stdPitch + " sY=" + stdYaw + " aP=" + avgPitch + " aY=" + avgYaw);
+                    fail(null, "Static aiming pattern", "sP=" + stdPitch + " sY=" + stdYaw + " aP=" + avgPitch + " aY=" + avgYaw);
                     debug("§cFLAGER");
                 } else removeBuffer();
                 if(gp.isCinematic) buffer = 0;

@@ -34,7 +34,7 @@ public class PingSpoofA extends GuardCheck {
     public void onTransaction(TransactionPacketClient packet, boolean found) {
        if(id == packet.getId() && checked) {
            transactionPing.add((int) (packet.getTimeStamp() - lastTransaction));
-
+            // this shit broken alr
            final boolean exempt = isExempt(ExemptType.TPS, ExemptType.CHUNK, ExemptType.TELEPORT, ExemptType.JOINED);
            if(!exempt && gp.ping > transactionPing.getAverageInt(transactionPing) && Math.abs(gp.ping - transactionPing.getAverageInt(transactionPing)) > 50) Bukkit.broadcastMessage("(A) " + Math.abs(gp.ping - transactionPing.getAverageInt(transactionPing)));
            if(!exempt && transactionPing.getAverageInt(transactionPing) > gp.ping && Math.abs(transactionPing.getAverageInt(transactionPing) - gp.ping) > 50) Bukkit.broadcastMessage("(B) " + Math.abs(gp.ping - transactionPing.getAverageInt(transactionPing)));

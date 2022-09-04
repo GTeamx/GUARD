@@ -19,7 +19,7 @@ public class AutoBlockA extends GuardCheck {
         if(packet.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
             WrappedPacketInUseEntity wrapper = new WrappedPacketInUseEntity(packet.getNMSPacket());
             debug("delay=" + (System.currentTimeMillis() - lastUse));
-            if((System.currentTimeMillis() - lastUse < 86) && wrapper.getAction() == WrappedPacketInUseEntity.EntityUseAction.ATTACK) fail(packet, "Invalid packet order", "lU §9" + (System.currentTimeMillis() - lastUse));
+            if((System.currentTimeMillis() - lastUse < 86) && wrapper.getAction() == WrappedPacketInUseEntity.EntityUseAction.ATTACK) fail(packet, "Impossible packet delay", "lU §9" + (System.currentTimeMillis() - lastUse));
         } else if(packet.getPacketId() == PacketType.Play.Client.BLOCK_PLACE && packet.getPlayer().getInventory().getItemInMainHand().getType().toString().contains("SWORD")) lastUse = System.currentTimeMillis();
     }
 }

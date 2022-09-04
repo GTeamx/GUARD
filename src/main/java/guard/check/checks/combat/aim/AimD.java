@@ -22,7 +22,7 @@ public class AimD extends GuardCheck {
 
             debug("moduloGCD=" + moduloGCD);
 
-            if(String.valueOf(moduloGCD).length() <= 3 && !isExempt(ExemptType.TELEPORT)) fail(packet, "Impossible perfect rotation", "mGCD §9" + moduloGCD);
+            if(String.valueOf(moduloGCD).length() <= 3 && !isExempt(ExemptType.TELEPORT)) fail(packet, "Rounded pitch rotation", "mGCD §9" + moduloGCD);
 
         }
     }

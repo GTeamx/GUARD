@@ -38,7 +38,7 @@ public class AimB extends GuardCheck {
 
             }
             lastModuloGCD3 = moduloGCD3;
-            if(String.valueOf(moduloGCD).contains("E-4") && moduloGCD > 0 && !gp.isCinematic && Math.abs(moduloGCD2) < 0.0008) fail(null, "GCD Flaw", "mGCD §9" + moduloGCD + "\n" + " §8»§f mGCD2 §9" + moduloGCD2);
+            if(String.valueOf(moduloGCD).contains("E-4") && moduloGCD > 0 && !gp.isCinematic && Math.abs(moduloGCD2) < 0.0008) fail(null, "Impossible modulo GCD", "mGCD §9" + moduloGCD + "\n" + " §8»§f mGCD2 §9" + moduloGCD2);
             //else removeBuffer();
         }
 

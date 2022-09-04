@@ -21,7 +21,7 @@ public class KillAuraB extends GuardCheck {
             double accel = Math.abs(gp.getDeltaXZ() - gp.getLastDeltaXZ());
             if(hitTicks++ <= 2) {
                 if(accel < 0.025) {
-                    fail(null, "Impossible acceleration", "accel §9" + accel);
+                    fail(null, "Impossible combat acceleration", "accel §9" + accel);
                     debug("accel=" + accel);
                 } else {
                     removeBuffer();

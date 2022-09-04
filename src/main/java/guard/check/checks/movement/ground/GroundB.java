@@ -40,7 +40,7 @@ public class GroundB extends GuardCheck {
         else removeBuffer();
     }
 
-    //Taken from Fiona
+    //Taken from Fiona, credits to Fiona
     public Block getBlock(final Location location) {
         if (location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) {
             return location.getBlock();

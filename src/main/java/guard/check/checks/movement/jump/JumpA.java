@@ -14,7 +14,8 @@ public class JumpA extends GuardCheck {
     double tempBuffer;
     boolean didOnce;
 
-    // Skidded yes yes.. me make new one later one day xD
+    // Skidded yes yes.. me make new one later one day xD -Vag
+    // Man hell nah we ain't using this so haram, this is meant to be skid-free -XIII
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
         boolean step = mathOnGround(motionY) && mathOnGround(gp.from.getY());
         boolean jumped = motionY > 0 && gp.from.getY() % (1D/64) == 0 && !gp.playerGround && !step;

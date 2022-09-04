@@ -21,7 +21,7 @@ public class AimG extends GuardCheck {
     public void onPacket(PacketPlayReceiveEvent packet) {
         if(packet.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
             double GCD = customGCD(Math.abs(gp.deltaPitch), Math.abs(gp.lastDeltaPitch));
-            if(String.valueOf(GCD).length() < 16 && GCD != 0) fail(packet, "Impossible rounded rotation", "rot §9" + GCD);
+            if(String.valueOf(GCD).length() < 16 && GCD != 0) fail(packet, "Impossible GCD", "rot §9" + GCD);
             if(String.valueOf(GCD).length() >= 16) removeBuffer();
             debug("gcd=" + GCD + " c=" + gp.isCinematic + " b=" + buffer);
         }

@@ -10,8 +10,6 @@ import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.Wrapped
 @GuardCheckInfo(name = "Reach A", category = GuardCategory.Combat, state = GuardCheckState.UNSTABLE, addBuffer = 0, removeBuffer = 0, maxBuffer = 0)
 public class ReachA extends GuardCheck {
 
-
-
     public void onPacket(PacketPlayReceiveEvent packet) {
         if(packet.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
             WrappedPacketInUseEntity useEntity = new WrappedPacketInUseEntity(packet.getNMSPacket());

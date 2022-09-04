@@ -21,7 +21,7 @@ public class AimE extends GuardCheck {
 
             debug("PITCH=" + moduloGCD);
 
-            if(Math.abs(moduloGCD) > 20) fail(null, "GCD Flaw", "mGCD §9" + moduloGCD);
+            if(Math.abs(moduloGCD) > 20) fail(null, "Impossible modulo GCD", "mGCD §9" + moduloGCD);
             else removeBuffer();
         }
 

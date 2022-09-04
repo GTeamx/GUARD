@@ -11,6 +11,7 @@ import io.github.retrooper.packetevents.packetwrappers.play.in.entityaction.Wrap
 
 @GuardCheckInfo(name = "Speed E", category = GuardCategory.Movement, state = GuardCheckState.STABLE, addBuffer = 1, removeBuffer = 1, maxBuffer = 2)
 public class SpeedE extends GuardCheck {
+
     int airTicks;
     double accel;
     boolean isSprinting;
@@ -23,7 +24,6 @@ public class SpeedE extends GuardCheck {
         final double prediction = gp.getLastDeltaXZ() * 0.91F + (isSprinting ? 0.026 : 0.02);
         final double difference = gp.getDeltaXZ() - prediction;
         final boolean exempt = isExempt(ExemptType.FLYING, ExemptType.NEAR_VEHICLE, ExemptType.VELOCITY);
-
         if (difference > accel && airTicks > 2 && !exempt && !gp.isInLiquid) fail(packet, "Impossible movement friction", "diff §9" + difference);
         else removeBuffer();
     }

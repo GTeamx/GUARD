@@ -7,29 +7,20 @@ import guard.check.GuardCheckState;
 import guard.utils.MathUtils;
 import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "AimAssist A", category = GuardCategory.Combat, state = GuardCheckState.STABLE, addBuffer = 1, removeBuffer = 0.10, maxBuffer = 3)
+@GuardCheckInfo(name = "AimAssist A", category = GuardCategory.Combat, state = GuardCheckState.STABLE, addBuffer = 1, removeBuffer = 0.20, maxBuffer = 3)
 public class AimAssistA extends GuardCheck {
-    double tempBuffer;
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
-        double divisorYaw = MathUtils.getGcd((long) (deltaYaw * MathUtils.EXPANDER), (long) (lastDeltaYaw * MathUtils.EXPANDER));
-        double divisorPitch = MathUtils.getGcd((long) (deltaPitch * MathUtils.EXPANDER), (long) (lastDeltaPitch * MathUtils.EXPANDER));
-        double constantYaw = divisorYaw / MathUtils.EXPANDER;
-        double constantPitch = divisorPitch / MathUtils.EXPANDER;
-        double currentX = deltaYaw / constantYaw;
-        double currentY = deltaPitch / constantPitch;
-        double previousX = lastDeltaYaw / constantYaw;
-        double previousY = lastDeltaPitch / constantPitch;
+        final double yawGCD = MathUtils.getGcd((long) (deltaYaw * MathUtils.EXPANDER), (long) (lastDeltaYaw * MathUtils.EXPANDER));
+        final double pitchGCD = MathUtils.getGcd((long) (deltaPitch * MathUtils.EXPANDER), (long) (lastDeltaPitch * MathUtils.EXPANDER));
         if (deltaYaw > 0.0 && deltaPitch > 0.0 && deltaYaw < 10.0 && deltaPitch < 10.0) {
-            double moduloX = currentX % previousX;
-            double moduloY = currentY % previousY;
-            double floorModuloX = Math.abs(Math.floor(moduloX) - moduloX);
-            double floorModuloY = Math.abs(Math.floor(moduloY) - moduloY);
-            boolean invalidX = (moduloX > 90.0D && floorModuloX > 0.1D);
-            boolean invalidY = (moduloY > 90.0D && floorModuloY > 0.1D);
-            if(invalidY && !gp.isCinematic) fail(packet, "Smooth Rotation", "iY");
+            final double yawGCDModulo = (deltaYaw / (yawGCD / MathUtils.EXPANDER)) % (lastDeltaYaw / (yawGCD / MathUtils.EXPANDER));
+            final double pitchGCDModulo = (deltaPitch / (pitchGCD / MathUtils.EXPANDER)) % (lastDeltaPitch / (pitchGCD / MathUtils.EXPANDER));
+            final double yawGCDModuloFloor = Math.abs(Math.floor(yawGCDModulo) - yawGCDModulo);
+            final double pitchGCDModuloFloor = Math.abs(Math.floor(pitchGCDModulo) - pitchGCDModulo);
+            if((pitchGCDModulo > 90 && pitchGCDModuloFloor > 0.1) && !gp.isCinematic) fail(packet, "Impossible smooth rotation", "A=§aTRUE");
             else removeBuffer();
-            if(invalidX && invalidY) fail(packet, "Smooth Rotation", "iY=§aTRUE" + "\n" + " §8»§f iX=§aTRUE");
+            if((yawGCDModulo > 90 && yawGCDModuloFloor > 0.1) && (pitchGCDModulo > 90 && pitchGCDModuloFloor > 0.1)) fail(packet, "Impossible smooth rotation", "yGCDM §9" + yawGCDModulo + "\n" + " §8»§f yGCDMf §9" + yawGCDModuloFloor + "\n" + " §8»§f pGCDM §9" + pitchGCDModulo + "\n" + " §8»§f pGCDMf §9" + pitchGCDModuloFloor);
         }
     }
 }
