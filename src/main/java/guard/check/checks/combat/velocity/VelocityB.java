@@ -58,10 +58,23 @@ public class VelocityB extends GuardCheck {
             boolean jumped = !gp.playerGround && lastPG;
             if(hit) {
                 if(jumped || (ticks++ > (4 + gp.transactionPing / 50))) {
-                    double predictedVelocityXZ =  Math.hypot(veloVector.x, veloVector.z);;
+                    double tempX = lastMotionX;
+                    double tempZ = lastMotionZ;
+                    double predictedVelocityXZ =  Math.hypot(veloVector.x, veloVector.z);
+                    float p_70653_3_ = (float) veloVector.x;
+                    float p_70653_5_ = (float) veloVector.z;
+                    float f2 = sqrt_double(p_70653_3_ * p_70653_3_ + p_70653_5_ * p_70653_5_);
+                    float f1 = 0.4F;
+                    tempX /= 2.0D;
+                    tempZ /= 2.0D;
+                    tempX -= p_70653_3_ / (double) f2 * (double) f1;
+                    tempZ -= p_70653_5_ / (double) f2 * (double) f1;
+                    double predictedVelocityXZNew = Math.hypot(tempX, tempZ);
                     double percentage = gp.getDeltaXZ() / predictedVelocityXZ * 100;
+                    double percentageNew = gp.getDeltaXZ() / predictedVelocityXZNew * 100;
                     double percentage2 = gp.getLastDeltaXZ() / predictedVelocityXZ * 100;
-                    debug("percentage=" + percentage + " percentage2=" + percentage2);
+                    debug("newPercentage=" + percentageNew);
+                    //debug("percentage=" + percentage + " percentage2=" + percentage2);
                     if ((percentage < 30) && percentage >= 0 && !String.valueOf(percentage).equals("-0.0")) { // TODO: check if player is moving, if yes then check the next not the current flying
                         fail(null, "Modified horizontal velocity", "velocity §9" + percentage + "%");
                     } else removeBuffer();
@@ -71,5 +84,9 @@ public class VelocityB extends GuardCheck {
             }
 
         }
+    }
+    public static float sqrt_double(double value)
+    {
+        return (float)Math.sqrt(value);
     }
 }

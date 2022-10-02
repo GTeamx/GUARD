@@ -18,6 +18,8 @@ public class TimerA extends GuardCheck {
     long joinTime;
     boolean wasFirst;
     SampleList<Long> balls = new SampleList<>(3);
+    SampleList<Long> times = new SampleList<>(5);
+    double balAvg;
 
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
         //if(packet.getPacketId() == PacketType.Play.Client.POSITION || packet.getPacketId() == PacketType.Play.Client.POSITION_LOOK || packet.getPacketId() == PacketType.Play.Client.LOOK || packet.getPacketId() == PacketType.Play.Client.FLYING) {
@@ -37,12 +39,27 @@ public class TimerA extends GuardCheck {
         if(String.valueOf(bal).contains("E")) {
             bal = -5;
         }
+        if(String.valueOf(balAvg).contains("E")) {
+            balAvg = -5;
+        }
         if(Math.abs(rate) >= 48 && Math.abs(rate) <= 52 && bal < -10) {
             balls.add(rate);
             if(balls.isCollected()) {
                 if (Math.abs(balls.getAverageLong(balls) - Math.abs(rate)) < 20) {
                     bal = -10;
                 }
+            }
+        }
+        times.add(rate);
+        if(times.isCollected()) {
+
+            balAvg += 50 - times.getAverageLong(times);
+            //sendMessage("balAvg=" + balAvg);
+            if(balAvg > 10) {
+                if(times.getStandardDeviation(times) < 10 && bal > 9) {
+                    //sendMessage("avg=" + times.getAverageLong(times) + " std=" + times.getStandardDeviation(times));
+                }
+                balAvg = 0;
             }
         }
         if(bal > 15) {

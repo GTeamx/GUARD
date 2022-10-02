@@ -8,6 +8,7 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import io.github.retrooper.packetevents.packettype.PacketType;
 import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
 import io.github.retrooper.packetevents.packetwrappers.play.out.animation.WrappedPacketOutAnimation;
+import org.bukkit.entity.Player;
 
 @GuardCheckInfo(name = "KillAura B", category = GuardCategory.Combat, state = GuardCheckState.STABLE, addBuffer = 1, removeBuffer = 1, maxBuffer = 5)
 public class KillAuraB extends GuardCheck {
@@ -19,8 +20,8 @@ public class KillAuraB extends GuardCheck {
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
         if(gp.player.isSprinting()) {
             double accel = Math.abs(gp.getDeltaXZ() - gp.getLastDeltaXZ());
-            if(hitTicks++ <= 2) {
-                if(accel < 0.025) {
+            if(hitTicks++ <= 2 && gp.target != null) {
+                if(accel < 0.025 && gp.target instanceof Player) {
                     fail(null, "Impossible combat acceleration", "accel §9" + accel);
                     debug("accel=" + accel);
                 } else {

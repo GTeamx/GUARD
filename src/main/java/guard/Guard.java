@@ -59,8 +59,11 @@ public class Guard extends JavaPlugin {
         System.out.println("OUTPUT: " + AES.AESEncrypt2("1.0", "12a7150c1688bf2b86c549c966c6c68cc33411d8accc397bcad1ca26e525a33e", "643134ed859db780df3d505ac459ef06d52c470b2979ec7ab2588dd67e5817e7"));
 
 
-        //PacketEvents.get().getInjector().eject();
-        //PacketEvents.get().getInjector().inject();
+        PacketEvents.get().getInjector().eject();
+        PacketEvents.get().getInjector().inject();
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+
+        }, 20);
         if(PacketEvents.get().getServerUtils().getVersion().isNewerThanOrEquals(ServerVersion.v_1_13)) {
             final Messenger messenger = Bukkit.getMessenger();
             messenger.registerIncomingPluginChannel(this, "minecraft:brand", new ClientBrandListener());

@@ -23,7 +23,7 @@ public class SpeedE extends GuardCheck {
         if(System.currentTimeMillis() - gp.lastAttack < 1200) accel = 0.04;
         final double prediction = gp.getLastDeltaXZ() * 0.91F + (isSprinting ? 0.026 : 0.02);
         final double difference = gp.getDeltaXZ() - prediction;
-        final boolean exempt = isExempt(ExemptType.FLYING, ExemptType.NEAR_VEHICLE, ExemptType.VELOCITY);
+        final boolean exempt = isExempt(ExemptType.FLYING, ExemptType.NEAR_VEHICLE);
         if (difference > accel && airTicks > 2 && !exempt && !gp.isInLiquid) fail(packet, "Impossible movement friction", "diff §9" + difference);
         else removeBuffer();
     }

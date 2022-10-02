@@ -307,8 +307,10 @@ public class PacketListener extends PacketListenerAbstract {
                 }
                 if(event.getPacketId() == PacketType.Play.Server.ENTITY_VELOCITY) {
                     WrappedPacketOutEntityVelocity velo = new WrappedPacketOutEntityVelocity(event.getNMSPacket());
-                    if(velo.getEntityId() == p.getEntityId())
+                    if(velo.getEntityId() == p.getEntityId()) {
+                        gp.velocity = velo.getVelocity();
                         gp.lastVelocity = System.currentTimeMillis();
+                    }
                 }
                 for (GuardCheck c : gp.getCheckManager().checks) {
                     c.gp = gp;
@@ -391,8 +393,26 @@ public class PacketListener extends PacketListenerAbstract {
             }
         }
 
+        BoundingBox bb4 = new BoundingBox(gp.getPlayer());
 
-
+        double minX3bb4 = bb4.getMinX();
+        double minY3bb4 = bb4.getMinY();
+        double minZ3bb4 = bb4.getMinZ();
+        double maxX3bb4 = bb4.getMaxX();
+        double maxY3bb4 = bb4.getMaxY();
+        double maxZ3bb4 = bb4.getMaxZ();
+        List<Block> b4bb4 = new ArrayList<>();
+        for (double x = minX3bb4; x <= maxX3bb4; x += (maxX3bb4 - minX3bb4)) {
+            for (double y = minY3bb4; y <= maxY3bb4 + 0.01; y += (maxY3bb4 - minY3bb4) / 5) {
+                for (double z = minZ3bb4; z <= maxZ3bb4; z += (maxZ3bb4 - minZ3bb4)) {
+                    final Location location = new Location(gp.getPlayer().getWorld(), x, y, z);
+                    final Block block = this.getBlock(location);
+                    b4bb4.add(block);
+                }
+            }
+        }
+        gp.inLava = b4bb4.stream().anyMatch(block -> block.getType().toString().contains("LAVA"));
+        gp.inWater = b4bb4.stream().anyMatch(block -> block.getType().toString().contains("WATER"));
         gp.isInLiquid = b.stream().anyMatch(Block::isLiquid);
         gp.isInFullLiquid = b4.stream().allMatch(Block::isLiquid);
         gp.aboveLiquid = b5.stream().allMatch(Block::isLiquid);
@@ -430,9 +450,7 @@ public class PacketListener extends PacketListenerAbstract {
 
         BoundingBox box = new BoundingBox(var4);
         final BoundingBox bb = new BoundingBox(gp.getPlayer())
-                .expandOther(0.2, 0.2, 0, 0, 0.2, 0.2);
-        box.expand(Math.abs(gp.motionX) + 0.14, 0,
-                Math.abs(gp.motionZ) + 0.14);
+                .expandOther(0.02, 0.02, 0, 0, 0.02, 0.02);
         final double mx = bb.getMinX();
         final double my = bb.getMinY();
         final double mz = bb.getMinZ();
@@ -441,7 +459,7 @@ public class PacketListener extends PacketListenerAbstract {
         final double maz = bb.getMaxZ();
         List<Block> b2 = new ArrayList<>();
         for (double x = mx; x <= max; x += (max - mx)) {
-            for (double y = my; y <= may + 0.01; y += (may - my) / 5) { //Expand max by 0.01 to compensate shortly for precision issues due to FP.
+            for (double y = my; y <= may; y += (may - my) / 5) { //Expand max by 0.01 to compensate shortly for precision issues due to FP.
                 for (double z = mz; z <= maz; z += (maz - mz)) {
                     final Location loc = new Location(gp.getPlayer().getWorld(), x, y, z);
                     final Block block = this.getBlock(loc);
@@ -449,7 +467,8 @@ public class PacketListener extends PacketListenerAbstract {
                 }
             }
         }
-        if (!b2.stream().allMatch(block -> block.getType().toString().contains("AIR")))
+        gp.inClimbableBlock = gp.onClimbable || b2.stream().anyMatch(block -> block.getType().toString().contains("LADDER") || block.getType().toString().contains("VINE"));
+        if (!b2.stream().allMatch(block -> block.getType().toString().contains("AIR")) || b2.stream().allMatch(Block::isLiquid))
             gp.collidesHorizontally = true;
         else
             gp.collidesHorizontally = false;

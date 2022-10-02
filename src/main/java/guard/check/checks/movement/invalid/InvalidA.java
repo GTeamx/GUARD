@@ -23,7 +23,7 @@ public class InvalidA extends GuardCheck {
         if(gp.playerGround) groundTicks++;
 
         if (groundTicks > 3) maxSpeed = 0.128;
-        else maxSpeed = 0.32;
+        else maxSpeed = 0.33;
 
         if(isExempt(ExemptType.VELOCITY)) maxSpeed = 0.39;
 

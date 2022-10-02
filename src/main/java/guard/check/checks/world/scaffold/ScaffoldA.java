@@ -50,7 +50,7 @@ public class ScaffoldA extends GuardCheck {
         } else {
             if(wasAboveBlock) {
                 if(!wasSneaking && gp.player.isSneaking() && System.currentTimeMillis() - lastBlock < 600) {
-                    fail(null, "Impossible perfect egle pattern", "§4NaN");
+                    fail(null, "Impossible perfect eagle pattern", "§4NaN");
                 } else removeBuffer();
             }
             wasSneaking = false;

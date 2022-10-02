@@ -17,6 +17,7 @@ import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.Wrapped
 import io.github.retrooper.packetevents.utils.npc.NPC;
 import io.github.retrooper.packetevents.utils.npc.NPCManager;
 import io.github.retrooper.packetevents.utils.server.ServerVersion;
+import io.github.retrooper.packetevents.utils.vector.Vector3d;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -78,6 +79,8 @@ public class GuardPlayer {
     public Location sTo;
     public Location sFrom;
     public boolean isOnStair;
+    public boolean inLava;
+    public boolean inWater;
     public boolean isInLiquid;
     public boolean isInFullLiquid;
     public boolean aboveLiquid;
@@ -110,6 +113,7 @@ public class GuardPlayer {
     public boolean nearPiston;
     public boolean isTeleporting;
     public boolean onClimbable;
+    public boolean inClimbableBlock;
     public long entityHit;
     public long lastAttack;
     public long lastHurt;
@@ -151,6 +155,7 @@ public class GuardPlayer {
     public long lastTakeDamage;
     public double lastCactusDamage;
     public int movesNextToCactus;
+    public Vector3d velocity;
     public List<TransactionPacketServer> transactions = new ArrayList<>();
     public PredictionProcessor predictionProcessor = new PredictionProcessor(this);
     public SampleList<Location> targetLocations = new SampleList<>(5, true);

@@ -34,6 +34,7 @@ import guard.check.checks.player.inventory.InventoryB;
 import guard.check.checks.player.pingspoof.PingSpoofA;
 import guard.check.checks.player.timer.TimerA;
 import guard.check.checks.world.anticactus.AntiCactusA;
+import guard.check.checks.world.baritone.BaritoneA;
 import guard.check.checks.world.interact.InteractA;
 import guard.check.checks.world.scaffold.ScaffoldA;
 
@@ -102,6 +103,7 @@ public class GuardCheckManager {
         registerCheck(new SpeedD());
         registerCheck(new SpeedE());
         registerCheck(new SpeedF());
+        registerCheck(new SpeedG());
 
         registerCheck(new StepA());
         registerCheck(new StepB());
@@ -135,6 +137,8 @@ public class GuardCheckManager {
         registerCheck(new TimerA());
 
         registerCheck(new AntiCactusA());
+
+        registerCheck(new BaritoneA());
 
         registerCheck(new InteractA());
 

@@ -10,6 +10,8 @@ import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 @GuardCheckInfo(name = "Speed F", category = GuardCategory.Movement, state = GuardCheckState.EXPERIMENTAL, addBuffer = 1, removeBuffer = 0.20, maxBuffer = 1)
 public class SpeedF extends GuardCheck {
 
+
+
     @Override
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
         final boolean exempt = isExempt(ExemptType.TELEPORT, ExemptType.CLIMBABLE, ExemptType.STAIRS, ExemptType.SLAB, ExemptType.LIQUID, ExemptType.FULL_LIQUID, ExemptType.VELOCITY, ExemptType.FLYING);
