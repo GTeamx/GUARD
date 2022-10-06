@@ -18,7 +18,7 @@ public class FlyD extends GuardCheck {
     public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
         boolean exempt = isExempt(ExemptType.SLIME, ExemptType.SLAB, ExemptType.STAIRS, ExemptType.LIQUID, ExemptType.GLIDE, ExemptType.FLYING, ExemptType.NEAR_VEHICLE, ExemptType.INSIDE_VEHICLE, ExemptType.CLIMBABLE, ExemptType.FULL_LIQUID, ExemptType.VELOCITY);
 
-        if(motionY - lastMotionY > 0 && gp.inAir && !gp.serverGround && !gp.playerGround && !exempt) fail(packet, "Impossible acceleration", "accel §9" + (motionY - lastMotionY));
+        if(motionY - lastMotionY > 0 && gp.inAir && !gp.serverGround && !gp.playerGround && !gp.lastPlayerGround && !exempt) fail(packet, "Impossible acceleration", "accel §9" + (motionY - lastMotionY));
         if(motionY - lastMotionY > 0) {
             airTicks++;
             if(airTicks > 3 && !exempt) fail(packet, "Impossible air time", "airTicks §9" + airTicks);

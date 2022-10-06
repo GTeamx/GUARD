@@ -21,7 +21,7 @@ public class BaritoneA extends GuardCheck {
         if((diffX > .490 && diffX < .510) || (diffZ > .490 && diffZ < .510)) {
             double yawDiff = Math.abs(deltaYaw) - Math.floor(Math.abs(deltaYaw));
             if(Math.abs(deltaYaw) > 0.1 && gp.getDeltaXZ() > 0 && yawDiff < 0.1 && Math.abs(deltaPitch) < 0.048 && Math.abs(deltaPitch) > 0) {
-                Bukkit.broadcastMessage("§cBaritone is really cool");
+                fail(null, "Baritone movement", "");
             }
         }
 

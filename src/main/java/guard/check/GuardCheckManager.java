@@ -95,7 +95,7 @@ public class GuardCheckManager {
         registerCheck(new JesusB());
         registerCheck(new JesusC());
         registerCheck(new JesusD());
-        registerCheck(new JesusE());
+        registerCheck(new JesusD());
 
         registerCheck(new SpeedA());
         registerCheck(new SpeedB());
@@ -103,7 +103,6 @@ public class GuardCheckManager {
         registerCheck(new SpeedD());
         registerCheck(new SpeedE());
         registerCheck(new SpeedF());
-        registerCheck(new SpeedG());
 
         registerCheck(new StepA());
         registerCheck(new StepB());
