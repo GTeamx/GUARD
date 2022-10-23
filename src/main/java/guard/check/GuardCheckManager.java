@@ -1,42 +1,10 @@
 package guard.check;
 
 import guard.Guard;
-import guard.check.checks.combat.aim.*;
-import guard.check.checks.combat.aim.aimassist.AimAssistA;
-import guard.check.checks.combat.aim.aimassist.AimAssistB;
-import guard.check.checks.combat.aim.aimassist.AimAssistC;
-import guard.check.checks.combat.aim.aimassist.AimAssistD;
-import guard.check.checks.combat.autoblock.AutoBlockA;
-import guard.check.checks.combat.autoclicker.AutoClickerA;
-import guard.check.checks.combat.killaura.KillAuraB;
-import guard.check.checks.combat.killaura.KillAuraC;
-import guard.check.checks.combat.killaura.KillAuraA;
-import guard.check.checks.combat.reach.ReachA;
-import guard.check.checks.combat.velocity.VelocityA;
-import guard.check.checks.combat.velocity.VelocityB;
-import guard.check.checks.movement.fastclimb.FastClimbA;
-import guard.check.checks.movement.fly.*;
-import guard.check.checks.movement.ground.GroundA;
-import guard.check.checks.movement.ground.GroundB;
-import guard.check.checks.movement.ground.GroundC;
-import guard.check.checks.movement.invalid.InvalidA;
-import guard.check.checks.movement.jesus.*;
-import guard.check.checks.movement.motion.MotionA;
-import guard.check.checks.movement.speed.*;
+
 import guard.check.checks.movement.step.StepA;
 import guard.check.checks.movement.step.StepB;
-import guard.check.checks.movement.step.StepC;
 import guard.check.checks.movement.vclip.vClipA;
-import guard.check.checks.player.badpackets.*;
-import guard.check.checks.player.badpackets.post.*;
-import guard.check.checks.player.inventory.InventoryA;
-import guard.check.checks.player.inventory.InventoryB;
-import guard.check.checks.player.pingspoof.PingSpoofA;
-import guard.check.checks.player.timer.TimerA;
-import guard.check.checks.world.anticactus.AntiCactusA;
-import guard.check.checks.world.baritone.BaritoneA;
-import guard.check.checks.world.interact.InteractA;
-import guard.check.checks.world.scaffold.ScaffoldA;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,102 +14,11 @@ public class GuardCheckManager {
     public List<GuardCheck> checks = new ArrayList<>();
 
     public GuardCheckManager() {
-        registerCheck(new AimAssistA());
-        registerCheck(new AimAssistB());
-        registerCheck(new AimAssistC());
-        registerCheck(new AimAssistD());
-
-        registerCheck(new AimA());
-        registerCheck(new AimB());
-        registerCheck(new AimC());
-        registerCheck(new AimD());
-        registerCheck(new AimE());
-        registerCheck(new AimF());
-        registerCheck(new AimG());
-
-        registerCheck(new AutoBlockA());
-
-        registerCheck(new AutoClickerA());
-
-        registerCheck(new KillAuraA());
-        registerCheck(new KillAuraB());
-        registerCheck(new KillAuraC());
-
-        registerCheck(new ReachA());
-
-        registerCheck(new VelocityA());
-        registerCheck(new VelocityB());
-
-        registerCheck(new FastClimbA());
-
-        registerCheck(new FlyA());
-        registerCheck(new FlyB());
-        registerCheck(new FlyC());
-        registerCheck(new FlyD());
-        registerCheck(new FlyE());
-        registerCheck(new FlyF());
 
         registerCheck(new vClipA());
 
-        registerCheck(new MotionA());
-
-        registerCheck(new InvalidA());
-
-        registerCheck(new GroundA());
-        registerCheck(new GroundB());
-        registerCheck(new GroundC());
-
-        registerCheck(new JesusA());
-        registerCheck(new JesusB());
-        registerCheck(new JesusC());
-        registerCheck(new JesusD());
-
-        registerCheck(new SpeedA());
-        registerCheck(new SpeedB());
-        registerCheck(new SpeedC());
-        registerCheck(new SpeedD());
-        registerCheck(new SpeedE());
-        registerCheck(new SpeedF());
-
         registerCheck(new StepA());
         registerCheck(new StepB());
-        registerCheck(new StepC());
-
-        registerCheck(new BadPacketA());
-        registerCheck(new BadPacketB());
-        registerCheck(new BadPacketC());
-        registerCheck(new BadPacketD());
-        registerCheck(new BadPacketE());
-        registerCheck(new BadPacketF());
-        registerCheck(new BadPacketG());
-        registerCheck(new BadPacketH());
-        registerCheck(new BadPacketI());
-        registerCheck(new BadPacketJ());
-        registerCheck(new BadPacketK());
-        registerCheck(new BadPacketL());
-        registerCheck(new BadPacketM());
-        registerCheck(new BadPacketN());
-        registerCheck(new BadPacketO());
-        registerCheck(new BadPacketP());
-        registerCheck(new BadPacketQ());
-        registerCheck(new BadPacketU());
-        registerCheck(new BadPacketR());
-
-        registerCheck(new InventoryA());
-        registerCheck(new InventoryB());
-
-        registerCheck(new PingSpoofA());
-
-        registerCheck(new TimerA());
-
-        registerCheck(new AntiCactusA());
-
-        registerCheck(new BaritoneA());
-
-        registerCheck(new InteractA());
-
-        registerCheck(new ScaffoldA());
-
 
     }
 

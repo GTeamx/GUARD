@@ -10,7 +10,6 @@ import io.github.retrooper.packetevents.packettype.PacketType;
 import io.github.retrooper.packetevents.packetwrappers.play.in.entityaction.WrappedPacketInEntityAction;
 import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
 import io.github.retrooper.packetevents.utils.player.ClientVersion;
-import net.minecraft.util.MathHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -438,8 +437,8 @@ public class PredictionProcessor {
             f = friction / f;
             strafe = strafe * f;
             forward = forward * f;
-            float f1 = MathHelper.sin(gp.to.getYaw() * (float)Math.PI / 180.0F);
-            float f2 = MathHelper.cos(gp.to.getYaw() * (float)Math.PI / 180.0F);
+            float f1 = (float) Math.sin(gp.to.getYaw() * (float)Math.PI / 180.0F);
+            float f2 = (float) Math.cos(gp.to.getYaw() * (float)Math.PI / 180.0F);
             predictedMotionX += (double)(strafe * f2 - forward * f1);
             predictedMotionZ += (double)(forward * f2 + strafe * f1);
         }
