@@ -2,9 +2,12 @@ package guard.check;
 
 import guard.Guard;
 
+import guard.check.checks.movement.ground.GroundA;
+import guard.check.checks.movement.ground.GroundB;
 import guard.check.checks.movement.step.StepA;
 import guard.check.checks.movement.step.StepB;
 import guard.check.checks.movement.vclip.vClipA;
+import guard.check.checks.world.baritone.BaritoneA;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +18,15 @@ public class GuardCheckManager {
 
     public GuardCheckManager() {
 
-        registerCheck(new vClipA());
+        registerCheck(new GroundA());
+        registerCheck(new GroundB());
 
         registerCheck(new StepA());
         registerCheck(new StepB());
+
+        registerCheck(new vClipA());
+
+        registerCheck(new BaritoneA());
 
     }
 
