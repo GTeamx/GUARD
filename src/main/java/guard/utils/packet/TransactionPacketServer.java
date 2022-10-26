@@ -1,29 +1,29 @@
 package guard.utils.packet;
 
-import io.github.retrooper.packetevents.PacketEvents;
-import io.github.retrooper.packetevents.packetwrappers.play.out.ping.WrappedPacketOutPing;
-import io.github.retrooper.packetevents.packetwrappers.play.out.transaction.WrappedPacketOutTransaction;
-import io.github.retrooper.packetevents.utils.server.ServerVersion;
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPing;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerWindowConfirmation;
 import lombok.Getter;
 
 @Getter
 public class TransactionPacketServer {
     
     public long timeStamp;
-    public WrappedPacketOutTransaction transaction;
-    public WrappedPacketOutPing ping;
+    public WrapperPlayServerWindowConfirmation transaction;
+    public WrapperPlayServerPing ping;
 
-    public TransactionPacketServer(WrappedPacketOutTransaction packet, long timeStamp) {
+    public TransactionPacketServer(WrapperPlayServerWindowConfirmation packet, long timeStamp) {
         this.transaction = packet;
         this.timeStamp = timeStamp;
     }
 
-    public TransactionPacketServer(WrappedPacketOutPing packet, long timeStamp) {
+    public TransactionPacketServer(WrapperPlayServerPing packet, long timeStamp) {
         this.ping = packet;
         this.timeStamp = timeStamp;
     }
 
     public int getId() {
-        return PacketEvents.get().getServerUtils().getVersion().isNewerThanOrEquals(ServerVersion.v_1_17) ? ping.getId() : transaction.getActionNumber();
+        return PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_17) ? ping.getId() : transaction.getWindowId();
     }
 }

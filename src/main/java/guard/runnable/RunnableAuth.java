@@ -1,8 +1,9 @@
 package guard.runnable;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.PacketListenerPriority;
 import guard.Guard;
 import guard.data.GuardPlayerManager;
-import io.github.retrooper.packetevents.PacketEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -14,10 +15,10 @@ public class RunnableAuth implements Runnable {
 
     @Override
     public void run() {
-        if(!Guard.instance.auth.auth) {
+        /**if(!Guard.instance.auth.auth) {
             if(!wasFirst && !doEnable) {
-                PacketEvents.get().unregisterListener(Guard.instance.listener);
-                PacketEvents.get().getInjector().eject();
+                PacketEvents.getAPI().getEventManager().unregisterAllListeners();
+                PacketEvents.getAPI().getInjector().uninject();
                 GuardPlayerManager.clearGuardPlayers();
                 wasFirst = true;
             }
@@ -26,14 +27,14 @@ public class RunnableAuth implements Runnable {
                 Guard.instance.auth.register(Guard.instance.configUtils.getStringFromConfig("config", "license", ""));
                 if(Guard.instance.auth.auth) {
                     if (doEnable && wasFirst) {
-                        PacketEvents.get().init();
-                        PacketEvents.get().registerListener(Guard.instance.listener);
+                        PacketEvents.getAPI().init();
+                        PacketEvents.getAPI().getEventManager().registerListener(Guard.instance.listener, PacketListenerPriority.HIGHEST);
 
 
-                        PacketEvents.get().getInjector().eject();
-                        PacketEvents.get().getInjector().inject();
+                        PacketEvents.getAPI().getInjector().uninject();
+                        PacketEvents.getAPI().getInjector().inject();
                         for (Player p : Bukkit.getOnlinePlayers()) {
-                            PacketEvents.get().getInjector().injectPlayer(p);
+                            //PacketEvents.getAPI().getInjector().inject(p);
                         }
                         doEnable = false;
                         wasFirst = false;
@@ -42,14 +43,12 @@ public class RunnableAuth implements Runnable {
             }
         }else {
             if(doEnable && wasFirst) {
-                PacketEvents.get().init();
-                PacketEvents.get().registerListener(Guard.instance.listener);
-
-
-                PacketEvents.get().getInjector().eject();
-                PacketEvents.get().getInjector().inject();
+                PacketEvents.getAPI().init();
+                PacketEvents.getAPI().getEventManager().registerListener(Guard.instance.listener, PacketListenerPriority.HIGHEST);
+                PacketEvents.getAPI().getInjector().uninject();
+                PacketEvents.getAPI().getInjector().inject();
                 for(Player p : Bukkit.getOnlinePlayers()) {
-                    PacketEvents.get().getInjector().injectPlayer(p);
+                   // PacketEvents.get().getInjector().injectPlayer(p);
                 }
                 doEnable = false;
                 //wasFirst = false;
@@ -58,7 +57,7 @@ public class RunnableAuth implements Runnable {
                 Guard.instance.auth.login(Guard.instance.configUtils.getStringFromConfig("config", "license", "") + "1", Guard.instance.configUtils.getStringFromConfig("config", "license", "") + "2");
             }
 
-        }
+        } **/
 
     }
 }

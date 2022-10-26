@@ -1,8 +1,8 @@
 package guard.listener;
 
+import com.github.retrooper.packetevents.PacketEvents;
 import guard.data.GuardPlayer;
 import guard.data.GuardPlayerManager;
-import io.github.retrooper.packetevents.PacketEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -21,7 +21,7 @@ public class ClientBrandListener implements PluginMessageListener, Listener {
             if (msg.length == 0) return;
             final String clientBrand = new String(msg, StandardCharsets.UTF_8).length() > 0 ? new String(msg, StandardCharsets.UTF_8).substring(1) : new String(msg, StandardCharsets.UTF_8);
             gp.clientBrand = clientBrand;
-            for(Player p : Bukkit.getOnlinePlayers()) if(p.hasPermission("guard.joinalerts")) p.sendMessage("§9§lGUARD §7»§f " + player.getName() + " §7joined using §f" + clientBrand + " §7in §f" + PacketEvents.get().getPlayerUtils().getClientVersion(player).name().replaceAll("_", ".").substring(2));
+            for(Player p : Bukkit.getOnlinePlayers()) if(p.hasPermission("guard.joinalerts")) p.sendMessage("§9§lGUARD §7»§f " + player.getName() + " §7joined using §f" + clientBrand + " §7in §f" + PacketEvents.getAPI().getPlayerManager().getClientVersion(player).name().replaceAll("_", ".").substring(2));
         } catch (Throwable e) {
             e.printStackTrace();
         }

@@ -1,10 +1,10 @@
 package guard.listener;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import guard.Guard;
 import guard.data.GuardPlayer;
 import guard.data.GuardPlayerManager;
-import io.github.retrooper.packetevents.PacketEvents;
-import io.github.retrooper.packetevents.utils.server.ServerVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -91,7 +91,7 @@ public class Event implements Listener {
                 GuardPlayer gp = GuardPlayerManager.getGuardPlayer(p);
                 if(e.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION || e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK || e.getCause() == EntityDamageEvent.DamageCause.PROJECTILE || e.getCause() == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION || e.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION)
                     gp.validVelocityHit = true;
-                else if(PacketEvents.get().getServerUtils().getVersion().isNewerThanOrEquals(ServerVersion.v_1_9)) {
+                else if(PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9)) {
                     gp.validVelocityHit = e.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK;
                 } else {
                     gp.validVelocityHit = false;
@@ -101,7 +101,7 @@ public class Event implements Listener {
                 if(e.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK)
                     gp.entityHit = System.currentTimeMillis();
 
-                if(PacketEvents.get().getServerUtils().getVersion().isNewerThanOrEquals(ServerVersion.v_1_9)) {
+                if(PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_9)) {
                     if(e.getCause() == EntityDamageEvent.DamageCause.ENTITY_SWEEP_ATTACK) {
                         gp.entityHit = System.currentTimeMillis();
                     }
@@ -151,7 +151,7 @@ public class Event implements Listener {
         Bukkit.getScheduler().runTaskAsynchronously(Guard.instance, () -> {
             GuardPlayerManager.addGuardPlayerJoin(e.getPlayer());
             GuardPlayer gp = GuardPlayerManager.getGuardPlayer(e.getPlayer());
-            String version = String.valueOf(PacketEvents.get().getPlayerUtils().getClientVersion(e.getPlayer()));
+            String version = String.valueOf(PacketEvents.getAPI().getPlayerManager().getClientVersion(e.getPlayer()));
             gp.joined = System.currentTimeMillis();
             gp.join = 0;
         });
@@ -160,7 +160,7 @@ public class Event implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onQuit(PlayerQuitEvent e) {
-        PacketEvents.get().getInjector().ejectPlayer(e.getPlayer());
+       // PacketEvents.getAPI().getInjector().u(e.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

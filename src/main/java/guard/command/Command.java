@@ -1,7 +1,7 @@
 package guard.command;
 
 import guard.Guard;
-import guard.check.GuardCheck;
+import guard.check.Check;
 import guard.data.GuardPlayer;
 import guard.data.GuardPlayerManager;
 import org.bukkit.Bukkit;
@@ -45,7 +45,7 @@ public class Command implements CommandExecutor {
                         if(strings.length > 1) {
                             if(strings.length < 3) {
                                 GuardPlayer gp = GuardPlayerManager.getGuardPlayer(sender);
-                                for(GuardCheck c : gp.getCheckManager().checks) {
+                                for(Check c : gp.getCheckManager().checks) {
                                     String checkname = c.name.replace(" ", "");
                                     if (strings[1].equalsIgnoreCase(checkname)) {
                                         if(c.debugToPlayers.isEmpty()) {
@@ -73,7 +73,7 @@ public class Command implements CommandExecutor {
                                 Player target = Bukkit.getPlayer(strings[2]);
                                 if(target != null) {
                                     GuardPlayer gp = GuardPlayerManager.getGuardPlayer(target);
-                                    for (GuardCheck c : gp.getCheckManager().checks) {
+                                    for (Check c : gp.getCheckManager().checks) {
                                         String checkname = c.name.replace(" ", "");
                                         if (strings[1].equalsIgnoreCase(checkname)) {
                                             if(c.debugToPlayers.isEmpty()) {

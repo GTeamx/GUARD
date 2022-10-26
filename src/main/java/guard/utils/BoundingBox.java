@@ -19,12 +19,12 @@ public class BoundingBox {
 
     // Gets the BoundingBox of a Block
     public BoundingBox(Block block) {
-        this.maxX = io.github.retrooper.packetevents.utils.boundingbox.BoundingBox.of(block).getMaxX();
-        this.maxY = io.github.retrooper.packetevents.utils.boundingbox.BoundingBox.of(block).getMaxY();
-        this.maxZ = io.github.retrooper.packetevents.utils.boundingbox.BoundingBox.of(block).getMaxZ();
-        this.minX = io.github.retrooper.packetevents.utils.boundingbox.BoundingBox.of(block).getMinX();
-        this.minY = io.github.retrooper.packetevents.utils.boundingbox.BoundingBox.of(block).getMinY();
-        this.minZ = io.github.retrooper.packetevents.utils.boundingbox.BoundingBox.of(block).getMinZ();
+        this.maxX = org.bukkit.util.BoundingBox.of(block).getMaxX();
+        this.maxY = org.bukkit.util.BoundingBox.of(block).getMaxY();
+        this.maxZ = org.bukkit.util.BoundingBox.of(block).getMaxZ();
+        this.minX = org.bukkit.util.BoundingBox.of(block).getMinX();
+        this.minY = org.bukkit.util.BoundingBox.of(block).getMinY();
+        this.minZ = org.bukkit.util.BoundingBox.of(block).getMinZ();
     }
 
     // Gets the BoundingBox of a Player

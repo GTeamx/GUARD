@@ -1,15 +1,15 @@
 package guard.check;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.PacketReceiveEvent;
+import com.github.retrooper.packetevents.protocol.packettype.PacketType;
+import com.github.retrooper.packetevents.protocol.player.ClientVersion;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientEntityAction;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
 import guard.Guard;
 import guard.data.GuardPlayer;
 import guard.exempt.ExemptType;
 import guard.utils.BoundingBox;
-import io.github.retrooper.packetevents.PacketEvents;
-import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
-import io.github.retrooper.packetevents.packettype.PacketType;
-import io.github.retrooper.packetevents.packetwrappers.play.in.entityaction.WrappedPacketInEntityAction;
-import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
-import io.github.retrooper.packetevents.utils.player.ClientVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -32,25 +32,25 @@ public class PredictionProcessor {
         this.gp = gp;
     }
 
-    public void handle(PacketPlayReceiveEvent event) {
-        if(event.getPacketId() == PacketType.Play.Client.ENTITY_ACTION) {
-            WrappedPacketInEntityAction action = new WrappedPacketInEntityAction(event.getNMSPacket());
-            if(action.getAction() == WrappedPacketInEntityAction.PlayerAction.START_SPRINTING) {
+    public void handle(PacketReceiveEvent event) {
+        if(event.getPacketType() == PacketType.Play.Client.ENTITY_ACTION) {
+            WrapperPlayClientEntityAction action = new WrapperPlayClientEntityAction(event);
+            if(action.getAction() == WrapperPlayClientEntityAction.Action.START_SPRINTING) {
                 isSprinting = true;
             }
-            if(action.getAction() == WrappedPacketInEntityAction.PlayerAction.STOP_SPRINTING) {
+            if(action.getAction() == WrapperPlayClientEntityAction.Action.STOP_SPRINTING) {
                 isSprinting = false;
             }
-            if(action.getAction() == WrappedPacketInEntityAction.PlayerAction.START_SNEAKING) {
+            if(action.getAction() == WrapperPlayClientEntityAction.Action.START_SNEAKING) {
                 isSneaking = true;
             }
-            if(action.getAction() == WrappedPacketInEntityAction.PlayerAction.STOP_SNEAKING) {
+            if(action.getAction() == WrapperPlayClientEntityAction.Action.STOP_SNEAKING) {
                 isSneaking = false;
             }
         }
-        if(event.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
-            WrappedPacketInUseEntity ue = new WrappedPacketInUseEntity(event.getNMSPacket());
-            if(ue.getAction() == WrappedPacketInUseEntity.EntityUseAction.ATTACK) {
+        if(event.getPacketType() == PacketType.Play.Client.INTERACT_ENTITY) {
+            WrapperPlayClientInteractEntity ue = new WrapperPlayClientInteractEntity(event);
+            if(ue.getAction() == WrapperPlayClientInteractEntity.InteractAction.ATTACK) {
                 isAttacking = true;
             }
         } else {
@@ -92,7 +92,7 @@ public class PredictionProcessor {
                     lastmotionX *= (gp.lastLastPlayerGround ? 0.6 : 1) * 0.91;
                     lastmotionZ *= (gp.lastLastPlayerGround ? 0.6 : 1) * 0.91;
 
-                    if (PacketEvents.get().getPlayerUtils().getClientVersion(gp.player).isNewerThanOrEquals(ClientVersion.v_1_9)) {
+                    if (PacketEvents.getAPI().getPlayerManager().getClientVersion(gp.player).isNewerThanOrEquals(ClientVersion.V_1_9)) {
                         if (Math.abs(lastmotionX) < 0.003)
                             lastmotionX = 0;
                         if (Math.abs(lastmotionZ) < 0.003)
@@ -211,7 +211,7 @@ public class PredictionProcessor {
                             .getAmplifier() + 1) * (double) -0.15f * walkspeed;
                 boolean step = mathOnGround(gp.motionY) && mathOnGround(gp.from.getY());
                 boolean jumped = gp.motionY > 0 && gp.from.getY() % (1D / 64) == 0 && !gp.playerGround && !step;
-                if (PacketEvents.get().getPlayerUtils().getClientVersion(gp.player).isNewerThanOrEquals(ClientVersion.v_1_9)) {
+                if (PacketEvents.getAPI().getPlayerManager().getClientVersion(gp.player).isNewerThanOrEquals(ClientVersion.V_1_9)) {
                     if (Math.abs(playerMotionX) < 0.003)
                         playerMotionX = 0;
                     if (Math.abs(playerMotionZ) < 0.003)
@@ -362,7 +362,7 @@ public class PredictionProcessor {
 
                 double keyMotion = forwardMotion * forwardMotion + strafeMotion * strafeMotion;
 
-               /* if (keyMotion >= 1.0E-4F) {
+                if (keyMotion >= 1.0E-4F) {
                     keyMotion = f55 / Math.max(1.0, Math.sqrt(keyMotion));
                     forwardMotion *= keyMotion;
                     strafeMotion *= keyMotion;
@@ -372,7 +372,7 @@ public class PredictionProcessor {
 
                     playerMotionX += ((strafeMotion * yawc) - (forwardMotion * yaws));
                     playerMotionZ += ((forwardMotion * yawc) + (strafeMotion * yaws));
-                } */
+                }
                 double delta = Math.pow(gp.motionX - playerMotionX, 2)
                         + Math.pow(gp.motionZ - playerMotionZ, 2);
                 double yDelta = Math.pow(gp.motionY - playerMotionY, 2);

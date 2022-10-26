@@ -1,18 +1,18 @@
 package guard.check.checks.movement.step;
 
-import guard.check.GuardCategory;
-import guard.check.GuardCheck;
-import guard.check.GuardCheckInfo;
-import guard.check.GuardCheckState;
+import com.github.retrooper.packetevents.event.PacketReceiveEvent;
+import guard.check.Category;
+import guard.check.Check;
+import guard.check.CheckInfo;
+import guard.check.CheckState;
 import guard.exempt.ExemptType;
-import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 
-@GuardCheckInfo(name = "Step A", category = GuardCategory.Movement, state = GuardCheckState.STABLE)
-public class StepA extends GuardCheck {
+@CheckInfo(name = "Step A", category = Category.Movement, state = CheckState.STABLE)
+public class StepA extends Check {
 
     private int airTicks;
 
-    public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
+    public void onMove(PacketReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
 
         // TODO: Handle damage properly and don't simply exempt.
 

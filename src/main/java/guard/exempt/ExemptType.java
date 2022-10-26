@@ -1,8 +1,8 @@
 package guard.exempt;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.protocol.player.ClientVersion;
 import guard.data.GuardPlayer;
-import io.github.retrooper.packetevents.PacketEvents;
-import io.github.retrooper.packetevents.utils.player.ClientVersion;
 import lombok.Getter;
 import org.bukkit.GameMode;
 
@@ -39,7 +39,7 @@ public enum ExemptType {
     GLIDE(gp -> System.currentTimeMillis() - gp.lastGlide < 4000),
     ICE(gp -> System.currentTimeMillis() - gp.lastIce < 2000),
     RESPAWN(gp -> System.currentTimeMillis() - gp.wasDead < 300L),
-    SWIMMING(gp -> PacketEvents.get().getPlayerUtils().getClientVersion(gp.player).isNewerThanOrEquals(ClientVersion.v_1_13) && gp.getPlayer().isSwimming()),
+    SWIMMING(gp -> PacketEvents.getAPI().getPlayerManager().getClientVersion(gp.player).isNewerThanOrEquals(ClientVersion.V_1_13) && gp.getPlayer().isSwimming()),
     SOULSAND(gp -> gp.onSoulSand),
     PLACE(gp -> System.currentTimeMillis() - gp.lastBlockPlaced < 600L);
 

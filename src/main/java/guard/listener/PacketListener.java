@@ -1,33 +1,31 @@
 package guard.listener;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.PacketReceiveEvent;
+import com.github.retrooper.packetevents.event.PacketSendEvent;
+import com.github.retrooper.packetevents.protocol.packettype.PacketType;
+import com.github.retrooper.packetevents.protocol.packettype.PacketTypeCommon;
+import com.github.retrooper.packetevents.protocol.player.ClientVersion;
+import com.github.retrooper.packetevents.protocol.player.DiggingAction;
+import com.github.retrooper.packetevents.protocol.world.BlockFace;
+import com.github.retrooper.packetevents.wrapper.play.client.*;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityAnimation;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityTeleport;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerEntityVelocity;
 import guard.Guard;
-import guard.check.GuardCheck;
+import guard.check.Check;
 import guard.data.GuardPlayer;
 import guard.data.GuardPlayerManager;
 import guard.runnable.RunnableTransaction;
 import guard.utils.BoundingBox;
 import guard.utils.packet.TransactionPacketClient;
 import guard.utils.packet.TransactionPacketServer;
-import io.github.retrooper.packetevents.PacketEvents;
-import io.github.retrooper.packetevents.event.PacketListenerAbstract;
-import io.github.retrooper.packetevents.event.PacketListenerPriority;
-import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
-import io.github.retrooper.packetevents.event.impl.PacketPlaySendEvent;
-import io.github.retrooper.packetevents.packettype.PacketType;
-import io.github.retrooper.packetevents.packetwrappers.NMSPacket;
-import io.github.retrooper.packetevents.packetwrappers.play.in.blockdig.WrappedPacketInBlockDig;
-import io.github.retrooper.packetevents.packetwrappers.play.in.flying.WrappedPacketInFlying;
-import io.github.retrooper.packetevents.packetwrappers.play.in.pong.WrappedPacketInPong;
-import io.github.retrooper.packetevents.packetwrappers.play.in.transaction.WrappedPacketInTransaction;
-import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
-import io.github.retrooper.packetevents.packetwrappers.play.out.animation.WrappedPacketOutAnimation;
-import io.github.retrooper.packetevents.packetwrappers.play.out.entityvelocity.WrappedPacketOutEntityVelocity;
-import io.github.retrooper.packetevents.packetwrappers.play.out.position.WrappedPacketOutPosition;
-import io.github.retrooper.packetevents.utils.player.ClientVersion;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.NumberConversions;
 import org.bukkit.util.Vector;
@@ -39,21 +37,19 @@ import java.util.List;
 import java.util.concurrent.FutureTask;
 import java.util.function.Predicate;
 
-public class PacketListener extends PacketListenerAbstract {
+public class PacketListener implements com.github.retrooper.packetevents.event.PacketListener {
 
-    public PacketListener() {
-        super(PacketListenerPriority.HIGHEST);
-    }
+    public PacketListener() {}
 
     @Override
-    public void onPacketPlayReceive(PacketPlayReceiveEvent event) {
-        Player p = event.getPlayer();
+    public void onPacketReceive(PacketReceiveEvent event) {
+        Player p = (Player)event.getPlayer();
         if(GuardPlayerManager.doesGuardPlayerExist(p)) {
             GuardPlayer gp = GuardPlayerManager.getGuardPlayer(p);
-            NMSPacket packet = event.getNMSPacket();
+            PacketTypeCommon packet = event.getPacketType();
 
             if (gp != null) {
-                if (event.getPacketId() == PacketType.Play.Client.KEEP_ALIVE) {
+                if (packet == PacketType.Play.Client.KEEP_ALIVE) {
                     gp.ping = (int) (System.currentTimeMillis() - gp.serverKeepAlive);
                 }
                 if (p.isDead()) {
@@ -67,24 +63,27 @@ public class PacketListener extends PacketListenerAbstract {
                 }
 
 
-                if (event.getPacketId() == PacketType.Play.Client.USE_ENTITY) {
-                    WrappedPacketInUseEntity ue = new WrappedPacketInUseEntity(packet);
-                    gp.target = ue.getEntity();
-                    gp.useAction = ue.getAction();
-                    if (ue.getAction() == WrappedPacketInUseEntity.EntityUseAction.ATTACK) {
-                        gp.lastAttack = System.currentTimeMillis();
+                if (packet == PacketType.Play.Client.INTERACT_ENTITY) {
+                    WrapperPlayClientInteractEntity ue = new WrapperPlayClientInteractEntity(event);
+                    if(Bukkit.getWorld(p.getWorld().getName()) != null) {
+                        Entity entity = Bukkit.getWorld(p.getWorld().getName()).getEntities().stream().filter(id -> id.getEntityId() == ue.getEntityId()).findFirst().get();
+                        gp.target = entity;
+                        gp.useAction = ue.getAction();
+                        if (ue.getAction() == WrapperPlayClientInteractEntity.InteractAction.ATTACK) {
+                            gp.lastAttack = System.currentTimeMillis();
+                        }
                     }
                 }
                 gp.predictionProcessor.handle(event);
-                for (GuardCheck c : gp.getCheckManager().checks) {
+                for (Check c : gp.getCheckManager().checks) {
                     c.gp = gp;
                     c.onPacket(event);
                 }
-                if (event.getPacketId() == PacketType.Play.Client.TRANSACTION) {
+                if (packet == PacketType.Play.Client.WINDOW_CONFIRMATION) {
                     if (gp.packetTracker != null) {
                         gp.packetTracker.setIntervalPackets(0);
                     }
-                    WrappedPacketInTransaction trans = new WrappedPacketInTransaction(event.getNMSPacket());
+                    WrapperPlayClientWindowConfirmation trans = new WrapperPlayClientWindowConfirmation(event);
                     boolean found = false;
                     long foundTransactionTime = System.currentTimeMillis();
                     TransactionPacketServer toRemove = null;
@@ -105,16 +104,16 @@ public class PacketListener extends PacketListenerAbstract {
                             gp.transactionPing = gp.transactionPackets.getAverageInt(gp.transactionPackets);
                         }
                     }
-                    for (GuardCheck c : gp.getCheckManager().checks) {
+                    for (Check c : gp.getCheckManager().checks) {
                         c.gp = gp;
                         c.onTransaction(new TransactionPacketClient(trans, now), found);
                     }
                 }
-                if (event.getPacketId() == PacketType.Play.Client.PONG) {
+                if (packet == PacketType.Play.Client.PONG) {
                     if (gp.packetTracker != null) {
                         gp.packetTracker.setIntervalPackets(0);
                     }
-                    WrappedPacketInPong pong = new WrappedPacketInPong(packet);
+                    WrapperPlayClientPong pong = new WrapperPlayClientPong(event);
                     boolean found = false;
                     TransactionPacketServer toRemove = null;
                     long foundTransactionTime = System.currentTimeMillis();
@@ -136,45 +135,45 @@ public class PacketListener extends PacketListenerAbstract {
                                 gp.transactionPing = gp.transactionPackets.getAverageInt(gp.transactionPackets);
                             }
                         }
-                        for (GuardCheck c : gp.getCheckManager().checks) {
+                        for (Check c : gp.getCheckManager().checks) {
                             c.gp = gp;
                             c.onTransaction(new TransactionPacketClient(pong, now), found);
                         }
                     } catch (ConcurrentModificationException stfu) {
                     }
                 }
-                if (event.getPacketId() == PacketType.Play.Client.BLOCK_DIG) {
-                    WrappedPacketInBlockDig dig = new WrappedPacketInBlockDig(packet);
-                    if (dig.getDigType().toString().contains("START_DESTROY_BLOCK")) {
+                if (packet == PacketType.Play.Client.PLAYER_DIGGING) {
+                    WrapperPlayClientPlayerDigging dig = new WrapperPlayClientPlayerDigging(event);
+                    if (dig.getAction() == DiggingAction.START_DIGGING) {
                         gp.sentStartDestroy = true;
                     }
-                    if (dig.getDigType().toString().contains("ABORT_DESTROY_BLOCK")) {
+                    if (dig.getAction() == DiggingAction.CANCELLED_DIGGING) {
                         gp.sentStartDestroy = false;
                     }
-                    if (dig.getDigType().toString().contains("STOP_DESTROY_BLOCK")) {
+                    if (dig.getAction() == DiggingAction.FINISHED_DIGGING) {
                         if (gp.sentStartDestroy) {
-                            if (dig.getDirection().toString().contains("UP")) {
+                            if (dig.getBlockFace() == BlockFace.UP) {
                                 gp.brokeBlock = System.currentTimeMillis();
                             }
                         }
                         gp.sentStartDestroy = false;
                     }
                 }
-                if (event.getPacketId() == PacketType.Play.Client.POSITION || event.getPacketId() == PacketType.Play.Client.POSITION_LOOK) {
-                    WrappedPacketInFlying ps = new WrappedPacketInFlying(packet);
-                    Location from = new Location(p.getWorld(), ps.getPosition().getX(), ps.getPosition().getY(), ps.getPosition().getZ());
+                if (packet == PacketType.Play.Client.PLAYER_POSITION || packet == PacketType.Play.Client.PLAYER_POSITION_AND_ROTATION) {
+                    WrapperPlayClientPlayerFlying ps = new WrapperPlayClientPlayerFlying(event);
+                    Location from = new Location(p.getWorld(), ps.getLocation().getX(), ps.getLocation().getY(), ps.getLocation().getZ());
 
                     if (gp.to != null) {
-                        if (PacketEvents.get().getPlayerUtils().getClientVersion(p).isNewerThanOrEquals(ClientVersion.v_1_17) && ps.isPosition() && ps.isLook() && sameLocation(gp, ps)) {
+                        if (PacketEvents.getAPI().getPlayerManager().getClientVersion(p).isNewerThanOrEquals(ClientVersion.V_1_17) && ps.hasPositionChanged() && ps.hasRotationChanged() && sameLocation(gp, ps)) {
                             gp.noCheckNextFlying = true;
                         }
                     }
 
                     if (!gp.noCheckNextFlying) {
                         new RunnableTransaction(gp.player).runTaskAsynchronously(Guard.instance);
-                        if (ps.isRotating()) {
-                            from.setYaw(ps.getYaw());
-                            from.setPitch(ps.getPitch());
+                        if (ps.hasRotationChanged()) {
+                            from.setYaw(ps.getLocation().getYaw());
+                            from.setPitch(ps.getLocation().getPitch());
                         } else {
                             from.setYaw(p.getLocation().getYaw());
                             from.setPitch(p.getLocation().getPitch());
@@ -205,7 +204,7 @@ public class PacketListener extends PacketListenerAbstract {
                         gp.sFrom = gp.sTo;
                         gp.sTo = from;
                         gp.doMove();
-                        if (ps.isRotating()) {
+                        if (ps.hasRotationChanged()) {
                             float yawAccelAccel = Math.abs(gp.lastAccelYaw - Math.abs(Math.abs(gp.deltaYaw) - Math.abs(gp.lastDeltaYaw)));
                             float pitchAccelAccel = Math.abs(gp.lastAccelPitch - Math.abs(Math.abs(gp.deltaPitch) - Math.abs(gp.lastDeltaPitch)));
                             if ((String.valueOf(yawAccelAccel).contains("E") || String.valueOf(pitchAccelAccel).contains("E")) && gp.sensitivity < 100) {
@@ -265,7 +264,7 @@ public class PacketListener extends PacketListenerAbstract {
                             gp.isTeleporting = true;
                         }
 
-                        for (GuardCheck c : gp.getCheckManager().checks) {
+                        for (Check c : gp.getCheckManager().checks) {
                             c.gp = gp;
                             c.onMove(event, gp.motionX, gp.motionY, gp.motionZ, gp.lastMotionX, gp.lastMotionY, gp.lastMotionZ, gp.deltaYaw, gp.deltaPitch, gp.lastDeltaYaw, gp.lastDeltaPitch);
                         }
@@ -278,26 +277,28 @@ public class PacketListener extends PacketListenerAbstract {
         } else GuardPlayerManager.addGuardPlayer(p);
     }
 
+
+
     @Override
-    public void onPacketPlaySend(PacketPlaySendEvent event) {
-        Player p = event.getPlayer();
+    public void onPacketSend(PacketSendEvent event) {
+        Player p = (Player)event.getPlayer();
         if(p != null) {
             GuardPlayerManager.addGuardPlayer(p);
             GuardPlayer gp = GuardPlayerManager.getGuardPlayer(p);
             if(gp != null) {
-                if(event.getPacketId() == PacketType.Play.Server.ANIMATION) {
-                    WrappedPacketOutAnimation animation = new WrappedPacketOutAnimation(event.getNMSPacket());
+                if(event.getPacketType() == PacketType.Play.Server.ENTITY_ANIMATION) {
+                    WrapperPlayServerEntityAnimation animation = new WrapperPlayServerEntityAnimation(event);
 
-                    if(animation.getAnimationType() == WrappedPacketOutAnimation.EntityAnimationType.TAKE_DAMAGE) {
+                    if(animation.getType() == WrapperPlayServerEntityAnimation.EntityAnimationType.HURT) {
                         gp.lastTakeDamage = System.currentTimeMillis();
                     }
                 }
-                if(event.getPacketId() == PacketType.Play.Server.KEEP_ALIVE) {
+                if(event.getPacketType() == PacketType.Play.Server.KEEP_ALIVE) {
 
                     gp.serverKeepAlive = System.currentTimeMillis();
                 }
-                if(event.getPacketId() == PacketType.Play.Server.POSITION) {
-                    WrappedPacketOutPosition ps = new WrappedPacketOutPosition(event.getNMSPacket());
+                if(event.getPacketType() == PacketType.Play.Server.ENTITY_TELEPORT) {
+                    WrapperPlayServerEntityTeleport ps = new WrapperPlayServerEntityTeleport(event);
                     final Vector teleportVector = new Vector(
                             ps.getPosition().getX(),
                             ps.getPosition().getY(),
@@ -305,14 +306,14 @@ public class PacketListener extends PacketListenerAbstract {
                     );
                     gp.teleports.add(teleportVector);
                 }
-                if(event.getPacketId() == PacketType.Play.Server.ENTITY_VELOCITY) {
-                    WrappedPacketOutEntityVelocity velo = new WrappedPacketOutEntityVelocity(event.getNMSPacket());
+                if(event.getPacketType() == PacketType.Play.Server.ENTITY_VELOCITY) {
+                    WrapperPlayServerEntityVelocity velo = new WrapperPlayServerEntityVelocity(event);
                     if(velo.getEntityId() == p.getEntityId()) {
                         gp.velocity = velo.getVelocity();
                         gp.lastVelocity = System.currentTimeMillis();
                     }
                 }
-                for (GuardCheck c : gp.getCheckManager().checks) {
+                for (Check c : gp.getCheckManager().checks) {
                     c.gp = gp;
                     c.onPacketSend(event);
                 }
@@ -526,7 +527,7 @@ public class PacketListener extends PacketListenerAbstract {
         }
     }
 
-    public boolean sameLocation(GuardPlayer gp, WrappedPacketInFlying flying) {
-        return gp.to.getX() == flying.getPosition().getX() && gp.to.getY() == flying.getPosition().getY() && gp.to.getZ() == flying.getPosition().getZ();
+    public boolean sameLocation(GuardPlayer gp, WrapperPlayClientPlayerFlying flying) {
+        return gp.to.getX() == flying.getLocation().getX() && gp.to.getY() == flying.getLocation().getY() && gp.to.getZ() == flying.getLocation().getZ();
     }
 }

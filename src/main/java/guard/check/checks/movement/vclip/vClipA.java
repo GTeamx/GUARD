@@ -1,18 +1,18 @@
 package guard.check.checks.movement.vclip;
 
-import guard.check.GuardCategory;
-import guard.check.GuardCheck;
-import guard.check.GuardCheckInfo;
-import guard.check.GuardCheckState;
+import com.github.retrooper.packetevents.event.PacketReceiveEvent;
+import guard.check.Category;
+import guard.check.Check;
+import guard.check.CheckInfo;
+import guard.check.CheckState;
 import guard.exempt.ExemptType;
-import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
 import org.bukkit.potion.PotionEffectType;
 
-@GuardCheckInfo(name = "vClip A", category = GuardCategory.Movement, state = GuardCheckState.STABLE)
-public class vClipA extends GuardCheck {
+@CheckInfo(name = "vClip A", category = Category.Movement, state = CheckState.STABLE)
+public class vClipA extends Check {
 
     @Override
-    public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
+    public void onMove(PacketReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
 
         // TODO: Add WATER_SOUlSAND and WATER_MAGMA exempt types.
 

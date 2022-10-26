@@ -1,22 +1,25 @@
 package guard.check.checks.movement.ground;
 
-import guard.check.GuardCategory;
-import guard.check.GuardCheck;
-import guard.check.GuardCheckInfo;
-import guard.check.GuardCheckState;
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.event.PacketReceiveEvent;
+import guard.check.Category;
+import guard.check.Check;
+import guard.check.CheckInfo;
+import guard.check.CheckState;
 import guard.exempt.ExemptType;
-import io.github.retrooper.packetevents.PacketEvents;
-import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
+import io.github.retrooper.packetevents.util.GeyserUtil;
+import io.github.retrooper.packetevents.util.SpigotReflectionUtil;
 
-@GuardCheckInfo(name = "Ground B", category = GuardCategory.Movement, state = GuardCheckState.EXPERIMENTAL)
-public class GroundB extends GuardCheck {
+@CheckInfo(name = "Ground B", category = Category.Movement, state = CheckState.EXPERIMENTAL)
+public class GroundB extends Check {
 
     double startY;
 
-    public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
+    public void onMove(PacketReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
 
         // Check if player is on bedrock (aka exempt since fallDistance is modified on bedrock)
-        final boolean isBedrock = PacketEvents.get().getPlayerUtils().isGeyserPlayer(gp.player) || gp.player.getName().contains(".");
+
+        final boolean isBedrock = GeyserUtil.isGeyserPlayer(gp.getPlayer().getUniqueId()) || gp.player.getName().contains(".");
 
         final boolean exempt = isExempt(ExemptType.NEAR_VEHICLE, ExemptType.SLIME, ExemptType.TELEPORT, ExemptType.CLIMBABLE, ExemptType.JOINED, ExemptType.STAIRS, ExemptType.VELOCITY, ExemptType.FLYING);
 

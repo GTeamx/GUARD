@@ -1,15 +1,15 @@
 package guard.check.checks.world.baritone;
 
-import guard.check.GuardCategory;
-import guard.check.GuardCheck;
-import guard.check.GuardCheckInfo;
-import guard.check.GuardCheckState;
-import io.github.retrooper.packetevents.event.impl.PacketPlayReceiveEvent;
+import com.github.retrooper.packetevents.event.PacketReceiveEvent;
+import guard.check.Category;
+import guard.check.Check;
+import guard.check.CheckInfo;
+import guard.check.CheckState;
 
-@GuardCheckInfo(name = "Baritone A", category = GuardCategory.World, state = GuardCheckState.STABLE)
-public class BaritoneA extends GuardCheck {
+@CheckInfo(name = "Baritone A", category = Category.World, state = CheckState.STABLE)
+public class BaritoneA extends Check {
 
-    public void onMove(PacketPlayReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
+    public void onMove(PacketReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
 
         //final String delta = String.valueOf(deltaPitch);
         //if(deltaPitch < 0.0038 && deltaPitch > 0 && !delta.contains("E")) fail(packet, "Baritone head movement (A)", "dP §9" + deltaPitch + "\n" + " §8»§f ldP §9" + lastDeltaPitch); else removeBuffer();

@@ -1,23 +1,20 @@
 package guard.data;
 
+import com.github.retrooper.packetevents.PacketEvents;
+import com.github.retrooper.packetevents.manager.server.ServerVersion;
+import com.github.retrooper.packetevents.util.Vector3d;
+import com.github.retrooper.packetevents.wrapper.play.client.WrapperPlayClientInteractEntity;
 import com.viaversion.viaversion.api.Via;
 import com.viaversion.viaversion.api.connection.UserConnection;
 import com.viaversion.viaversion.api.protocol.packet.PacketTracker;
 import guard.Guard;
-import guard.check.GuardCheck;
-import guard.check.GuardCheckManager;
-import guard.check.GuardCheckState;
+import guard.check.Check;
+import guard.check.CheckManager;
 import guard.check.PredictionProcessor;
 import guard.exempt.Exempt;
 import guard.utils.BoundingBox;
 import guard.utils.SampleList;
 import guard.utils.packet.TransactionPacketServer;
-import io.github.retrooper.packetevents.PacketEvents;
-import io.github.retrooper.packetevents.packetwrappers.play.in.useentity.WrappedPacketInUseEntity;
-import io.github.retrooper.packetevents.utils.npc.NPC;
-import io.github.retrooper.packetevents.utils.npc.NPCManager;
-import io.github.retrooper.packetevents.utils.server.ServerVersion;
-import io.github.retrooper.packetevents.utils.vector.Vector3d;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -46,7 +43,7 @@ public class GuardPlayer {
     public boolean alertsToggled;
     private HashMap<String, HashMap<String, Integer>> flags = new HashMap<String, HashMap<String, Integer>>();
     public Exempt exempt = new Exempt(this);
-    public GuardCheckManager checkManager = new GuardCheckManager();
+    public CheckManager checkManager = new CheckManager();
     public long serverKeepAlive;
     public ArrayDeque<Vector> teleports = new ArrayDeque<>();
     public Location from;
@@ -106,7 +103,7 @@ public class GuardPlayer {
     public boolean collidesHorizontally;
     public Entity target;
     public Entity lastTarget;
-    public WrappedPacketInUseEntity.EntityUseAction useAction;
+    public WrapperPlayClientInteractEntity.InteractAction useAction;
     public boolean inAir;
     public boolean onSolidGround;
     public boolean nearTrapdoor;
@@ -205,7 +202,7 @@ public class GuardPlayer {
         return flags.get(plname).getOrDefault(type, 0);
     }
 
-    public void flag(GuardCheck check, int threshold, Object... debug) {
+    public void flag(Check check, int threshold, Object... debug) {
         if(player != null) {
             addFlag(check.name);
             String buf = "";
@@ -260,7 +257,7 @@ public class GuardPlayer {
     }
 
     public double getTPS() {
-        return PacketEvents.get().getServerUtils().getTPS();
+        return 20;
     }
 
     public boolean hasPotionEffect(PotionEffectType type) {
@@ -287,7 +284,7 @@ public class GuardPlayer {
     }
 
     public int getDepthStriderLevel() {
-        if(PacketEvents.get().getServerUtils().getVersion().isNewerThanOrEquals(ServerVersion.v_1_8)) {
+        if(PacketEvents.getAPI().getServerManager().getVersion().isNewerThanOrEquals(ServerVersion.V_1_8)) {
             if (player.getInventory().getBoots() != null) {
                 return player.getInventory().getBoots().getEnchantmentLevel(Enchantment.DEPTH_STRIDER);
             }

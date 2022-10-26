@@ -29,8 +29,12 @@
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <relocations>
                                 <relocation>
-                                    <pattern>io.github.retrooper.packetevents</pattern>
+                                    <pattern>com.github.retrooper.packetevents</pattern>
                                     <shadedPattern>guard.packetevents</shadedPattern> <!--relocate packetevents package. choose something unique!-->
+                                </relocation>
+                                <relocation>
+                                    <pattern>io.github.retrooper.packetevents</pattern>
+                                    <shadedPattern>guard.iopacketevents</shadedPattern> <!--relocate packetevents package. choose something unique!-->
                                 </relocation>
                             </relocations>
                         </configuration>
@@ -72,6 +76,10 @@
             <id>viaversion-repo</id>
             <url>https://repo.viaversion.com</url>
         </repository>
+        <repository>
+            <id>codemc-snapshots</id>
+            <url>https://repo.codemc.io/repository/maven-snapshots/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -106,9 +114,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.retrooper</groupId>
-            <artifactId>packetevents</artifactId>
-            <version>v1.8.4</version>
+            <groupId>com.github.retrooper.packetevents</groupId>
+            <artifactId>spigot</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
