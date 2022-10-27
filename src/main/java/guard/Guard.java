@@ -35,7 +35,7 @@ public class Guard extends JavaPlugin {
     public void onLoad() {
         PacketEvents.setAPI(SpigotPacketEventsBuilder.build(this));
         //Are all listeners read only?
-        PacketEvents.getAPI().getSettings().readOnlyListeners(false)
+        PacketEvents.getAPI().getSettings().debug(false)
                 .checkForUpdates(false)
                 .bStats(true);
         PacketEvents.getAPI().load();
@@ -54,7 +54,6 @@ public class Guard extends JavaPlugin {
         configUtils = new ConfigUtils(this);
         PacketEvents.getAPI().getEventManager().registerListener(Guard.instance.listener, PacketListenerPriority.HIGHEST);
         PacketEvents.getAPI().init();
-
         // FOR TESTING AUTH ENCRYPTION
         System.out.println("OUTPUT: " + AES.AESEncrypt2("1.0", "12a7150c1688bf2b86c549c966c6c68cc33411d8accc397bcad1ca26e525a33e", "643134ed859db780df3d505ac459ef06d52c470b2979ec7ab2588dd67e5817e7"));
 
@@ -106,7 +105,6 @@ public class Guard extends JavaPlugin {
             PacketEvents.get().getPlayerUtils().channels.remove(player.getName());
             PacketEvents.get().getServerUtils().entityCache.remove(player.getEntityId());
         } */
-        PacketEvents.getAPI().getInjector().uninject();
         PacketEvents.getAPI().terminate();
         Bukkit.getScheduler().cancelTasks(this);
 

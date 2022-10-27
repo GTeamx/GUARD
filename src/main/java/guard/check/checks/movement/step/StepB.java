@@ -19,6 +19,7 @@ public class StepB extends Check {
 
         // TODO: Prevent false from the glitch collision in a block.
         // TODO: Prevent false from explosions.
+        // TODO: Prevent false from Velocity
 
         // To prevent false from jumping when touching vines/ladders.
         if(gp.playerGround) lastGround = System.currentTimeMillis();

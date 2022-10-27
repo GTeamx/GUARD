@@ -8,7 +8,6 @@ import guard.check.CheckInfo;
 import guard.check.CheckState;
 import guard.exempt.ExemptType;
 import io.github.retrooper.packetevents.util.GeyserUtil;
-import io.github.retrooper.packetevents.util.SpigotReflectionUtil;
 
 @CheckInfo(name = "Ground B", category = Category.Movement, state = CheckState.EXPERIMENTAL)
 public class GroundB extends Check {

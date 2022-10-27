@@ -80,6 +80,7 @@ public class PredictionProcessor {
                     if (using) {
                         forwardMotion *= 0.2;
                         strafeMotion *= 0.2;
+
                     }
                     forwardMotion *= 0.98;
                     strafeMotion *= 0.98;
@@ -131,9 +132,7 @@ public class PredictionProcessor {
                     } else {
                         frictionwalk = isSprinting ? 0.026f : 0.02f;
                     }
-
                     double keyMotion = forwardMotion * forwardMotion + strafeMotion * strafeMotion;
-
                     if (keyMotion >= 1.0E-4F) {
                         keyMotion = frictionwalk / Math.max(1.0, Math.sqrt(keyMotion));
                         forwardMotion *= keyMotion;
@@ -155,6 +154,7 @@ public class PredictionProcessor {
                         playerMotionZ = lastmotionZ;
                     }
                     sdelta = Math.min(delta, sdelta);
+
                 }
             }
         }
