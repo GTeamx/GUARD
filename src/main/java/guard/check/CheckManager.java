@@ -25,6 +25,7 @@ public class CheckManager {
         registerCheck(new GroundB());
 
         registerCheck(new SpeedA());
+        registerCheck(new SpeedC());
 
         registerCheck(new StepA());
         registerCheck(new StepB());

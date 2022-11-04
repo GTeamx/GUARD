@@ -27,6 +27,6 @@ public class SpeedA extends Check {
             }
         }
         //debug("§cFLAG " + (gp.getDeltaXZ() >= values2[0]) + " " + (values2[1] > threshold2) + "" + (gp.getDeltaXZ() > 0));
-        if(gp.getDeltaXZ() >= values[0] && values[1] > threshold && gp.getDeltaXZ() > 0 && !exempt) fail(packet, "Generic movement speed modifications", "speed §9" + values[1]); else removeBuffer();
+        if(gp.getDeltaXZ() >= values[0] && values[1] > threshold && gp.getDeltaXZ() > 0 && !exempt) fail(packet, "Generic movement speed modification", "speed §9" + values[1]); else removeBuffer();
     }
 }

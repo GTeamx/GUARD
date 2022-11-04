@@ -232,7 +232,7 @@ public class GuardPlayer {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 boolean d = Guard.instance.configUtils.getBooleanFromConfig("config", "testMode", false);
                 GuardPlayer gp = GuardPlayerManager.getGuardPlayer(p);
-                if ((gp.alertsToggled)) { // TODO: /alerts command test later && (!d && !player.getName().equals(p.getName()))         || (d && !p.getName().equals(player.getName()))
+                if ((gp.alertsToggled)) {
                     if(!state.equalsIgnoreCase("EXPERIMENTAL")) {
                         TextComponent Flag = new TextComponent(prefix + " " + player.getName() + " §7failed §f" + check.name + " §7(§9x" + getFlags(player.getName(), check.name) + "§7)");
                         Flag.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder(text).create()));
