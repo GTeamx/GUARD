@@ -449,7 +449,6 @@ public class PacketListener implements com.github.retrooper.packetevents.event.P
         final int var3 = NumberConversions.floor(location.getZ());
         final Block var4 = this.getBlock(new Location(location.getWorld(), var1, var2, var3));
 
-        BoundingBox box = new BoundingBox(var4);
         final BoundingBox bb = new BoundingBox(gp.getPlayer())
                 .expandOther(0.02, 0.02, 0, 0, 0.02, 0.02);
         final double mx = bb.getMinX();
