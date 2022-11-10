@@ -15,7 +15,7 @@ public class StepB extends Check {
 
     private int currentTicks;
     private long lastGround;
-    private long lastJumpBoost = 0;
+    private long lastJumpBoost = 15000L;
 
     public void onMove(PacketReceiveEvent packet, double motionX, double motionY, double motionZ, double lastMotionX, double lastMotionY, double lastMotionZ, float deltaYaw, float deltaPitch, float lastDeltaYaw, float lastDeltaPitch) {
 
@@ -28,7 +28,7 @@ public class StepB extends Check {
 
         // Proper handling for JumpBoost.
         if(gp.getPotionEffectAmplifier(PotionEffectType.JUMP) > 0) lastJumpBoost = System.currentTimeMillis();
-        final int extraTicks = lastJumpBoost - System.currentTimeMillis() >= 1500 ? 0 : gp.getPotionEffectAmplifier(PotionEffectType.JUMP);
+        final int extraTicks = lastJumpBoost - System.currentTimeMillis() >= 1500 ? 0 : (gp.getPotionEffectAmplifier(PotionEffectType.JUMP) + 1);
 
         final int maxTicks = (PacketEvents.getAPI().getPlayerManager().getClientVersion(gp.getPlayer()).isNewerThanOrEquals(ClientVersion.V_1_16) ? isExempt(ExemptType.CLIMBABLE) ? (System.currentTimeMillis() - lastGround) < 1200 ? 5 : 0 : isExempt(ExemptType.VELOCITY) ? 7 : 5 :  isExempt(ExemptType.CLIMBABLE) ? (System.currentTimeMillis() - lastGround) < 1200 ? 4 : 0 : isExempt(ExemptType.VELOCITY) ? 6 : 4) + extraTicks;
         final boolean exempt = isExempt(ExemptType.PLACE, ExemptType.STAIRS, ExemptType.GLIDE, ExemptType.SLAB, ExemptType.SLIME, ExemptType.FLYING, ExemptType.NEAR_VEHICLE, ExemptType.TELEPORT, ExemptType.LIQUID, ExemptType.FULL_LIQUID);

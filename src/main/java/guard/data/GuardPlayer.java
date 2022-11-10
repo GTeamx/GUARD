@@ -86,7 +86,7 @@ public class GuardPlayer {
     public boolean blockAboveWater;
     public double lastBlockAbove;
     public boolean isDead;
-    public long lastVelocity;
+    public long lastVelocity = 1000L;
     public int ping;
     public boolean inAnimation;
     public long wasDead;
@@ -111,7 +111,7 @@ public class GuardPlayer {
     public boolean isTeleporting;
     public boolean onClimbable;
     public boolean inClimbableBlock;
-    public long entityHit;
+    public long entityHit = 1000L;
     public long lastAttack;
     public long lastHurt;
     public long lastHurtOther;
@@ -129,7 +129,7 @@ public class GuardPlayer {
     public boolean lastNoCheckNextFlying;
     public boolean lastLastNoCheckNextFlying;
     public double pMotionX;
-    public double lastGlide;
+    public double lastGlide = 5000;
     public double pMotionZ;
     public float lastAccelYaw;
     public float lastAccelPitch;
@@ -183,7 +183,8 @@ public class GuardPlayer {
                 if(target != lastTarget) {
                     targetBoundingBoxes.clear();
                 }
-                targetBoundingBoxes.add(new BoundingBox(target.getBoundingBox()));
+                // TODO: fix: java.lang.NoSuchMethodError: org.bukkit.entity.Entity.getBoundingBox()Lorg/bukkit/util/BoundingBox;
+                //targetBoundingBoxes.add(new BoundingBox(target.getBoundingBox()));
             }
         }, 1, 1);
         alertsToggled = Guard.instance.configUtils.getBooleanFromConfig("config", "testMode", false);

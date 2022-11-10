@@ -10,7 +10,7 @@ import guard.check.CheckInfo;
 import guard.check.CheckState;
 import guard.exempt.ExemptType;
 
-@CheckInfo(name = "Speed C", category = Category.Movement, state = CheckState.STABLE, addBuffer = 1, removeBuffer = 1, maxBuffer = 2)
+@CheckInfo(name = "Speed C", category = Category.Movement, state = CheckState.STABLE, addBuffer = 1, removeBuffer = 1, maxBuffer = 3)
 public class SpeedC extends Check {
 
     private int airTicks;
@@ -32,7 +32,7 @@ public class SpeedC extends Check {
         final double difference = gp.getDeltaXZ() - prediction;
 
         if (difference > accel && airTicks > 2 && !exempt && !gp.isInLiquid) fail(packet, "Impossible movement friction", "difference §9" + difference);
-        else removeBuffer();
+        if(difference <= accel) removeBuffer();
     }
 
     // Sprint desync fix
